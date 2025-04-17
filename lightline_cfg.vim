@@ -74,15 +74,15 @@ let g:lightline.inactive = {
     \ ]
     \ }
 
-let g:lightline.tab = {
-    \ 'active': ['tabnum'],
-    \ 'inactive': ['tabnum']
-    \ }
+" let g:lightline.tab = {
+"     \ 'active': ['tabnum'],
+"     \ 'inactive': ['tabnum']
+"     \ }
 
-let g:lightline.tabline = {
-    \ 'left': [ ['buffers'] ],
-    \ 'right': [ ['tabs'] ]
-    \ }
+" let g:lightline.tabline = {
+"     \ 'left': [ ['buffers'] ],
+"     \ 'right': [ ['tabs'] ]
+"     \ }
 
 let g:lightline.component = {
     \ 'lineinfo': '%3l:%-2v / %L',
@@ -97,8 +97,8 @@ let g:lightline.component_expand = {
     \ 'linter_warnings': 'LightlineDiagnosticsWarning',
     \ 'linter_errors': 'LightlineDiagnosticsError',
     \ 'linter_checking': 'LightlineDiagnosticsChecking',
-    \ 'buffers': 'lightline#bufferline#buffers',
     \ }
+    " \ 'buffers': 'lightline#bufferline#buffers',
 
 let g:lightline.component_function = {
     \ 'fugitive': 'LightLineFugitive',
@@ -118,11 +118,11 @@ let g:lightline.component_type = {
     \ 'linter_warnings': 'warning',
     \ 'linter_errors': 'error',
     \ 'linter_checking': 'info',
-    \ 'buffers': 'tabsel',
     \ }
+    " \ 'buffers': 'tabsel',
 
 " Required to make bufferline clickable
-let g:lightline.component_raw = {'buffers': 1}
+" let g:lightline.component_raw = {'buffers': 1}
 
 " \ 'linter_checking': 'info',
 " \ 'linter_ok': 'info',

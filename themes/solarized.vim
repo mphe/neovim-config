@@ -28,6 +28,7 @@ let s:blue_light = '#65a5de'
 let s:base4   = '#a3b1b1'
 let s:pum_fg  = '#C6C6C6'
 let s:pum_bg = s:blue3
+let s:slight_cyan = '#71A3A0'
 
 " Actually not normal fg and bg but the slightly brighter variant.
 " TODO: rename
@@ -57,6 +58,8 @@ function ApplySolarizedStyle()
     exec 'highlight BlueFg guifg=' . s:blue
     exec 'highlight VioletFg guifg=' . s:violet
     exec 'highlight MagentaFg guifg=' . s:magenta
+    exec 'highlight CyanFg guifg=' . s:cyan
+    exec 'highlight SlightCyanFg guifg=' . s:slight_cyan
 
     augroup SyntaxFix
         autocmd!
@@ -71,16 +74,21 @@ function ApplySolarizedStyle()
     highlight Comment cterm=NONE gui=NONE
 
     " treesitter (also used by coc implicitly) {{{
-    hi link @module VioletFg
-    hi link @keyword.storage @keyword
+    hi! link @module VioletFg
+    hi! link @keyword.storage @keyword
     hi! link @comment Comment
     exec 'hi @property guifg=' . s:blue_light
+    " hi! link @property @variable
+    hi! link @constant Constant
 
     " gdscript
-    hi link @attribute.gdscript Keyword
-    hi link @string.special.url.gdscript Macro  " $ or % node paths
+    hi! link @attribute.gdscript Keyword
+    hi! link @string.special.url.gdscript Macro  " $ or % node paths
 
     " }}}
+
+    " telescope
+    hi! link TelescopeSelection Pmenu
 
     " Search highlight color
     highlight Search cterm=NONE ctermbg=240 ctermfg=black gui=NONE guibg=#586e75 guifg=#073642
@@ -104,8 +112,10 @@ function ApplySolarizedStyle()
     highlight clear Error
     exec 'highlight Error cterm=undercurl ctermfg=1 gui=undercurl guisp=' . s:red
     highlight link SpellBad Error
-    highlight DiagnosticUnderlineInfo gui=undercurl
     highlight DiagnosticUnderlineWarn gui=undercurl
+    highlight DiagnosticUnderlineHint gui=undercurl
+    highlight DiagnosticUnderlineInfo gui=undercurl
+    highlight DiagnosticUnderlineOk gui=undercurl
     highlight DiagnosticUnderlineError gui=undercurl
 
     if s:transparent_background
@@ -154,12 +164,18 @@ function ApplySolarizedStyle()
     highlight link DiagnosticVirtualTextInfo CocInfoSign
     highlight link DiagnosticVirtualTextHint CocHintSign
 
+    " template arguments
+    exec 'hi CocSemTypeTypeParameter guifg=' . s:base2
     hi link CocSemType CocSemTypeType
-    hi link CocSemTypeStruct CocSemTypeType
     hi link CocSemTypeClass CocSemTypeType
+    hi link CocSemTypeStruct CocSemTypeType
     hi link CocSemTypeEnumMember @constant
-    hi link CocSemTypeModVariableReadonly @constant
+    hi link CocSemTypeModVariableReadonly SlightCyanFg
+    hi link CocSemTypeModParameterReadonly CocSemTypeModVariableReadonly
     hi link CocSemTypeEvent @property
+
+    " coc-lightbulb
+    exec 'hi LightBulbDefaultSign guibg=' . s:normal_bg
 
     " ale
     highlight! link ALEError CocErrorHighlight

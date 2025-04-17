@@ -41,10 +41,10 @@ let g:coc_global_extensions = [
       \ 'coc-go',
       \ 'coc-spell-checker',
       \ 'coc-cspell-dicts',
-      \ 'coc-ltex',
       \ 'coc-markdownlint',
       \ 'coc-texlab',
       \ ]
+      " \ 'coc-ltex',
     " \ 'coc-java',
 
 " Use tab for trigger completion with characters ahead and navigate.
@@ -124,7 +124,8 @@ nmap <silent> ]g <Plug>(coc-diagnostic-next)
 nmap <silent> <leader>jr <Plug>(coc-references)
 
 nmap <silent> <leader>jd <Plug>(coc-definition)
-nmap <silent> <leader>jD <Plug>(coc-implementation)
+nmap <silent> <leader>jD :vsp<cr><Plug>(coc-definition)
+nmap <silent> <leader>JD :tab split<cr><Plug>(coc-definition)
 " nmap <silent> gy <Plug>(coc-type-definition)
 " nmap <silent> gr <Plug>(coc-references)
 
@@ -133,7 +134,8 @@ nnoremap <silent> K :call ShowDocumentation()<CR>
 
 function! ShowDocumentation()
   if CocAction('hasProvider', 'hover')
-    call CocActionAsync('doHover')
+    " call CocActionAsync('doHover')
+    call CocActionAsync('definitionHover')
   else
     call feedkeys('K', 'in')
   endif
@@ -157,14 +159,12 @@ augroup mygroup
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
 
-" Applying codeAction to the selected region.
-" Example: `<leader>aap` for current paragraph
 xmap <leader>ac  <Plug>(coc-codeaction-selected)
 vmap <leader>ac  <Plug>(coc-codeaction-selected)
+nmap <leader>ac  <Plug>(coc-codeaction-cursor)
+" Applying codeAction to the selected region, e.g. <leader>aap
 nmap <leader>a  <Plug>(coc-codeaction-selected)
 
-" Remap for do codeAction of current line
-nmap <leader>ac  <Plug>(coc-codeaction)
 " Fix autofix problem of current line
 nmap <leader>fx  <Plug>(coc-fix-current)
 
@@ -198,7 +198,8 @@ endif
 " xmap <silent> <C-s> <Plug>(coc-range-select)
 
 " Use `:Format` to format current buffer
-command! -nargs=0 Format :call CocAction('format')
+command! -nargs=0 FormatAll :call CocAction('format')
+command! -nargs=0 Format :call CocAction('formatSelected', 'V')
 
 " Use `:Fold` to fold current buffer
 command! -nargs=? Fold :call     CocAction('fold', <f-args>)
@@ -245,7 +246,7 @@ command! CocOutput CocCommand workspace.showOutput
 
 " let g:coc_borderchars = ['─', '│', '─', '│', '╭', '╮', '╯', '╰']
 
-nnoremap <f2> :CocListResume<cr>
+nnoremap <silent> <F2> :<C-u>CocListResume<CR>
 nnoremap <leader>v <Plug>(coc-cursors-operator)
 
 command! CocJumpDefinition     call CocAction('jumpDefinition')
@@ -259,3 +260,7 @@ command! CocDeclarations       call CocAction('declarations')
 command! CocImplementations    call CocAction('implementations')
 command! CocTypeDefinitions    call CocAction('typeDefinitions')
 command! CocReferences         call CocAction('references')
+command! CocIncomingCalls      call CocAction('showIncomingCalls')
+command! CocOutgoingCalls      call CocAction('showOutgoingCalls')
+command! CocSuperTypes         call CocAction('showSuperTypes')
+command! CocSubTypes           call CocAction('showSubTypes')

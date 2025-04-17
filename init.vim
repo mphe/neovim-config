@@ -12,6 +12,67 @@ if !has('nvim')
     let g:use_treesitter = 0
 endif
 
+
+" Default font settings
+let s:guifont = 'Terminus'
+let s:guifontwide = 'Symbols_Nerd_Font'
+let s:guifontsize = 9
+
+
+if exists("g:neovide")
+    let g:neovide_cursor_animation_length = 0
+    let g:neovide_cursor_trail_size = 0
+    let g:neovide_cursor_animate_in_insert_mode = v:false
+    let g:neovide_cursor_animate_command_line = v:false
+    let g:neovide_scroll_animation_length = 0.1
+    let g:neovide_cursor_vfx_mode = ""
+    let g:neovide_scale_factor=1.0
+    let g:neovide_padding_top = 0
+    let g:neovide_padding_bottom = 0
+    let g:neovide_padding_right = 0
+    let g:neovide_padding_left = 0
+    let g:neovide_title_background_color = "#002b36"
+    let g:neovide_title_text_color = "#93a1a1"
+    let g:neovide_hide_mouse_when_typing = v:true
+    let g:neovide_confirm_quit = v:false
+    let g:neovide_remember_window_size = v:true
+    let g:neovide_cursor_antialiasing = v:false
+
+    let g:neovide_floating_shadow = v:true
+    let g:neovide_floating_z_height = 10
+    let g:neovide_light_angle_degrees = 45
+    let g:neovide_light_radius = 5
+    let g:neovide_floating_corner_radius = 0.5
+
+    " Use Nerd Font because Bitmap fonts are not supported and disable AA
+    let s:guifont = 'Terminess_Nerd_Font:#e-alias'
+    set linespace=-2
+
+    " Control + shift + c/v for copy & paste
+    lua vim.api.nvim_set_keymap("v", "<sc-c>", '"+y', { noremap = true })
+    lua vim.api.nvim_set_keymap("i", "<sc-v>", '<ESC>"+p', { noremap = true })
+    lua vim.api.nvim_set_keymap("n", "<sc-v>", '"+p', { noremap = true })
+endif
+
+
+function! ChangeFontSize(delta)
+    let s:guifontsize = s:guifontsize + a:delta
+    exec 'set guifont=' .. s:guifont .. ':h' .. s:guifontsize
+    exec 'set guifontwide=' .. s:guifontwide .. ':h' .. s:guifontsize
+endfunction
+
+nnoremap <expr><C-+> ChangeFontSize(1)
+nnoremap <expr><C--> ChangeFontSize(-1)
+
+" Apply font defaults
+call ChangeFontSize(0)
+
+
+if has("win32")
+    nnoremap <c-z> :tab terminal wsl<cr>
+    autocmd TermOpen * startinsert
+endif
+
 " -------------------------------------- General settings start {{{
 syntax enable
 set number
@@ -20,18 +81,27 @@ set noshowcmd
 
 " tab size = 4, spaces instead of tabs, and auto indent
 set shiftwidth=4
-set tabstop=4
+" set tabstop=4
+set softtabstop=-1  " Apparently prefered over tabstop. Use value of shiftwidth.
 set expandtab
 set smarttab
 set autoindent
-set cinoptions+=j1
 
+" indent java anonymous classes correctly
 set cinoptions+=j1
-
 " Do not indent content within namespaces in C++
 set cinoptions+=N-s
 " Sames goes for extern "C" blocks
 set cinoptions+=E-s
+" Do not indent public/protected/private keywords.
+set cinoptions+=g0
+" Indent more like Python, i.e. +shiftwidth after linebreak or aligned to the opening parantheses
+" However, shift linebreaks in multi-line if/for/while conditions (ks).
+set cinoptions+=(0,W4,ks
+" In combination with (0, use double shiftwidth to indent inside parantheses after if/for/while
+" set cinoptions+=ks
+" Do not indent a closing parantheses
+set cinoptions+=m1
 
 " enable folding
 set foldmethod=syntax
@@ -43,7 +113,7 @@ set foldlevelstart=99
 set foldopen-=block
 
 " global clipboard
-set clipboard+=unnamed
+" set clipboard+=unnamed
 
 " disable swap files
 set noswapfile
@@ -100,6 +170,7 @@ set laststatus=2
 set pyxversion=3
 set fileencoding=utf-8
 set encoding=utf-8
+set fileformats=unix,dos
 
 set linebreak
 set breakindent
@@ -300,7 +371,14 @@ Plug 'dhruvasagar/vim-table-mode'
 Plug 'lervag/vimtex'
 Plug 'kana/vim-textobj-indent'
 Plug 'kana/vim-textobj-user'
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+
+" If you don't have nodejs and yarn
+" use pre build, add 'vim-plug' to the filetype list so vim-plug can update this plugin
+" see: https://github.com/iamcco/markdown-preview.nvim/issues/50
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+" If you have nodejs
+" Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
+
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'derekwyatt/vim-fswitch'
 Plug 'derekwyatt/vim-protodef'
@@ -318,7 +396,10 @@ Plug 'neoclide/jsonc.vim'
 Plug 'dominikduda/vim_current_word'
 " Plug 'bfrg/vim-cpp-modern'
 Plug 'lambdalisue/suda.vim'
+
+" jekyll stuff
 Plug 'tpope/vim-liquid'
+
 Plug 'embear/vim-localvimrc'
 Plug 'amadeus/vim-convert-color-to'
 Plug 'mingchaoyan/vim-shaderlab'
@@ -327,7 +408,7 @@ Plug 'tikhomirov/vim-glsl'
 " Plug 'beyondmarc/glsl.vim'
 " Plug 'petrbroz/vim-glsl'
 Plug 'captbaritone/better-indent-support-for-php-with-html'
-Plug 'mattn/emmet-vim'
+" Plug 'mattn/emmet-vim'  " Adds keybindings with <c-y> prefix
 Plug 'kosayoda/nvim-lightbulb'
 
 Plug 'inkarkat/vim-ingo-library'
@@ -381,6 +462,11 @@ Plug 'shiracamus/vim-syntax-x86-objdump-d'
 
 Plug 'JafarDakhan/vim-gml'
 
+if has("win32")
+    " Startup screen
+    " Plug 'mhinz/vim-startify'
+endif
+
 if has('nvim')
     Plug 'rcarriga/nvim-notify'
     if g:use_treesitter
@@ -390,18 +476,27 @@ if has('nvim')
     " Required by: telescope, copilot, codeium.nvim
     Plug 'nvim-lua/plenary.nvim'
 
+    " Required by barbar.nvim and dashboard-nvim
+    Plug 'kyazdani42/nvim-web-devicons'
+
     Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }
 
     " Fix CursorHold performance
     Plug 'antoinemadec/FixCursorHold.nvim'
 
-    Plug 'kyazdani42/nvim-web-devicons'
+    " Buffer bar
     Plug 'romgrk/barbar.nvim'
 
     " Easy custom highlight patterns
     Plug 'folke/paint.nvim'
 
     Plug 'sakhnik/nvim-gdb'
+
+    if has("win32")
+        " Startup screen
+        " Requires nvim-web-devicons
+        Plug 'nvimdev/dashboard-nvim'
+    endif
 
     if g:config_use_copilot
         " Plug 'github/copilot.vim'
@@ -433,6 +528,15 @@ set fillchars+=vert:│
 
 
 " -------------------------------------- Plugin configuration {{{
+
+" gitgutter - https://github.com/airblade/vim-gitgutter
+let g:gitgutter_set_sign_backgrounds = 1
+let g:gitgutter_sign_added = '│'
+let g:gitgutter_sign_modified = '│'
+" let g:gitgutter_sign_removed = '│'
+" let g:gitgutter_sign_removed_first_line = '│'
+" let g:gitgutter_sign_removed_above_and_below = '│'
+" let g:gitgutter_sign_modified_removed = '│'
 
 " localvimrc
 let g:localvimrc_reverse = 1
@@ -606,7 +710,7 @@ let g:ctrlp_show_hidden=1
 " let g:ctrlp_custom_ignore = '\.pyc'
 let g:ctrlp_open_multiple_files = 'ijr'
 let g:ctrlp_custom_ignore = {
-            \ 'dir':  '\v[\/](\.(godot|import|git|hg|svn|clangd|ccls-cache|tmp|mypy_cache|cache)|node_modules)$',
+            \ 'dir':  '\v[\/](\.(godot|import|git|hg|svn|clangd|ccls-cache|tmp|mypy_cache|cache)|node_modules|build)$',
             \ 'file': '\v\.(exe|so|dll|pyc|o|a|obj)$'
             \ }
 " let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -c -o --exclude-standard && git submodule --quiet foreach --recursive "git ls-files . -c -o --exclude-standard"', 'find %s -type f']
@@ -886,8 +990,10 @@ endif
 
 
 " vim-gdscript4
-
 let g:gdscript_use_python_indent = 1
+
+" telescope
+nnoremap <leader>l :Telescope buffers<CR>
 
 " -------------------------------------- Plugin configuration end }}}
 
@@ -1037,7 +1143,7 @@ command! Fname echo expand('%:p')
 " nnoremap <leader>bn :bn<CR>
 " nnoremap <leader>bp :bp<CR>
 nnoremap <leader>bl :b#<CR>
-nnoremap <leader>l :ls<CR>:b 
+" nnoremap <leader>l :ls<CR>:b 
 
 " buffergator
 let g:buffergator_suppress_keymaps = 1
@@ -1113,6 +1219,9 @@ nnoremap <F9> :lbelow<CR>
 
 " Make ctrl-c copy the selected text
 vmap <c-c> "+y
+
+" Exit terminal mode with escape
+tnoremap <Esc> <C-\><C-n>
 
 " -------------------------------------- Key mappings end }}}
 

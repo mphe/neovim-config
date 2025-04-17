@@ -1,6 +1,4 @@
 function ApplyCommonStylePre()
-    set guifont="Terminus"
-
     augroup AutocmdCommonStylesPre
         autocmd!
         autocmd VimEnter * call s:EarlyStyleOverrides()

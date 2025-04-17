@@ -24,7 +24,7 @@ require'bufferline'.setup {
 
   -- A buffer to this direction will be focused (if it exists) when closing the current buffer.
   -- Valid options are 'left' (the default) and 'right'
-  focus_on_close = 'left',
+  focus_on_close = 'previous',
 
   -- Hide inactive buffers and file extensions. Other options are `alternate`, `current`, and `visible`.
   hide = {extensions = true, inactive = false},
@@ -45,7 +45,7 @@ require'bufferline'.setup {
     -- Configure the base icons on the bufferline.
     buffer_index = false,
     buffer_number = false,
-    button = '󰅖',
+    button = '',
     -- Enables / disables diagnostic symbols
     -- diagnostics = {
     --   [vim.diagnostic.severity.ERROR] = {enabled = false},
@@ -192,27 +192,29 @@ require("scrollbar").setup({
     --     Hint = { text = { "-", "=" }, priority = 4, color = "green" },
     --     Misc = { text = { "-", "=" }, priority = 5, color = "purple" },
     -- },
-    excluded_filetypes = {
-        "",
-        "prompt",
-        "TelescopePrompt",
-    },
-    autocmd = {
-        render = {
-            "BufWinEnter",
-            "TabEnter",
-            "TermEnter",
-            "WinEnter",
-            "CmdwinLeave",
-            "TextChanged",
-            "VimResized",
-            "WinScrolled",
-            "InsertLeave",
-        },
-    },
+    -- excluded_filetypes = {
+    --     "",
+    --     "prompt",
+    --     "TelescopePrompt",
+    -- },
+    -- autocmd = {
+    --     render = {
+    --         "BufWinEnter",
+    --         "TabEnter",
+    --         "TermEnter",
+    --         "WinEnter",
+    --         "CmdwinLeave",
+    --         "TextChanged",
+    --         "VimResized",
+    --         "WinScrolled",
+    --         "InsertLeave",
+    --     },
+    -- },
     handlers = {
         diagnostic = false,
         search = false,
+        ale = false,
+        cursor = false,
     },
 })
 
@@ -282,7 +284,11 @@ require("paint").setup({
             -- filter = { filetype = "lua" },
             -- pattern = "%s*%-%-%-%s*(@%w+)",
             -- hl = "Constant",
-            filter = {},
+            filter = function(buf)
+                local buftype = vim.api.nvim_buf_get_option(buf, "buftype")
+                local filetype = vim.api.nvim_buf_get_option(buf, "filetype")
+                return buftype == "" and filetype ~= "dashboard"
+            end,
             pattern = "%s+$",
             hl = "Error",
         },
@@ -419,4 +425,21 @@ if vim.g.use_treesitter == 1 then
 
     require("nvim-treesitter.install").prefer_git = true
 end
+-- }}}
+
+-- dashboard-nvim {{{
+require('dashboard').setup {
+    disable_move = false,
+    change_to_vcs_root = true,
+    shortcut_type = "number"
+}
+-- }}}
+
+-- telescope {{{
+require('telescope').setup{
+    defaults = {
+        preview = false
+    },
+}
+
 -- }}}
