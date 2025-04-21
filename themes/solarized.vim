@@ -60,6 +60,7 @@ function ApplySolarizedStyle()
     exec 'highlight MagentaFg guifg=' . s:magenta
     exec 'highlight CyanFg guifg=' . s:cyan
     exec 'highlight SlightCyanFg guifg=' . s:slight_cyan
+    exec 'highlight RedFg guifg=' . s:red
 
     augroup SyntaxFix
         autocmd!
@@ -126,6 +127,9 @@ function ApplySolarizedStyle()
     hi! link Pmenu BrightBgFg
     highlight VertSplit  ctermbg=0 guibg=#073642
     highlight! link QuickFixLine CursorLine
+
+    " For some reason removed lines in git diffs are not red when not using fugitive.
+    hi! link Removed RedFg
 
     " coc
     highlight CocErrorSign   cterm=bold ctermbg=black ctermfg=9   gui=bold guibg=#073642 guifg=#cb4b16
