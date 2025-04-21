@@ -633,6 +633,7 @@ let g:ale_virtualtext_prefix = ' 󰨓 '
     " \ 'cpp': [ 'clangtidy' ],
     " \ 'c': [ 'clangtidy' ],
 let g:ale_linters = {
+    \ 'kotlin': [],
     \ 'cpp': [],
     \ 'c': [],
     \ 'java': [],
