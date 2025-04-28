@@ -438,9 +438,15 @@ end
 -- }}}
 
 -- telescope {{{
+local telescope_actions = require("telescope.actions")
 require('telescope').setup{
     defaults = {
-        preview = false
+        preview = false,
+        mappings = {
+            i = {
+                ["<esc>"] = telescope_actions.close,
+            },
+        },
     },
 }
 
