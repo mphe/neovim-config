@@ -5,6 +5,7 @@ autocmd!
 
 let g:use_treesitter = 0
 let s:use_vim_omnisharp = 0
+let g:config_use_dashboard = has('win32')
 let g:config_use_copilot = 1
 let g:config_use_codeium = 0
 
@@ -19,20 +20,20 @@ let s:guifontwide = 'Symbols_Nerd_Font'
 let s:guifontsize = 9
 
 
-if exists("g:neovide")
+if exists('g:neovide')
     let g:neovide_cursor_animation_length = 0
     let g:neovide_cursor_trail_size = 0
     let g:neovide_cursor_animate_in_insert_mode = v:false
     let g:neovide_cursor_animate_command_line = v:false
     let g:neovide_scroll_animation_length = 0.1
-    let g:neovide_cursor_vfx_mode = ""
+    let g:neovide_cursor_vfx_mode = ''
     let g:neovide_scale_factor=1.0
     let g:neovide_padding_top = 0
     let g:neovide_padding_bottom = 0
     let g:neovide_padding_right = 0
     let g:neovide_padding_left = 0
-    let g:neovide_title_background_color = "#002b36"
-    let g:neovide_title_text_color = "#93a1a1"
+    let g:neovide_title_background_color = '#002b36'
+    let g:neovide_title_text_color = '#93a1a1'
     let g:neovide_hide_mouse_when_typing = v:true
     let g:neovide_confirm_quit = v:false
     let g:neovide_remember_window_size = v:true
@@ -57,8 +58,8 @@ endif
 
 function! ChangeFontSize(delta)
     let s:guifontsize = s:guifontsize + a:delta
-    exec 'set guifont=' .. s:guifont .. ':h' .. s:guifontsize
-    exec 'set guifontwide=' .. s:guifontwide .. ':h' .. s:guifontsize
+    exec 'set guifont=' . s:guifont . ':h' . s:guifontsize
+    exec 'set guifontwide=' . s:guifontwide . ':h' . s:guifontsize
 endfunction
 
 nnoremap <expr><C-+> ChangeFontSize(1)
@@ -68,7 +69,7 @@ nnoremap <expr><C--> ChangeFontSize(-1)
 call ChangeFontSize(0)
 
 
-if has("win32")
+if has('win32')
     nnoremap <c-z> :tab terminal wsl<cr>
     autocmd TermOpen * startinsert
 endif
@@ -462,11 +463,6 @@ Plug 'shiracamus/vim-syntax-x86-objdump-d'
 
 Plug 'JafarDakhan/vim-gml'
 
-if has("win32")
-    " Startup screen
-    " Plug 'mhinz/vim-startify'
-endif
-
 if has('nvim')
     Plug 'rcarriga/nvim-notify'
     if g:use_treesitter
@@ -492,12 +488,6 @@ if has('nvim')
 
     Plug 'sakhnik/nvim-gdb'
 
-    if has("win32")
-        " Startup screen
-        " Requires nvim-web-devicons
-        Plug 'nvimdev/dashboard-nvim'
-    endif
-
     if g:config_use_copilot
         " Plug 'github/copilot.vim'
         " Plug 'samodostal/copilot-client.lua'
@@ -505,6 +495,15 @@ if has('nvim')
     elseif g:config_use_codeium
         Plug 'Exafunction/codeium.vim', { 'branch': 'main' }
     endif
+endif
+
+if g:config_use_dashboard
+    " Startup screen
+    " Plug 'mhinz/vim-startify'
+
+    " Startup screen
+    " Requires nvim-web-devicons
+    Plug 'nvimdev/dashboard-nvim'
 endif
 
 if s:use_vim_omnisharp

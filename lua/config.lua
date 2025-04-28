@@ -428,11 +428,13 @@ end
 -- }}}
 
 -- dashboard-nvim {{{
-require('dashboard').setup {
-    disable_move = false,
-    change_to_vcs_root = true,
-    shortcut_type = "number"
-}
+if vim.g.config_use_dashboard == 1 then
+    require('dashboard').setup {
+        disable_move = false,
+        change_to_vcs_root = true,
+        shortcut_type = "number"
+    }
+end
 -- }}}
 
 -- telescope {{{
