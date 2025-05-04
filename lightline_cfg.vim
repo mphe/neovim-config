@@ -1,11 +1,7 @@
 " lightline related configs
+scriptencoding utf-8
 
-let s:diagnostic_symbols = { 'error': "\uf05e  ", 'warning': "\uf071  ", 'info': "\uf05a  " }
-
-let s:error_symbol = "\uf05e  "
-let s:warning_symbol = "\uf071  "
-let s:info_symbol = "\uf05a  "
-
+let s:diagnostic_symbols = { 'error': g:config_icon_error . ' ', 'warning': g:config_icon_warning . ' ', 'info': g:config_icon_info . ' ' }
 
 " lightline {{{
 
@@ -60,9 +56,10 @@ let g:lightline.active = {
     \     [ 'lineinfo' ],
     \     [ 'fileformat', 'fileencoding', 'filetype' ],
     \     [ 'linter_infos', 'linter_warnings', 'linter_errors', 'linter_checking' ],
-    \     [ 'codeium', 'current_function' ],
+    \     [ 'codeium', ],
     \ ]
     \ }
+    " \     [ 'codeium', 'breadcrumbs' ],
 
 " \ 'left': [ [ 'filename' ] ],
 " \ 'right': []
@@ -71,6 +68,7 @@ let g:lightline.inactive = {
     \ 'right': [
     \     [ 'lineinfo' ],
     \     [ 'fileformat', 'fileencoding', 'filetype' ],
+    \     [ 'linter_infos', 'linter_warnings', 'linter_errors' ],
     \ ]
     \ }
 
@@ -87,10 +85,14 @@ let g:lightline.inactive = {
 let g:lightline.component = {
     \ 'lineinfo': '%3l:%-2v / %L',
     \ 'maxlines': '%L',
-    \ 'current_function': '%{%get(b:, "coc_symbol_line", "")%}',
     \ }
-    " \ 'current_function': '%{get(b:,"coc_current_function","")}',
 
+" if g:config_use_nvimlsp
+"     let g:lightline.component.breadcrumbs = '%{luaeval("require(\"lspsaga.symbol.winbar\").get_bar()")}'
+" elseif g:config_use_coc
+"     let g:lightline.component.breadcrumbs = '%{%get(b:, "coc_symbol_line", "")%}'
+"     " '%{get(b:,"coc_current_function","")}'
+" endif
 
 let g:lightline.component_expand = {
     \ 'linter_infos': 'LightlineDiagnosticsInfo',
@@ -107,7 +109,7 @@ let g:lightline.component_function = {
     \ 'fileencoding': 'LightLineFileEnc',
     \ 'filetype': 'LightLineFileType',
     \ 'customlineinfo': 'LightLineLineInfo',
-    \ 'codeium': 'CodeiumStatus'
+    \ 'codeium': 'CodeiumStatus',
     \ }
 
 let g:lightline.component_visible_condition = {
@@ -120,9 +122,6 @@ let g:lightline.component_type = {
     \ 'linter_checking': 'info',
     \ }
     " \ 'buffers': 'tabsel',
-
-" Required to make bufferline clickable
-" let g:lightline.component_raw = {'buffers': 1}
 
 " \ 'linter_checking': 'info',
 " \ 'linter_ok': 'info',
@@ -187,26 +186,30 @@ function! LightlineUpdateDiagnostics()
     let l:info = { 'error': 0, 'warning': 0, 'info': 0, 'checking': 0 }
 
     " coc
-    let l:cocinfo = get(b:, 'coc_diagnostic_info', {})
-    if !empty(cocinfo)
-        let l:info.error   += get(cocinfo, 'error', 0)
-        let l:info.warning += get(cocinfo, 'warning', 0)
-        let l:info.info    += get(cocinfo, 'information', 0) + get(cocinfo, 'hint', 0)
+    if g:config_use_coc
+        let l:cocinfo = get(b:, 'coc_diagnostic_info', {})
+        if !empty(cocinfo)
+            let l:info.error   += get(cocinfo, 'error', 0)
+            let l:info.warning += get(cocinfo, 'warning', 0)
+            let l:info.info    += get(cocinfo, 'information', 0) + get(cocinfo, 'hint', 0)
+        endif
+
+        " ale
+        if get(g:, 'ale_enabled', 0) == 1
+            let l:aleinfo = ale#statusline#Count(bufnr(''))
+            let l:info.error   += get(aleinfo, 'error', 0)   + get(aleinfo, 'style_error', 0)
+            let l:info.warning += get(aleinfo, 'warning', 0) + get(aleinfo, 'style_warning', 0)
+            let l:info.info    += get(aleinfo, 'info', 0)
+            let l:info.checking = ale#engine#IsCheckingBuffer(bufnr(''))
+        endif
     endif
 
-    " ale
-    if get(g:, 'ale_enabled', 0) == 1
-        let l:aleinfo = ale#statusline#Count(bufnr(''))
-        let l:info.error   += get(aleinfo, 'error', 0)   + get(aleinfo, 'style_error', 0)
-        let l:info.warning += get(aleinfo, 'warning', 0) + get(aleinfo, 'style_warning', 0)
-        let l:info.info    += get(aleinfo, 'info', 0)
-        let l:info.checking = ale#engine#IsCheckingBuffer(bufnr(''))
-    endif
-
-    " ycm
-    if exists('*youcompleteme#GetWarningCount')
-        let l:info.error += youcompleteme#GetErrorCount()
-        let l:info.warning += youcompleteme#GetWarningCount()
+    if g:config_use_nvimlsp
+        " ALE passes its diagnostics to the internal LSP, so we can just query vim diagnostics
+        let l:diags = luaeval('vim.diagnostic.count(0)')
+        let l:info.error   += get(diags, 0, 0)  " vim.diagnostic.severity.ERROR
+        let l:info.warning += get(diags, 1, 0)  " vim.diagnostic.severity.WARN
+        let l:info.info    += get(diags, 2, 0)  " vim.diagnostic.severity.INFO
     endif
 
     " store in buffer variable
@@ -214,14 +217,23 @@ function! LightlineUpdateDiagnostics()
     call lightline#update()
 endfun
 
-augroup lightline_diagnostics
-    autocmd!
-    autocmd User ALEJobStarted call LightlineUpdateDiagnostics()
-    autocmd User ALELintPost call LightlineUpdateDiagnostics()
-    autocmd User ALEFixPost call LightlineUpdateDiagnostics()
-    autocmd User CocDiagnosticChange call LightlineUpdateDiagnostics()
-    autocmd InsertLeave * call LightlineUpdateDiagnostics()
-augroup END
+if g:config_use_coc
+    augroup lightline_diagnostics
+        autocmd!
+        autocmd User ALEJobStarted call LightlineUpdateDiagnostics()
+        autocmd User ALELintPost call LightlineUpdateDiagnostics()
+        autocmd User ALEFixPost call LightlineUpdateDiagnostics()
+        autocmd User CocDiagnosticChange call LightlineUpdateDiagnostics()
+        autocmd InsertLeave * call LightlineUpdateDiagnostics()
+    augroup END
+elseif g:config_use_nvimlsp
+    augroup lightline_diagnostics
+        autocmd!
+        autocmd DiagnosticChanged * call LightlineUpdateDiagnostics()
+        " autocmd User LspDiagnosticsChanged call LightlineUpdateDiagnostics()
+        " autocmd InsertLeave * call LightlineUpdateDiagnostics()
+    augroup END
+endif
 
 function! LightlineGetDiagnosticsRaw(name)
     if !exists('b:_lightline_diagnostic_info')

@@ -264,3 +264,12 @@ command! CocIncomingCalls      call CocAction('showIncomingCalls')
 command! CocOutgoingCalls      call CocAction('showOutgoingCalls')
 command! CocSuperTypes         call CocAction('showSuperTypes')
 command! CocSubTypes           call CocAction('showSubTypes')
+
+function! ShowDiagnostics()
+    ALEDetail
+    call CocAction('diagnosticInfo')
+endfun
+
+nnoremap <leader>d :call ShowDiagnostics()<CR>
+
+

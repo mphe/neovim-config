@@ -3,15 +3,17 @@ scriptencoding utf-8
 " Clean autocmds
 autocmd!
 
-let g:use_treesitter = 0
 let s:use_vim_omnisharp = 0
+let g:config_use_coc = 0
+let g:config_use_nvimlsp = 1
 let g:config_use_dashboard = has('win32')
 let g:config_use_copilot = 1
 let g:config_use_codeium = 0
 
-if !has('nvim')
-    let g:use_treesitter = 0
-endif
+let g:config_icon_error = ' '
+let g:config_icon_warning = ' '
+let g:config_icon_info = ' '
+let g:config_icon_hint = ' '
 
 
 " Default font settings
@@ -72,6 +74,13 @@ call ChangeFontSize(0)
 if has('win32')
     nnoremap <c-z> :tab terminal wsl<cr>
     autocmd TermOpen * startinsert
+endif
+
+if g:config_use_nvimlsp
+    " Disable Neovim's default mappings starting with gr for lsp functionality
+    nunmap gri
+    nunmap gra
+    nunmap grn
 endif
 
 " -------------------------------------- General settings start {{{
@@ -195,6 +204,9 @@ set mouse=a
 " causing the sign column to appear and disappear constantly while typing.
 set signcolumn=yes
 
+" Default default border style of floating windows (Neovim 0.11+)
+set winborder=rounded
+
 " Enable doxygen tag highlighting
 let g:load_doxygen_syntax = 1
 
@@ -210,25 +222,77 @@ let g:python_indent.closed_paren_align_last_line = v:false
 " -------------------------------------- General settings end }}}
 
 " -------------------------------------- Plugin settings before loading {{{
-" ALE configs that need to be set before ALE is loaded
-let g:ale_use_neovim_diagnostics_api = 0
-let g:ale_lint_on_enter = 1
-let g:ale_lint_on_filetype_changed = 1
-let g:ale_lint_on_text_changed = 1
-let g:ale_lint_on_save = 1
-let g:ale_lint_on_insert_leave = 0
-let g:ale_lint_delay = 2000
+" ale
+let g:ale_use_neovim_diagnostics_api = 1
+let g:ale_completion_enabled = 0
+let g:ale_disable_lsp = 1
+" let g:ale_lint_on_enter = 1
+" let g:ale_lint_on_filetype_changed = 1
+" let g:ale_lint_on_text_changed = 1
+" let g:ale_lint_on_save = 1
+" let g:ale_lint_on_insert_leave = 0
+" let g:ale_lint_delay = 2000
 
-" Workaround ALE diagnostics disappearing upon saving when getting diagnostics from coc.nvim
-" https://github.com/dense-analysis/ale/discussions/3721
-" augroup ale_autocmd
-"     au!
-"     autocmd FileType typescript,gdscript3 let g:ale_lint_on_save = 0 |
-"                 \ let g:ale_lint_on_insert_leave = 0 |
-"                 \ let g:ale_lint_on_text_changed = 0 |
-"                 \ let g:ale_lint_on_enter = 0 |
-"                 \ let g:ale_lint_on_filetype_changed = 0
-" augroup END
+" can all be disabled because it's managed by internal nvim-lsp
+let g:ale_echo_cursor = 0
+let g:ale_set_loclist = 0
+let g:ale_set_signs = 0
+
+let g:ale_linters = {
+    \ 'kotlin': [],
+    \ 'cpp': [],
+    \ 'c': [],
+    \ 'java': [],
+    \ 'gdscript3': [],
+    \ 'tex': [],
+    \ 'css': [],
+    \ 'go': [],
+    \ 'cs': [ 'OmniSharp' ],
+    \ 'glsl': [ 'glslang' ],
+    \ }
+let g:ale_fixers = {
+    \ 'cpp': [],
+    \ 'c': [],
+    \ 'java': [],
+    \ }
+
+let g:ale_linters_ignore = [ 'lacheck', 'pyright', 'shell']
+let g:ale_pattern_options = {'\.tex$': {'ale_enabled': 0}}
+
+let g:ale_cs_csc_options = ' /warn:4 /langversion:7.2'
+let g:ale_nasm_nasm_options = '-f elf64'
+let g:ale_lua_luacheck_options = ''
+
+let g:ale_type_map = {
+            \ 'flake8': {'ES': 'I', 'WS': 'I'},
+            \ 'mypy':   {'ES': 'I', 'WS': 'I'},
+            \ 'pylint': {'ES': 'I', 'WS': 'I'},
+            \ 'vint':   {'ES': 'I', 'WS': 'I'},
+            \ 'luacheck': {'ES': 'I', 'WS': 'I'},
+            \ }
+
+" let g:ale_python_auto_pipenv = 1
+let g:ale_python_flake8_options = '--ignore=F403,F401,E201,E202,F841,E501,E221,E241,E722,F405'
+let g:ale_python_pylint_options = '-j 4 --ignored-modules=pyglet,scapy,numpy,matplotlib,pyplot --disable=C,syntax-error,too-few-public-methods,global-statement,useless-object-inheritance,try-except-raise,broad-except,too-many-branches,too-many-arguments,protected-access,chained-comparison,too-many-instance-attributes,unspecified-encoding'
+let g:ale_python_mypy_options = '--install-types --non-interactive --namespace-packages --show-error-codes --show-error-context --show-column-numbers --no-strict-optional --ignore-missing-imports --check-untyped-defs --allow-untyped-globals'
+let g:ale_python_mypy_ignore_invalid_syntax = 1
+let g:ale_python_mypy_show_notes = 0
+let g:ale_python_pylint_auto_pipenv = 1
+let g:ale_python_auto_pipenv = 1
+
+let b:ale_python_pyright_config = {
+\ 'pyright': {
+\   'disableLanguageServices': v:true,
+\ },
+\}
+let g:ale_use_neovim_diagnostics_api = 1
+let g:ale_completion_enabled = 0
+" let g:ale_lint_on_enter = 1
+" let g:ale_lint_on_filetype_changed = 1
+" let g:ale_lint_on_text_changed = 1
+" let g:ale_lint_on_save = 1
+" let g:ale_lint_on_insert_leave = 0
+" let g:ale_lint_delay = 2000
 
 " nvim-gdb
 let g:nvimgdb_disable_start_keymaps = 1
@@ -261,16 +325,6 @@ endfunction
 
 command! -nargs=1 HowLong call HowLong(<q-args>)
 
-
-" function RunClangTidy()
-"     let l:checks = join(ale#Var(bufnr('%'), 'cpp_clangtidy_checks'), ',')
-"     exec '!clang-tidy ' . shellescape(expand('%:p')) . ' --fix --fix-errors --checks=' . shellescape(l:checks)
-"     normal <esc>
-"     e
-"     ALELint
-" endfun
-"
-" command! ClangTidy call RunClangTidy()
 
 function! ProfileStart()
     profile start profile.log
@@ -338,94 +392,59 @@ call plug#begin(s:vim_cfg_path . '/plugged')
 
 " color schemes
 Plug 'ishan9299/nvim-solarized-lua' " Has treesitter support
-" Plug 'qualiabyte/vim-colorstepper'
 
-Plug 'scrooloose/nerdtree'
+Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'itchyny/lightline.vim'
 Plug 'Lokaltog/vim-easymotion'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
-" Plug 'tpope/vim-markdown'
 Plug 'tomtom/tcomment_vim'
 
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'Shougo/echodoc.vim'
+if g:config_use_coc
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+endif
+
+if g:config_use_nvimlsp
+    Plug 'neovim/nvim-lspconfig'
+    Plug 'nvimdev/lspsaga.nvim'
+    Plug 'seblyng/nvim-echo-diagnostics'
+    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " Needed for hover highlighting
+
+    " Autocompletion
+    Plug 'Saghen/blink.cmp', { 'tag': 'v1.*' }
+    " Plug 'Saghen/blink.compat'
+    " Plug 'quangnguyen30192/cmp-nvim-ultisnips'
+endif
 
 Plug 'Raimondi/delimitMate'
 Plug 'airblade/vim-gitgutter'
-Plug 'jeetsukumaran/vim-buffergator'
-
-Plug 'majutsushi/tagbar'
+Plug 'jeetsukumaran/vim-buffergator', { 'on': 'BuffergatorOpen' }
+Plug 'majutsushi/tagbar', { 'on': 'TagbarOpen' }
 Plug 'SirVer/ultisnips'
-" Plug 'reconquest/vim-pythonx'
 Plug 'honza/vim-snippets'
 Plug 'kien/ctrlp.vim'
 Plug 'kshenoy/vim-signature'
 Plug 'dense-analysis/ale'
-Plug 'vimperator/vimperator.vim'
-Plug 'Shougo/vimproc.vim'
+" Plug 'Shougo/vimproc.vim' " TODO: Is this obsolete?
 Plug 'dhruvasagar/vim-table-mode'
-" Plug '~/extdata/vim/grayout.vim'
-" Plug 'mphe/grayout.vim'
-" Plug 'LaTeX-Box-Team/LaTeX-Box'
-Plug 'lervag/vimtex'
 Plug 'kana/vim-textobj-indent'
 Plug 'kana/vim-textobj-user'
-
-" If you don't have nodejs and yarn
-" use pre build, add 'vim-plug' to the filetype list so vim-plug can update this plugin
-" see: https://github.com/iamcco/markdown-preview.nvim/issues/50
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
-" If you have nodejs
-" Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
-
+Plug 'gaving/vim-textobj-argument'
 Plug 'vim-scripts/ReplaceWithRegister'
-Plug 'derekwyatt/vim-fswitch'
-Plug 'derekwyatt/vim-protodef'
-Plug 'tmhedberg/SimpylFold'
-Plug 'Vimjas/vim-python-pep8-indent'
-Plug 'vim-python/python-syntax'
-Plug 'withgod/vim-sourcepawn'
 Plug 'junegunn/vim-easy-align'
 Plug 'osyo-manga/vim-over'
-Plug 'mphe/vim-gdscript4'
-Plug 'gaving/vim-textobj-argument'
 Plug 'farmergreg/vim-lastplace'
-Plug 'romainl/vim-cool'
-Plug 'neoclide/jsonc.vim'
+Plug 'romainl/vim-cool'  " improved hlsearch
 Plug 'dominikduda/vim_current_word'
-" Plug 'bfrg/vim-cpp-modern'
 Plug 'lambdalisue/suda.vim'
-
-" jekyll stuff
-Plug 'tpope/vim-liquid'
-
 Plug 'embear/vim-localvimrc'
-Plug 'amadeus/vim-convert-color-to'
-Plug 'mingchaoyan/vim-shaderlab'
-Plug 'wsdjeg/FlyGrep.vim'
-Plug 'tikhomirov/vim-glsl'
-" Plug 'beyondmarc/glsl.vim'
-" Plug 'petrbroz/vim-glsl'
-Plug 'captbaritone/better-indent-support-for-php-with-html'
-" Plug 'mattn/emmet-vim'  " Adds keybindings with <c-y> prefix
-Plug 'kosayoda/nvim-lightbulb'
-
 Plug 'inkarkat/vim-ingo-library'
 Plug 'inkarkat/vim-EnhancedJumps'
 Plug 'MattesGroeger/vim-bookmarks'
-" Plug 'Jorengarenar/vim-syntaxMarkerFold'
-
-" should be unnecessary because vim and neovim have qml support integrated now, but for some reason
-" it doesn't work for me
-Plug 'peterhoeg/vim-qml'
 
 " Auto detect indent
 Plug 'tpope/vim-sleuth'
-
-" IntelliJ a-> Neovim bridge
-" Plug 'beeender/Comrade'
 
 " Scrollbar with diagnostics and search markers
 Plug 'petertriho/nvim-scrollbar'
@@ -436,65 +455,39 @@ Plug 'AndrewRadev/sideways.vim'
 " Easy text exchange operator
 Plug 'tommcdo/vim-exchange'
 
-" Interact with jupyter from neovim
-Plug 'tzachar/magma-nvim', { 'do': ':UpdateRemotePlugins' }
-
-" Open a scratch buffer to quickly evaluate code
-Plug 'shift-d/scratch.nvim'
-
 " Preview colours in source code while editing
 Plug 'ap/vim-css-color'
 
-" typescript/javascript indent
-" Plug 'jason0x43/vim-js-indent'
+" TODO: Consider removing
+" Plug 'Konfekt/FastFold'
 
-Plug 'Konfekt/FastFold'
+Plug 'rcarriga/nvim-notify'
 
-Plug 'weirongxu/plantuml-previewer.vim'
-Plug 'tyru/open-browser.vim'
+" Required by: telescope, copilot, codeium.nvim
+Plug 'nvim-lua/plenary.nvim'
 
-" Custom symbol as color column
-" Plug 'lukas-reineke/virt-column.nvim'
+" Required by barbar.nvim, dashboard-nvim and lsp stuff
+Plug 'kyazdani42/nvim-web-devicons'
 
-" Generate TOC in markdown files
-Plug 'mzlogin/vim-markdown-toc'
+Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }
 
-Plug 'shiracamus/vim-syntax-x86-objdump-d'
+" Fix CursorHold performance
+Plug 'antoinemadec/FixCursorHold.nvim'
 
-Plug 'JafarDakhan/vim-gml'
+" Buffer bar
+Plug 'romgrk/barbar.nvim'
 
-if has('nvim')
-    Plug 'rcarriga/nvim-notify'
-    if g:use_treesitter
-        Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-    endif
+" Easy custom highlight patterns
+Plug 'folke/paint.nvim'
 
-    " Required by: telescope, copilot, codeium.nvim
-    Plug 'nvim-lua/plenary.nvim'
+Plug 'sakhnik/nvim-gdb'
 
-    " Required by barbar.nvim and dashboard-nvim
-    Plug 'kyazdani42/nvim-web-devicons'
-
-    Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }
-
-    " Fix CursorHold performance
-    Plug 'antoinemadec/FixCursorHold.nvim'
-
-    " Buffer bar
-    Plug 'romgrk/barbar.nvim'
-
-    " Easy custom highlight patterns
-    Plug 'folke/paint.nvim'
-
-    Plug 'sakhnik/nvim-gdb'
-
-    if g:config_use_copilot
-        " Plug 'github/copilot.vim'
-        " Plug 'samodostal/copilot-client.lua'
-        Plug 'zbirenbaum/copilot.lua'
-    elseif g:config_use_codeium
-        Plug 'Exafunction/codeium.vim', { 'branch': 'main' }
-    endif
+if g:config_use_copilot
+    " Plug 'github/copilot.vim'
+    " Plug 'samodostal/copilot-client.lua'
+    Plug 'zbirenbaum/copilot.lua'
+elseif g:config_use_codeium
+    Plug 'Exafunction/codeium.vim', { 'branch': 'main' }
 endif
 
 if g:config_use_dashboard
@@ -508,16 +501,65 @@ endif
 
 if s:use_vim_omnisharp
     Plug 'OmniSharp/omnisharp-vim'
+    Plug 'Shougo/echodoc.vim'
 endif
+
+" filetype stuff {{{
+Plug 'vimperator/vimperator.vim'
+Plug 'neoclide/jsonc.vim'
+Plug 'mphe/vim-gdscript4'
+Plug 'withgod/vim-sourcepawn'
+
+Plug 'derekwyatt/vim-fswitch', { 'for': ['c', 'cpp'] }
+Plug 'derekwyatt/vim-protodef', { 'for': ['c', 'cpp'] }
+Plug 'tmhedberg/SimpylFold', { 'for': ['python', 'gdscript'] }
+Plug 'Vimjas/vim-python-pep8-indent', { 'for': ['python', 'gdscript'] }
+Plug 'vim-python/python-syntax', { 'for': ['python'] }
+
+Plug 'lervag/vimtex', { 'for': 'tex' }
+
+" If you don't have nodejs and yarn
+" use pre build, add 'vim-plug' to the filetype list so vim-plug can update this plugin
+" see: https://github.com/iamcco/markdown-preview.nvim/issues/50
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+" If you have nodejs
+" Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
+
+Plug 'tpope/vim-liquid', { 'for': 'liquid' }  " jekyll
+
+" Plug 'mingchaoyan/vim-shaderlab'
+Plug 'tikhomirov/vim-glsl', { 'for': 'glsl' }
+
+Plug 'captbaritone/better-indent-support-for-php-with-html', { 'for': 'php' }
+" Plug 'mattn/emmet-vim'  " Disabled because it adds keybindings with <c-y> prefix
+
+" should be unnecessary because vim and neovim have qml support integrated now, but for some reason it doesn't work for me
+Plug 'peterhoeg/vim-qml', { 'for': 'qml' }
+
+Plug 'weirongxu/plantuml-previewer.vim', { 'for': 'plantuml' }
+Plug 'mzlogin/vim-markdown-toc', { 'for': 'markdown' }  " Generate TOC in markdown files
+Plug 'JafarDakhan/vim-gml', { 'for': 'gml' }
+Plug 'shiracamus/vim-syntax-x86-objdump-d'
+
+" Interact with jupyter from neovim
+Plug 'tzachar/magma-nvim', { 'do': ':UpdateRemotePlugins', 'for': 'python' }
+
+" }}}
+
 
 call plug#end()
 
 " -------------------------------------- vim-plug end }}}
 
+" -------------------------------------- lua {{{
+if has('nvim')
+    lua require("config")
+endif
+" -------------------------------------- lua }}}
 
 " -------------------------------------- Style config {{{
-call ApplyCommonStyle()
 call ApplySolarizedStyle()
+call ApplyCommonStyle()  " Must come afterwards otherwise changes would get overwritten when changing the colorscheme
 
 " set the split char tmux uses
 set fillchars+=vert:│
@@ -532,6 +574,7 @@ set fillchars+=vert:│
 let g:gitgutter_set_sign_backgrounds = 1
 let g:gitgutter_sign_added = '│'
 let g:gitgutter_sign_modified = '│'
+let g:gitgutter_sign_priority = 0
 " let g:gitgutter_sign_removed = '│'
 " let g:gitgutter_sign_removed_first_line = '│'
 " let g:gitgutter_sign_removed_above_and_below = '│'
@@ -624,86 +667,6 @@ let g:ultisnips_java_brace_style='nl'
 
 command! UltiSnipReload call UltiSnips#RefreshSnippets()
 
-" ale
-let g:ale_disable_lsp = 1
-let g:ale_virtualtext_cursor = 1
-let g:ale_virtualtext_prefix = ' 󰨓 '
-
-    " \ 'cpp': [ 'clangtidy' ],
-    " \ 'c': [ 'clangtidy' ],
-let g:ale_linters = {
-    \ 'kotlin': [],
-    \ 'cpp': [],
-    \ 'c': [],
-    \ 'java': [],
-    \ 'gdscript3': [],
-    \ 'tex': [],
-    \ 'css': [],
-    \ 'go': [],
-    \ 'cs': [ 'OmniSharp' ],
-    \ 'glsl': [ 'glslang' ],
-    \ }
-    " \ 'cpp': [ 'clangtidy' ],
-    " \ 'c': [ 'clangtidy' ],
-let g:ale_fixers = {
-    \ 'cpp': [],
-    \ 'c': [],
-    \ 'java': [],
-    \ }
-
-let g:ale_pattern_options = {'\.tex$': {'ale_enabled': 0}}
-
-let g:ale_linters_ignore = [ 'lacheck', 'pyright', 'shell']
-
-let g:ale_cs_csc_options = ' /warn:4 /langversion:7.2'
-
-" let g:ale_cpp_clangtidy_checks = [ 'modernize-use-override' ]
-" let g:ale_c_clangtidy_checks = [ 'modernize-use-override' ]
-" let g:ale_exclude_highlights = [ '.*clang-diagnostic-.*' ]
-
-let g:ale_type_map = {
-            \ 'flake8': {'ES': 'I', 'WS': 'I'},
-            \ 'mypy':   {'ES': 'I', 'WS': 'I'},
-            \ 'pylint': {'ES': 'I', 'WS': 'I'},
-            \ 'vint':   {'ES': 'I', 'WS': 'I'},
-            \ 'luacheck': {'ES': 'I', 'WS': 'I'},
-            \ }
-
-" let g:ale_python_auto_pipenv = 1
-let g:ale_python_flake8_options = '--ignore=F403,F401,E201,E202,F841,E501,E221,E241,E722,F405'
-let g:ale_python_pylint_options = '-j 4 --ignored-modules=pyglet,scapy,numpy,matplotlib,pyplot --disable=C,syntax-error,too-few-public-methods,global-statement,useless-object-inheritance,try-except-raise,broad-except,too-many-branches,too-many-arguments,protected-access,chained-comparison,too-many-instance-attributes,unspecified-encoding'
-let g:ale_python_mypy_options = '--install-types --non-interactive --namespace-packages --show-error-codes --show-error-context --show-column-numbers --no-strict-optional --ignore-missing-imports --check-untyped-defs --allow-untyped-globals'
-let g:ale_python_mypy_ignore_invalid_syntax = 1
-let g:ale_python_mypy_show_notes = 0
-let g:ale_python_pylint_auto_pipenv = 1
-let g:ale_python_auto_pipenv = 1
-
-let b:ale_python_pyright_config = {
-\ 'pyright': {
-\   'disableLanguageServices': v:true,
-\ },
-\}
-
-let g:ale_nasm_nasm_options = '-f elf64'
-
-let g:ale_lua_luacheck_options = ''
-
-let g:ale_echo_msg_format = '[ale][%linter%] %code: %%s'
-let g:ale_sign_warning = ' '
-let g:ale_sign_info = ' '
-let g:ale_sign_error = ' '
-" let g:ale_sign_warning = '!!'
-" let g:ale_sign_info = '?'
-" let g:ale_sign_error = "\uf05e  "
-" let g:ale_sign_warning = "\uf071  "
-" let g:ale_sign_info = "\uf05a  "
-
-
-" eclim
-let g:EclimCompletionMethod = 'omnifunc'
-autocmd FileType java
-    \ nnoremap <leader>fx :JavaCorrect<CR>|
-    \ nnoremap <leader>fi :JavaImport<CR>
 
 " CtrlP
 let g:ctrlp_show_hidden=1
@@ -725,10 +688,14 @@ let g:vimtex_fold_enabled = 1
 let g:vimtex_imaps_enabled = 0
 let g:vimtex_mappings_enabled = 0
 
-augroup vimtex_build_on_save
-    autocmd!
-    autocmd BufReadPost,BufWritePost * if &ft == 'tex' | exec 'CocCommand latex.Build' | endif
-augroup END
+if g:config_use_coc
+    augroup vimtex_build_on_save
+        autocmd!
+        autocmd BufReadPost,BufWritePost * if &ft == 'tex' | exec 'CocCommand latex.Build' | endif
+    augroup END
+
+    command! LatexJump CocCommand latex.ForwardSearch
+endif
 
 " latex box
 " let g:LatexBox_viewer = 'zathura'
@@ -743,7 +710,6 @@ augroup END
 
 " command! LatexPreview VimtexView
 " command! LatexJump VimtexView
-command! LatexJump CocCommand latex.ForwardSearch
 
 
 
@@ -971,14 +937,6 @@ nnoremap <leader>ta :TableModeRealign<CR>
 let g:vmt_list_item_char = '-'
 
 
-" copilot
-" let g:copilot_no_tab_map = v:true
-" imap <silent><script><expr> <C-J> copilot#Accept("\<C-J>")
-" let g:copilot_assume_mapped = v:true
-
-" lua vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
-
-
 " codeium
 if g:config_use_codeium
     let g:codeium_disable_bindings = 1
@@ -994,6 +952,12 @@ let g:gdscript_use_python_indent = 1
 
 " telescope
 nnoremap <leader>l :Telescope buffers<CR>
+
+" vim-exchange
+nmap cx <Plug>(Exchange)
+nmap cxx <Plug>(ExchangeLine)
+nmap cxc <Plug>(ExchangeClear)
+xmap X <Plug>(Exchange)
 
 " -------------------------------------- Plugin configuration end }}}
 
@@ -1015,7 +979,6 @@ autocmd FileType cmake,vim,lua setlocal foldmethod=marker
 autocmd FileType sourcepawn,json,jsonc setlocal commentstring=//\ %s
 autocmd FileType text,markdown,tex,unknown setlocal wrap
 autocmd FileType markdown setlocal shiftwidth=2 | setlocal tabstop=2 | setlocal formatoptions-=tc
-" autocmd FileType markdown call coc#config('diagnostic.displayByAle', v:false)
 autocmd FileType scala setlocal previewheight=5
 
 " cursorline in php or html files often severe massive lags
@@ -1205,15 +1168,6 @@ endfun
 nnoremap <silent> <F5> :call F5Refresh()<CR>
 inoremap <silent> <F5> <c-o>:call F5Refresh()<CR>
 
-function! ShowDiagnostics()
-  ALEDetail
-  call CocAction('diagnosticInfo')
-endfun
-
-" nnoremap <leader>d :ALEDetail<CR>
-nnoremap <leader>d :call ShowDiagnostics()<CR>
-
-
 nnoremap <F8> :labove<CR>
 nnoremap <F9> :lbelow<CR>
 
@@ -1222,6 +1176,41 @@ vmap <c-c> "+y
 
 " Exit terminal mode with escape
 tnoremap <Esc> <C-\><C-n>
+
+
+" Insert-mode Enter expression {{{
+
+" Copied from plugin source
+" TODO: Expose directly in Codeium plugin
+function! CodeiumGetCurrentCompletionItem() abort
+  if exists('b:_codeium_completions') &&
+        \ has_key(b:_codeium_completions, 'items') &&
+        \ has_key(b:_codeium_completions, 'index') &&
+        \ b:_codeium_completions.index < len(b:_codeium_completions.items)
+    return get(b:_codeium_completions.items, b:_codeium_completions.index)
+  endif
+
+  return v:null
+endfunction
+
+function OnEnterExpr()
+    if g:config_use_coc && coc#pum#visible()
+        return coc#pum#confirm()
+    elseif g:config_use_codeium && CodeiumGetCurrentCompletionItem() isnot v:null
+        return codeium#Accept()
+    elseif g:config_use_copilot && luaeval('copilot_accept()')
+        return ''
+    endif
+
+    return "\<Plug>delimitMateCR"
+    " return "\<CR>"
+endfun
+
+if !g:config_use_coc
+    inoremap <silent><expr> <CR> OnEnterExpr()
+endif
+
+" }}}
 
 " -------------------------------------- Key mappings end }}}
 
@@ -1273,8 +1262,36 @@ function! CheckSize()
 endfun
 
 
-runtime coc.vim
+if g:config_use_coc
+    runtime coc.vim
+endif
 
-if has('nvim')
-  lua require("config")
+if g:config_use_nvimlsp
+    command! IncomingCalls Lspsaga incoming_calls
+    command! OutgoingCalls Lspsaga outgoing_calls
+
+    nnoremap <leader>ac :Lspsaga code_action<cr>
+    nnoremap <leader>fx :lua vim.lsp.buf.code_action({apply=true})<cr>
+
+    " nnoremap <leader>d :Lspsaga show_line_diagnostics<cr>
+    " nnoremap <leader>D :Lspsaga show_buf_diagnostics<cr>
+    nnoremap <leader>d :lua vim.diagnostic.open_float()<cr>
+    nnoremap <leader>D :lua vim.diagnostic.setloclist()<cr>
+
+    nnoremap <leader>jd :Lspsaga goto_definition<cr>
+    nmap <leader>jD :vsp<cr><leader>jd
+    nmap <leader>JD :tab split<cr><leader>jd
+    nnoremap <leader>rn :Lspsaga rename<cr>
+    nnoremap <leader>jr :Lspsaga finder<cr>
+    nnoremap <leader>jR :lua vim.lsp.buf.references()<cr>
+
+    cnoreabbrev Lsp Lspsaga
+
+    function LspEnableDebugLogging()
+        lua vim.lsp.set_log_level 'trace'
+        lua require('vim.lsp.log').set_format_func(vim.inspect)
+    endfunction
+
+    command! LspServerCapabilities lua =vim.lsp.get_clients()[1].server_capabilities
+    command! LspEnableDebugLogging call LSPEnableDebugLogging()
 endif

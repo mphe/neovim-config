@@ -2,8 +2,6 @@
 set t_Co=256
 set background=dark
 
-let s:transparent_background = 0
-
 let s:base03  = '#002b36'
 let s:base02  = '#073642'
 let s:base01  = '#586e75'
@@ -46,12 +44,9 @@ function ApplySolarizedStylePre()
 endfun
 
 function ApplySolarizedStyle()
-    if has('nvim')
-        set termguicolors
-    endif
-
     colorscheme solarized
 
+    " Define a second Normal highlight because Normal might have a transparent background.
     exec 'highlight NormalBgFg gui=NONE guibg=' . s:base03 . ' guifg=' . s:base1
     exec 'highlight BrighterBgFg gui=NONE guibg=' . s:base02 . ' guifg=' . s:base4
     exec 'highlight BrightBgFg guibg=' . s:pum_bg . ' guifg=' . s:pum_fg
@@ -71,25 +66,10 @@ function ApplySolarizedStyle()
         " autocmd ColorScheme * call s:EarlyStyleOverrides()
     augroup END
 
-    " make comments non-italic
-    highlight Comment cterm=NONE gui=NONE
-
-    " treesitter (also used by coc implicitly) {{{
+    " treesitter {{{
     hi! link @module VioletFg
-    hi! link @keyword.storage @keyword
-    hi! link @comment Comment
     exec 'hi @property guifg=' . s:blue_light
-    " hi! link @property @variable
-    hi! link @constant Constant
-
-    " gdscript
-    hi! link @attribute.gdscript Keyword
-    hi! link @string.special.url.gdscript Macro  " $ or % node paths
-
     " }}}
-
-    " telescope
-    hi! link TelescopeSelection Pmenu
 
     " Search highlight color
     highlight Search cterm=NONE ctermbg=240 ctermfg=black gui=NONE guibg=#586e75 guifg=#073642
@@ -103,38 +83,57 @@ function ApplySolarizedStyle()
     highlight CursorLine ctermbg=Black cterm=NONE gui=NONE
     highlight CursorLineNr cterm=bold ctermfg=3 ctermbg=black gui=bold guifg=#b58900 guibg=#073642
 
-    " No underline in folds
-    highlight Folded cterm=bold gui=bold
-
     highlight SignColumn cterm=bold ctermbg=black gui=bold guibg=#073642
-    highlight! link StatusLineNC SignColumn
     highlight link WinSeparator LineNr
 
     highlight clear Error
     exec 'highlight Error cterm=undercurl ctermfg=1 gui=undercurl guisp=' . s:red
     highlight link SpellBad Error
+
     highlight DiagnosticUnderlineWarn gui=undercurl
     highlight DiagnosticUnderlineHint gui=undercurl
     highlight DiagnosticUnderlineInfo gui=undercurl
     highlight DiagnosticUnderlineOk gui=undercurl
     highlight DiagnosticUnderlineError gui=undercurl
 
-    if s:transparent_background
-        highlight Normal     ctermbg=NONE guibg=NONE
-    endif
+    " exec 'highlight DiagnosticError cterm=bold gui=bold guibg=' . s:base02 . 'guifg=' . s:orange
+    " exec 'highlight DiagnosticWarn cterm=bold gui=bold guibg=' . s:base02 . 'guifg=' . s:yellow
+    " exec 'highlight DiagnosticInfo cterm=bold gui=bold guibg=' . s:base03 . ' guifg=' . s:base1
+    exec 'highlight! DiagnosticError cterm=bold gui=bold guifg=' . s:orange
+    exec 'highlight! DiagnosticWarn cterm=bold gui=bold guifg=' . s:yellow
+    exec 'highlight! DiagnosticInfo cterm=bold gui=bold guifg=' . s:base1
+    highlight! link DiagnosticHint DiagnosticInfo
 
+    " highlight link DiagnosticVirtualTextError DiagnosticError
+    " highlight link DiagnosticVirtualTextWarn DiagnosticWarn
+    " highlight link DiagnosticVirtualTextInfo DiagnosticInfo
+    " highlight link DiagnosticVirtualTextHint DiagnosticHint
+
+    hi! link WinBar Normal
+    hi! link WinBarNC Normal
     highlight PmenuSbar  ctermfg=12 ctermbg=0
     hi! link Pmenu BrightBgFg
+    hi! link FloatBorder BlueFg
     highlight VertSplit  ctermbg=0 guibg=#073642
-    highlight! link QuickFixLine CursorLine
 
     " For some reason removed lines in git diffs are not red when not using fugitive.
     hi! link Removed RedFg
 
+    " blink.cmp
+    hi! link NormalFloat NormalBgFg
+    hi! link BlinkCmpCursorLineMenuHack NormalBgFg
+    hi! link BlinkCmpCursorLineSignatureHack NormalBgFg
+    hi! link BlinkCmpSignatureHelp NormalBgFg
+    hi! link BlinkCmpSignatureHelpBorder FloatBorder
+    hi! link BlinkCmpSignatureHelpActiveParameter BrightBgFg
+    hi! link BlinkCmpMenu NormalBgFg
+    hi! link BlinkCmpMenuSelection BrightBgFg
+    hi! link BlinkCmpMenuBorder FloatBorder
+
     " coc
-    highlight CocErrorSign   cterm=bold ctermbg=black ctermfg=9   gui=bold guibg=#073642 guifg=#cb4b16
-    highlight CocWarningSign cterm=bold ctermbg=black ctermfg=130 gui=bold guibg=#073642 guifg=#b58900
-    highlight CocInfoSign    cterm=bold ctermbg=black ctermfg=11  gui=bold guibg=#073642
+    highlight link CocErrorSign   DiagnosticError
+    highlight link CocWarningSign DiagnosticWarn
+    highlight link CocInfoSign    DiagnosticInfo
     highlight link CocHintSign CocInfoSign
     highlight CocErrorFloat   cterm=NONE ctermbg=black ctermfg=9   gui=NONE guibg=#094655 guifg=#cb4b16
     highlight CocWarningFloat cterm=NONE ctermbg=black ctermfg=130 gui=NONE guibg=#094655 guifg=#b58900
@@ -163,11 +162,6 @@ function ApplySolarizedStyle()
     " exec 'highlight CocInlayHintType guifg=' . s:yellow . ' guibg=' . s:pum_bg
     " exec 'highlight CocInlayHintType guibg=' . s:normal_bg
 
-    highlight link DiagnosticVirtualTextError CocErrorSign
-    highlight link DiagnosticVirtualTextWarn CocWarningSign
-    highlight link DiagnosticVirtualTextInfo CocInfoSign
-    highlight link DiagnosticVirtualTextHint CocHintSign
-
     " template arguments
     exec 'hi CocSemTypeTypeParameter guifg=' . s:base2
     hi link CocSemType CocSemTypeType
@@ -195,16 +189,6 @@ function ApplySolarizedStyle()
     highlight! link ALEVirtualTextError ALEErrorSign
     highlight! link ALEVirtualTextWarning ALEWarningSign
     highlight! link ALEVirtualTextInfo ALEInfoSign
-
-    " ycm
-    highlight link YcmWarningSign CocWarningSign
-    highlight link YcmErrorSign CocErrorSign
-    highlight link YcmErrorSection CocErrorHighlight
-    highlight link YcmErrorLine CocErrorLine
-
-    " Add this line at the start of the python syntax file
-    " syn match pythonFunctionCall "\zs\(\k\w*\)*\s*\ze("
-    highlight link pythonFunctionCall Function
 
     highlight CurrentWordTwins ctermbg=black guibg=#094655
     highlight link CurrentWord CurrentWordTwins
@@ -285,17 +269,21 @@ function s:ApplyBarBar()
     let visible_fg = current_fg
     let bufferline_bg = s:base03
     let modif_fg = s:red
+    let error_fg = s:orange
 
     exec 'highlight BufferCurrent           guibg=' . current_bg  . ' guifg=' . current_fg
     exec 'highlight BufferCurrentIcon       guibg=' . current_bg  . ' guifg=' . current_fg
     exec 'highlight BufferCurrentMod        guibg=' . current_bg  . ' guifg=' . modif_fg
     exec 'highlight BufferCurrentSign       guibg=' . current_bg  . ' guifg=' . bufferline_bg
+    exec 'highlight BufferCurrentERROR      guibg=' . current_bg  . ' guifg=' . error_fg
     exec 'highlight BufferInactive          guibg=' . inactive_bg . ' guifg=' . inactive_fg
     exec 'highlight BufferInactiveSign      guibg=' . inactive_bg . ' guifg=' . bufferline_bg
     exec 'highlight BufferInactiveMod       guibg=' . inactive_bg . ' guifg=' . modif_fg
+    exec 'highlight BufferInactiveERROR     guibg=' . inactive_bg  . ' guifg=' . error_fg
     exec 'highlight BufferVisible           guibg=' . visible_bg  . ' guifg=' . visible_fg
     exec 'highlight BufferVisibleSign       guibg=' . visible_bg  . ' guifg=' . bufferline_bg
     exec 'highlight BufferVisibleMod        guibg=' . visible_bg  . ' guifg=' . modif_fg
+    exec 'highlight BufferVisibleERROR      guibg=' . visible_bg  . ' guifg=' . error_fg
     exec 'highlight BufferTabpageFill       guibg=' . bufferline_bg . ' guifg=' . bufferline_bg
 
     " powerline

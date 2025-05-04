@@ -1,4 +1,7 @@
-local vim = vim
+local icon_error = vim.g.config_icon_error
+local icon_warning = vim.g.config_icon_warning
+local icon_info = vim.g.config_icon_info
+local icon_hint = vim.g.config_icon_hint
 
 -- barbar.nvim {{{
 -- config {{{
@@ -47,12 +50,12 @@ require'bufferline'.setup {
     buffer_number = false,
     button = '',
     -- Enables / disables diagnostic symbols
-    -- diagnostics = {
-    --   [vim.diagnostic.severity.ERROR] = {enabled = false},
-    --   [vim.diagnostic.severity.WARN] = {enabled = false},
-    --   [vim.diagnostic.severity.INFO] = {enabled = false},
-    --   [vim.diagnostic.severity.HINT] = {enabled = false},
-    -- },
+    diagnostics = {
+      [vim.diagnostic.severity.ERROR] = {enabled = true, icon = icon_error},
+      [vim.diagnostic.severity.WARN] = {enabled = false, icon = icon_warning},
+      [vim.diagnostic.severity.INFO] = {enabled = false, icon = icon_info},
+      [vim.diagnostic.severity.HINT] = {enabled = false, icon = icon_hint},
+    },
     filetype = {
       -- Sets the icon's highlight group.
       -- If false, will use nvim-web-devicons colors
@@ -211,37 +214,37 @@ require("scrollbar").setup({
     --     },
     -- },
     handlers = {
-        diagnostic = false,
+        diagnostic = true,
         search = false,
         ale = false,
         cursor = false,
     },
 })
 
-local mark_type_map = {
-    I = "Info",
-    W = "Warn",
-    E = "Error",
-}
-
-local function ll_handler(bufnr)
-    local winnr = vim.fn.get(vim.fn.win_findbuf(bufnr), 0, -1)
-    if winnr == -1 then
-        return {}
-    end
-
-    local ll = vim.fn.getloclist(winnr)
-    local marks = {}
-
-    for _, entry in pairs(ll) do
-        if (entry.bufnr or bufnr) == bufnr then
-            table.insert(marks, { line = entry.lnum, type = mark_type_map[entry.type]})
-        end
-    end
-    return marks
-end
-
-require("scrollbar.handlers").register("locationlist", ll_handler)
+-- local mark_type_map = {
+--     I = "Info",
+--     W = "Warn",
+--     E = "Error",
+-- }
+--
+-- local function ll_handler(bufnr)
+--     local winnr = vim.fn.get(vim.fn.win_findbuf(bufnr), 0, -1)
+--     if winnr == -1 then
+--         return {}
+--     end
+--
+--     local ll = vim.fn.getloclist(winnr)
+--     local marks = {}
+--
+--     for _, entry in pairs(ll) do
+--         if (entry.bufnr or bufnr) == bufnr then
+--             table.insert(marks, { line = entry.lnum, type = mark_type_map[entry.type]})
+--         end
+--     end
+--     return marks
+-- end
+--
+-- require("scrollbar.handlers").register("locationlist", ll_handler)
 -- }}}
 
 -- nvim-notify {{{
@@ -262,10 +265,10 @@ require("notify").setup({
 
     -- Icons for the different levels
     icons = {
-        ERROR = " ",
-        WARN = " ",
-        INFO = "",
-        DEBUG = "",
+        ERROR = icon_error,
+        WARN = icon_warning,
+        INFO = icon_info,
+        DEBUG = icon_hint,
         TRACE = "✎",
     },
 })
@@ -314,6 +317,18 @@ require("paint").setup({
             pattern = "\\s+case",
             hl = "Keyword",
         },
+        -- Highlight 'self'.
+        {
+            filter = { filetype = "python" },
+            pattern = "%f[%a]self%f[%A]",
+            hl = "Identifier",
+        },
+        -- Treat uppercase identifiers as constants. Overrides semantic tokens.
+        {
+            filter = { filetype = "python" },
+            pattern = "%f[%a0-9_][A-Z0-9_]+%f[^%a0-9_]",
+            hl = "Constant",
+        },
     },
 })
 -- }}}
@@ -324,25 +339,28 @@ if vim.g.config_use_copilot == 1 then
     require("copilot").setup()
 
     function copilot_show()
-      require("copilot.suggestion").next()
-      vim.api.nvim_buf_set_keymap(0, 'i', '<CR>', '<cmd>lua copilot_accept()<CR>', { noremap = true, silent = true })
-    end
-
-    function copilot_accept()
-      require("copilot.suggestion").accept()
-      copilot_cancel()
+        require("copilot.suggestion").next()
     end
 
     function copilot_cancel()
-      if require("copilot.suggestion").is_visible() then
-        require("copilot.suggestion").dismiss()
-      end
-      vim.api.nvim_buf_del_keymap(0, 'i', '<CR>')
+        if require("copilot.suggestion").is_visible() then
+            require("copilot.suggestion").dismiss()
+        end
+    end
+
+    function copilot_accept()
+        if require("copilot.suggestion").is_visible() then
+            require("copilot.suggestion").accept()
+            copilot_cancel()
+            return true
+        end
+
+        return false
     end
 
     vim.api.nvim_create_autocmd("InsertLeave", {
-      command = "silent! lua copilot_cancel()",
-      group = vim.api.nvim_create_augroup("custom_copilot_trigger", { clear = true }),
+        command = "silent! lua copilot_cancel()",
+        group = vim.api.nvim_create_augroup("custom_copilot_trigger", { clear = true }),
     })
 
     vim.api.nvim_set_keymap('i', '<C-c>', '<cmd>lua copilot_show()<CR>', { noremap = true, silent = true })
@@ -362,69 +380,73 @@ end
 -- }}}
 
 -- treesitter {{{
-if vim.g.use_treesitter == 1 then
+local use_treesitter = false
+local enabled_highlights = {
+    -- gdscript = true,
+    -- gdshader = true,
+}
+
+if use_treesitter then
     vim.wo.foldmethod = 'expr'
     vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+end
 
-    local enabled_parsers = {
-        -- "gdscript",
+require'nvim-treesitter.configs'.setup {
+    -- A list of parser names, or "all" (the listed parsers MUST always be installed)
+    ensure_installed = {
+        "markdown",
+        "markdown_inline",
+        "c",
+        "cpp",
+        "gdscript",
         -- "gdshader",
         "go",
-    }
-    local enabled_highlights = {
-        -- gdscript = true,
-        -- gdshader = true,
-    }
+        "python",
+    },
 
-    require'nvim-treesitter.configs'.setup {
-        -- A list of parser names, or "all" (the listed parsers MUST always be installed)
-        ensure_installed = enabled_parsers,
+    -- Install parsers synchronously (only applied to `ensure_installed`)
+    sync_install = false,
 
-        -- Install parsers synchronously (only applied to `ensure_installed`)
-        sync_install = false,
+    -- Automatically install missing parsers when entering buffer
+    -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
+    auto_install = false,
 
-        -- Automatically install missing parsers when entering buffer
-        -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
-        auto_install = false,
+    -- List of parsers to ignore installing (or "all")
+    -- ignore_install = { "javascript" },
 
-        -- List of parsers to ignore installing (or "all")
-        -- ignore_install = { "javascript" },
+    ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
+    -- parser_install_dir = "/some/path/to/store/parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
 
-        ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
-        -- parser_install_dir = "/some/path/to/store/parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
+    indent = {
+        enable = false
+    },
+    highlight = {
+        enable = use_treesitter,
 
-        indent = {
-            enable = false
-        },
-        highlight = {
-            enable = true,
+        -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
+        -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
+        -- the name of the parser)
+        -- list of language that will be disabled
+        -- disable = { "c", "rust" },
+        disable = function(lang, _buf)
+            return enabled_highlights[lang] == nil
+            -- Disable slow treesitter highlight for large files
+            -- local max_filesize = 100 * 1024 -- 100 KB
+            -- local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+            -- if ok and stats and stats.size > max_filesize then
+            --     return true
+            -- end
+        end,
 
-            -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
-            -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
-            -- the name of the parser)
-            -- list of language that will be disabled
-            -- disable = { "c", "rust" },
+        -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+        -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+        -- Using this option may slow down your editor, and you may see some duplicate highlights.
+        -- Instead of true it can also be a list of languages
+        additional_vim_regex_highlighting = {},
+    },
+}
 
-            disable = function(lang, _buf)
-                return enabled_highlights[lang] == nil
-                -- Disable slow treesitter highlight for large files
-                -- local max_filesize = 100 * 1024 -- 100 KB
-                -- local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-                -- if ok and stats and stats.size > max_filesize then
-                --     return true
-                -- end
-            end,
-
-            -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-            -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-            -- Using this option may slow down your editor, and you may see some duplicate highlights.
-            -- Instead of true it can also be a list of languages
-            additional_vim_regex_highlighting = { "gdscript" },
-        },
-    }
-
-    require("nvim-treesitter.install").prefer_git = true
-end
+require("nvim-treesitter.install").prefer_git = true
 -- }}}
 
 -- dashboard-nvim {{{
@@ -441,7 +463,7 @@ end
 local telescope_actions = require("telescope.actions")
 require('telescope').setup{
     defaults = {
-        preview = false,
+        -- preview = false,
         mappings = {
             i = {
                 ["<esc>"] = telescope_actions.close,
@@ -451,3 +473,286 @@ require('telescope').setup{
 }
 
 -- }}}
+
+if vim.g.config_use_nvimlsp == 1 then
+-- lspconfig {{{
+vim.api.nvim_create_autocmd('LspAttach', {
+    callback = function(args)
+        local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
+
+        -- Fix gopls semantic tokens: https://github.com/golang/go/issues/54531#issuecomment-1464982242
+        if client.name == 'gopls' and not client.server_capabilities.semanticTokensProvider then
+            local semantic = client.config.capabilities.textDocument.semanticTokens
+            client.server_capabilities.semanticTokensProvider = {
+                full = true,
+                legend = {tokenModifiers = semantic.tokenModifiers, tokenTypes = semantic.tokenTypes},
+                range = true,
+            }
+        end
+    end,
+})
+
+vim.diagnostic.config({
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = icon_error,
+            [vim.diagnostic.severity.WARN] = icon_warning,
+            [vim.diagnostic.severity.INFO] = icon_info,
+            [vim.diagnostic.severity.HINT] = icon_hint,
+        },
+        priority = 100,
+    },
+    -- virtual_lines = true,
+    virtual_text = true,
+})
+
+vim.lsp.inlay_hint.enable(true)
+vim.highlight.priorities.semantic_tokens = 95
+
+vim.lsp.enable({
+    'basedpyright',
+    -- 'jedi_language_server',
+    'bashls',
+    'clangd',
+    'cmake',
+    'csharp_ls',
+    'diagnosticls',
+    'gdscript',
+    'gdshader_lsp',
+    'gh_actions_ls',
+    'gopls',
+    'jsonls',
+    'ltex',
+    'lua_ls',
+    'tsserver',
+    'omnisharp',
+    'vimls',
+})
+
+vim.lsp.config("basedpyright", {
+    settings = {
+        basedpyright = {
+            analysis = {
+                inlayHints = {
+                    callArgumentNames = false
+                },
+                typeCheckingMode = "off",  -- Use mypy for type checking
+                diagnosticMode = "workspace",
+            },
+        },
+    },
+})
+
+vim.lsp.config("gopls", {
+    settings = {
+        ["gopls"] = {
+            gofumpt = true,
+            codelenses = {
+                gc_details = false,
+                generate = true,
+                regenerate_cgo = true,
+                run_govulncheck = true,
+                test = true,
+                tidy = true,
+                upgrade_dependency = true,
+                vendor = true,
+            },
+            hints = {
+                assignVariableTypes = true,
+                compositeLiteralFields = true,
+                compositeLiteralTypes = true,
+                constantValues = true,
+                functionTypeParameters = true,
+                parameterNames = true,
+                rangeVariableTypes = true,
+            },
+            analyses = {
+                nilness = true,
+                unusedparams = true,
+                unusedwrite = true,
+                useany = true,
+            },
+            semanticTokens = true,
+            usePlaceholders = true,
+            completeUnimported = true,
+            staticcheck = true,
+            directoryFilters = { "-.git", "-.vscode", "-.idea", "-.vscode-test", "-node_modules" },
+        },
+    },
+})
+-- }}}
+
+-- blink.cmp {{{
+-- https://cmp.saghen.dev/installation
+require("blink.cmp").setup {
+    -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
+    -- 'super-tab' for mappings similar to vscode (tab to accept)
+    -- 'enter' for enter to accept
+    -- 'none' for no mappings
+    --
+    -- All presets have the following mappings:
+    -- C-space: Open menu or open docs if already open
+    -- C-n/C-p or Up/Down: Select next/previous item
+    -- C-e: Hide menu
+    -- C-k: Toggle signature help (if signature.enabled = true)
+    --
+    -- See :h blink-cmp-config-keymap for defining your own keymap
+    keymap = {
+        preset = 'default',
+        -- ['<Tab>'] = { 'insert_next', 'fallback' },
+        -- ['<S-Tab>'] = { 'insert_prev', 'fallback' },
+        ['<Tab>'] = { 'select_next', 'fallback' },
+        ['<S-Tab>'] = { 'select_prev', 'fallback' },
+        ['<CR>'] = { "fallback_to_mappings" },
+        ['<C-e>'] = { "fallback_to_mappings" },
+        ['<c-f>'] = { 'scroll_documentation_down', 'fallback' },
+        ['<c-b>'] = { 'scroll_documentation_up', 'fallback' },
+    },
+
+    cmdline = {
+        keymap = {
+            preset = "none",
+            -- ['<Tab>'] = { 'show_and_insert', 'accept' },
+            -- ['<Tab>'] = { 'show', 'accept' },
+        },
+        completion = { menu = { auto_show = false } }
+    },
+
+    appearance = {
+        -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+        -- Adjusts spacing to ensure icons are aligned
+        nerd_font_variant = 'mono',
+        use_nvim_cmp_as_default = true,
+    },
+
+    completion = {
+        documentation = { auto_show = true },
+        accept = {
+            auto_brackets = { enabled = false },
+        },
+        list = {
+            selection = {
+                preselect = false,
+                auto_insert = true
+            },
+        },
+        menu = {
+            auto_show = true,
+            -- draw = {
+            --     columns = {
+            --         { "kind_icon" },
+            --         { "label", "label_description" },
+            --         -- { "label", "label_description", gap = 1 },
+            --         -- { "kind_icon", "kind" }
+            --     },
+            -- }
+        },
+        ghost_text = { enabled = false },
+        trigger = {
+            -- When true, will prefetch the completion items when entering insert mode
+            prefetch_on_insert = true,
+        },
+    },
+
+    signature = {
+        enabled = true,
+        window = {
+            -- border = "none",
+            -- show_documentation = false
+        },
+    },
+
+    -- Default list of enabled providers defined so that you can extend it
+    -- elsewhere in your config, without redefining it, due to `opts_extend`
+    sources = {
+        default = { 'lsp', 'path', 'snippets', 'buffer' },
+
+        providers = {
+            path = {
+                opts = {
+                    -- Path completion from cwd instead of current buffer's directory
+                    get_cwd = function(_)
+                        return vim.fn.getcwd()
+                    end,
+                },
+            },
+            buffer = {
+                opts = {
+                    -- Buffer completion from all open buffers
+                    get_bufnrs = function()
+                        return vim.tbl_filter(function(bufnr)
+                            return vim.bo[bufnr].buftype == ''
+                        end, vim.api.nvim_list_bufs())
+                    end
+                }
+            }
+        }
+    },
+
+    -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
+    -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
+    -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
+    --
+    -- See the fuzzy documentation for more information
+    fuzzy = {
+        implementation = "prefer_rust_with_warning",
+        sorts = {
+            "exact",
+            "score",
+            "sort_text",
+        },
+    }
+}
+
+-- https://nvimdev.github.io/lspsaga/
+require("lspsaga").setup {
+    ui = {
+        border = "rounded",
+        button = { "", "" }  -- Remove slanted powerline symbols appearing in floating window titles
+    },
+    lightbulb = {
+        virtual_text = false,
+        -- debounce = 0,
+    },
+    symbol_in_winbar = {
+        -- enable = false,
+        separator = ' > ',
+        -- color_mode = false,
+        -- show_file = false,
+        -- folder_level = 0,
+        hide_keyword = true,
+        show_server_name = true,
+        only_in_cursor = false,
+    },
+    code_action = {
+        keys = {
+            quit = { "q", "<esc>" }
+        }
+    },
+    finder = {
+        keys = {
+            shuttle = "<c-w>",
+            quit = { "q", "<esc>" }
+        },
+        layout = "normal",
+        left_width = 0.2,
+        right_width = 0.5,
+    }
+}
+
+-- }}}
+
+-- echo diagnostics {{{
+-- https://github.com/seblyng/nvim-echo-diagnostics
+require("echo-diagnostics").setup({
+    show_diagnostic_number = false,
+    show_diagnostic_source = true,
+})
+
+vim.api.nvim_create_autocmd("CursorHold", {
+    pattern = { "*", },
+    callback = require("echo-diagnostics").echo_line_diagnostic,
+    group = vim.api.nvim_create_augroup("echo_diagnostics", { clear = true }),
+})
+-- }}}
+end
