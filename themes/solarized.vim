@@ -119,6 +119,9 @@ function ApplySolarizedStyle()
     " For some reason removed lines in git diffs are not red when not using fugitive.
     hi! link Removed RedFg
 
+    highlight LspCodeLens guibg=#073642 guifg=#6C71C4
+    highlight! link LspInlayHint LspCodeLens
+
     " blink.cmp
     hi! link NormalFloat NormalBgFg
     hi! link BlinkCmpCursorLineMenuHack NormalBgFg

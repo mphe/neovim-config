@@ -603,7 +603,7 @@ require("blink.cmp").setup {
         -- ['<S-Tab>'] = { 'insert_prev', 'fallback' },
         ['<Tab>'] = { 'select_next', 'fallback' },
         ['<S-Tab>'] = { 'select_prev', 'fallback' },
-        ['<CR>'] = { "fallback_to_mappings" },
+        ['<CR>'] = { "accept", "fallback_to_mappings" },
         ['<C-e>'] = { "fallback_to_mappings" },
         ['<c-f>'] = { 'scroll_documentation_down', 'fallback' },
         ['<c-b>'] = { 'scroll_documentation_up', 'fallback' },
@@ -638,14 +638,15 @@ require("blink.cmp").setup {
         },
         menu = {
             auto_show = true,
-            -- draw = {
-            --     columns = {
-            --         { "kind_icon" },
-            --         { "label", "label_description" },
-            --         -- { "label", "label_description", gap = 1 },
-            --         -- { "kind_icon", "kind" }
-            --     },
-            -- }
+            draw = {
+                columns = {
+                    { "kind_icon" },
+                    { "label", "label_description", gap = 1 },
+                    { "source_id" },
+                    -- { "label", "label_description", gap = 1 },
+                    -- { "kind_icon", "kind" }
+                },
+            }
         },
         ghost_text = { enabled = false },
         trigger = {
