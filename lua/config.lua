@@ -732,12 +732,15 @@ require("lspsaga").setup {
     },
     finder = {
         keys = {
-            shuttle = "<c-w>",
+            -- shuttle = "<c-w>",
             quit = { "q", "<esc>" }
         },
         layout = "normal",
         left_width = 0.2,
         right_width = 0.5,
+    },
+    breadcrumbs = {
+        delay = 300,
     }
 }
 
