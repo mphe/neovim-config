@@ -407,6 +407,7 @@ endif
 
 if g:config_use_nvimlsp
     Plug 'neovim/nvim-lspconfig'
+    Plug 'p00f/clangd_extensions.nvim'
     Plug 'nvimdev/lspsaga.nvim'
     Plug 'seblyng/nvim-echo-diagnostics'
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " Needed for hover highlighting
