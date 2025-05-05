@@ -66,6 +66,9 @@ function ApplySolarizedStyle()
         " autocmd ColorScheme * call s:EarlyStyleOverrides()
     augroup END
 
+    " Make Lspsaga's breadcrumb folder style yellow
+    hi! link SagaFolder Type
+
     " treesitter {{{
     hi! link @module VioletFg
     exec 'hi @property guifg=' . s:blue_light
