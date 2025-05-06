@@ -27,6 +27,8 @@ function ApplyCommonStyle()
     " Neovim 0.11 seems to inverse the status/tab line styles which causes inverted lightline rendering
     highlight StatusLine gui=NONE
     highlight StatusLineNC gui=NONE
+    highlight StatusLineTerm gui=NONE
+    highlight StatusLineTermNC gui=NONE
     highlight TabLine gui=NONE
     highlight TabLineFill gui=NONE
 
@@ -51,11 +53,16 @@ function ApplyCommonStyle()
     " Prevent LSP semantic tokens overriding custom highlights
     hi clear @lsp.type.variable
 
+    " Lspsaga fixes
+    hi! link SagaClass Type
+    hi! link SagaNamespace @namespace
+
     " treesitter fixes {{{
     hi! link @keyword.storage @keyword
     hi! link @comment Comment
     " hi! link @property @variable
     hi! link @constant Constant
+    hi! link @namespace @module
 
     " python
     " hi! link @lsp.mod.readonly.python Constant
