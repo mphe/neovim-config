@@ -2,6 +2,12 @@ if has('nvim')
     set termguicolors
 endif
 
+if has('win32')
+    " for wezterm undercurl support
+    let &t_Cs = "\e[4:3m"
+    let &t_Ce = "\e[4:0m"
+endif
+
 let s:transparent_background = 0
 
 function ApplyCommonStylePre()
@@ -23,6 +29,12 @@ function ApplyCommonStyle()
     if s:transparent_background
         highlight Normal     ctermbg=NONE guibg=NONE
     endif
+
+    augroup CommonSyntaxFixes
+        autocmd!
+        autocmd FileType c,cpp call s:CSyntaxFixes()
+        autocmd FileType scala call s:ScalaSyntaxFixes()
+    augroup END
 
     " Neovim 0.11 seems to inverse the status/tab line styles which causes inverted lightline rendering
     highlight StatusLine gui=NONE
@@ -56,6 +68,8 @@ function ApplyCommonStyle()
     " Lspsaga fixes
     hi! link SagaClass Type
     hi! link SagaNamespace @namespace
+    hi! link SagaFolder Normal  " Make Lspsaga's breadcrumb folder not red
+    " hi! link SagaFolder Type
 
     " treesitter fixes {{{
     hi! link @keyword.storage @keyword
@@ -72,4 +86,26 @@ function ApplyCommonStyle()
     hi! link @attribute.gdscript Keyword
     hi! link @string.special.url.gdscript Macro  " $ or % node paths
     " }}}
+endfun
+
+" https://vi.stackexchange.com/questions/16813/avoid-highlighting-defined-by-matchadd-in-comments
+function! s:CSyntaxFixes()
+    hi link doxygenBrief Comment
+    hi link doxygenStart doxygenBrief
+    hi link doxygenComment doxygenBrief
+    hi link doxygenContinueComment doxygenBrief
+endfun
+
+function! s:ScalaSyntaxFixes()
+    highlight! link scalaSquareBracketsBrackets Normal
+    highlight! link scalaInstanceDeclaration Type
+    highlight! link scalaCapitalWord Type
+    highlight! link scalaCapitalWord Function
+    highlight! link scalaKeywordModifier Keyword
+    highlight! CocErrorLine ctermbg=NONE guibg=NONE
+    highlight! ALEWarning cterm=NONE gui=NONE
+
+    " Add this line at the start of the python syntax file
+    syn match scalaFunctionCall "\zs\(\k\w*\)*\s*\ze("
+    highlight link scalaFunctionCall Function
 endfun

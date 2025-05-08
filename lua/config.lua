@@ -30,7 +30,7 @@ require'bufferline'.setup {
   focus_on_close = 'previous',
 
   -- Hide inactive buffers and file extensions. Other options are `alternate`, `current`, and `visible`.
-  hide = {extensions = true, inactive = false},
+  hide = {extensions = false, inactive = false},
 
   -- Disable highlighting alternate buffers
   highlight_alternate = false,
@@ -51,7 +51,7 @@ require'bufferline'.setup {
     button = '',
     -- Enables / disables diagnostic symbols
     diagnostics = {
-      [vim.diagnostic.severity.ERROR] = {enabled = true, icon = icon_error},
+      [vim.diagnostic.severity.ERROR] = {enabled = false, icon = icon_error},
       [vim.diagnostic.severity.WARN] = {enabled = false, icon = icon_warning},
       [vim.diagnostic.severity.INFO] = {enabled = false, icon = icon_info},
       [vim.diagnostic.severity.HINT] = {enabled = false, icon = icon_hint},
@@ -280,13 +280,15 @@ vim.notify = require("notify")
 -- paint.nvim {{{
 require("paint").setup({
     highlights = {
+        -- filter can be a table of buffer options that should match,
+        -- or a function called with buf as param that should return true.
+        -- The example below will paint @something in comments with Constant
+        -- {
+        --     filter = { filetype = "lua" },
+        --     pattern = "%s*%-%-%-%s*(@%w+)",
+        --     hl = "Constant",
+        -- }
         {
-            -- filter can be a table of buffer options that should match,
-            -- or a function called with buf as param that should return true.
-            -- The example below will paint @something in comments with Constant
-            -- filter = { filetype = "lua" },
-            -- pattern = "%s*%-%-%-%s*(@%w+)",
-            -- hl = "Constant",
             filter = function(buf)
                 local buftype = vim.api.nvim_buf_get_option(buf, "buftype")
                 local filetype = vim.api.nvim_buf_get_option(buf, "filetype")
@@ -733,11 +735,12 @@ require("lspsaga").setup {
     finder = {
         keys = {
             -- shuttle = "<c-w>",
-            quit = { "q", "<esc>" }
+            quit = { "q", "<esc>" },
+            toggle_or_open = { "o", "<cr>" }
         },
         layout = "normal",
-        left_width = 0.2,
-        right_width = 0.5,
+        -- left_width = 0.2,
+        -- right_width = 0.5,
     },
     breadcrumbs = {
         delay = 300,

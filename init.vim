@@ -47,6 +47,15 @@ if exists('g:neovide')
     let g:neovide_light_radius = 5
     let g:neovide_floating_corner_radius = 0.5
 
+    " turn off all animations
+    let g:neovide_position_animation_length = 0
+    let g:neovide_cursor_animation_length = 0.00
+    let g:neovide_cursor_trail_size = 0
+    let g:neovide_cursor_animate_in_insert_mode = false
+    let g:neovide_cursor_animate_command_line = false
+    let g:neovide_scroll_animation_far_lines = 0
+    let g:neovide_scroll_animation_length = 0.00
+
     " Use Nerd Font because Bitmap fonts are not supported and disable AA
     let s:guifont = 'Terminess_Nerd_Font:#e-alias'
     set linespace=-2
@@ -457,10 +466,10 @@ Plug 'AndrewRadev/sideways.vim'
 Plug 'tommcdo/vim-exchange'
 
 " Preview colours in source code while editing
-Plug 'ap/vim-css-color'
+" Plug 'ap/vim-css-color'
 
 " TODO: Consider removing
-" Plug 'Konfekt/FastFold'
+Plug 'Konfekt/FastFold'
 
 Plug 'rcarriga/nvim-notify'
 
@@ -473,7 +482,8 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }
 
 " Fix CursorHold performance
-Plug 'antoinemadec/FixCursorHold.nvim'
+" FIXME: Maybe remove, apparently not needed anymore
+" Plug 'antoinemadec/FixCursorHold.nvim'
 
 " Buffer bar
 Plug 'romgrk/barbar.nvim'
@@ -1279,7 +1289,8 @@ if g:config_use_nvimlsp
     nnoremap <leader>d :lua vim.diagnostic.open_float()<cr>
     nnoremap <leader>D :lua vim.diagnostic.setloclist()<cr>
 
-    nnoremap <leader>jd :Lspsaga goto_definition<cr>
+    " nnoremap <leader>jd :Lspsaga goto_definition<cr>
+    nnoremap <leader>jd :lua vim.lsp.buf.definition()<cr>
     nmap <leader>jD :vsp<cr><leader>jd
     nmap <leader>JD :tab split<cr><leader>jd
     nnoremap <leader>rn :Lspsaga rename<cr>

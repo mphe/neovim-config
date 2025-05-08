@@ -57,17 +57,10 @@ function ApplySolarizedStyle()
     exec 'highlight SlightCyanFg guifg=' . s:slight_cyan
     exec 'highlight RedFg guifg=' . s:red
 
-    augroup SyntaxFix
+    augroup SolarizedSyntaxFixes
         autocmd!
-        autocmd FileType c,cpp call s:CSyntaxFixes()
-        autocmd FileType scala call s:ScalaSyntaxFixes()
         autocmd FileType markdown call s:MarkdownStyles()
-        " autocmd VimEnter * call s:EarlyStyleOverrides()
-        " autocmd ColorScheme * call s:EarlyStyleOverrides()
     augroup END
-
-    " Make Lspsaga's breadcrumb folder style yellow
-    hi! link SagaFolder Type
 
     " treesitter {{{
     hi! link @module VioletFg
@@ -214,31 +207,6 @@ function ApplySolarizedStyle()
 
     " tagbar
     hi link TagbarAccessProtected BlueFg
-endfun
-
-
-" https://vi.stackexchange.com/questions/16813/avoid-highlighting-defined-by-matchadd-in-comments
-function! s:CSyntaxFixes()
-    " let l:commentassert = '\(\/\/.*\|\/\*.*\)\@<!'
-    " call matchadd('cString', l:commentassert . '".\{-}"')
-    hi doxygenBrief ctermfg=10 guifg=#586e75 gui=italic cterm=italic
-    hi link doxygenStart doxygenBrief
-    hi link doxygenComment doxygenBrief
-    hi link doxygenContinueComment doxygenBrief
-endfun
-
-function! s:ScalaSyntaxFixes()
-    highlight! link scalaSquareBracketsBrackets Normal
-    highlight! link scalaInstanceDeclaration Type
-    highlight! link scalaCapitalWord Type
-    highlight! link scalaCapitalWord Function
-    highlight! link scalaKeywordModifier Keyword
-    highlight! CocErrorLine ctermbg=NONE guibg=NONE
-    highlight! ALEWarning cterm=NONE gui=NONE
-
-    " Add this line at the start of the python syntax file
-    syn match scalaFunctionCall "\zs\(\k\w*\)*\s*\ze("
-    highlight link scalaFunctionCall Function
 endfun
 
 function! s:MarkdownStyles()
