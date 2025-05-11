@@ -494,6 +494,25 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end,
 })
 
+-- Custom highlight conditions (https://github.com/neovim/neovim/pull/22022)
+local st = vim.lsp.semantic_tokens
+vim.api.nvim_create_autocmd("LspTokenUpdate", {
+    callback = function(args)
+        local token = args.data.token
+
+        -- Highlight global/filescope constant variables with @constant
+        if
+            token.type == "variable"
+            and token.modifiers.readonly
+            and (token.modifiers.globalScope or token.modifiers.fileScope)
+            then
+                st.highlight_token(token, args.buf, args.data.client_id, "@constant")
+            end
+        end,
+    })
+
+vim.api.nvim_set_hl(0, 'MyMutableGlobalHL', { fg = 'red' })
+
 vim.diagnostic.config({
     signs = {
         text = {
