@@ -246,6 +246,7 @@ let g:ale_disable_lsp = 1
 let g:ale_echo_cursor = 0
 let g:ale_set_loclist = 0
 let g:ale_set_signs = 0
+let g:ale_cache_executable_check_failures = 1
 
 let g:ale_linters = {
     \ 'kotlin': [],
