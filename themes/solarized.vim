@@ -51,11 +51,13 @@ function ApplySolarizedStyle()
     exec 'highlight BrighterBgFg gui=NONE guibg=' . s:base02 . ' guifg=' . s:base4
     exec 'highlight BrightBgFg guibg=' . s:pum_bg . ' guifg=' . s:pum_fg
     exec 'highlight BlueFg guifg=' . s:blue
+    exec 'highlight SlightBlueFg guifg=' . s:blue_light
     exec 'highlight VioletFg guifg=' . s:violet
     exec 'highlight MagentaFg guifg=' . s:magenta
     exec 'highlight CyanFg guifg=' . s:cyan
     exec 'highlight SlightCyanFg guifg=' . s:slight_cyan
     exec 'highlight RedFg guifg=' . s:red
+    exec 'highlight WhiteFg guifg=' . s:base2
 
     augroup SolarizedSyntaxFixes
         autocmd!
@@ -64,7 +66,8 @@ function ApplySolarizedStyle()
 
     " treesitter {{{
     hi! link @module VioletFg
-    exec 'hi @property guifg=' . s:blue_light
+    hi! link @property SlightBlueFg
+    hi! link @lsp.type.typeParameter WhiteFg
     " }}}
 
     " Search highlight color

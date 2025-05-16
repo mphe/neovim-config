@@ -9,6 +9,7 @@ let g:config_use_nvimlsp = 1
 let g:config_use_dashboard = has('win32')
 let g:config_use_copilot = 1
 let g:config_use_codeium = 0
+let g:config_use_scrollbar = 1  " Might cause performance issues on Windows
 
 let g:config_icon_error = ' '
 let g:config_icon_warning = ' '
@@ -51,12 +52,13 @@ if exists('g:neovide')
     let g:neovide_position_animation_length = 0
     let g:neovide_cursor_animation_length = 0.00
     let g:neovide_cursor_trail_size = 0
-    let g:neovide_cursor_animate_in_insert_mode = false
-    let g:neovide_cursor_animate_command_line = false
+    let g:neovide_cursor_animate_in_insert_mode = v:false
+    let g:neovide_cursor_animate_command_line = v:false
     let g:neovide_scroll_animation_far_lines = 0
     let g:neovide_scroll_animation_length = 0.00
 
     " Use Nerd Font because Bitmap fonts are not supported and disable AA
+    " let s:guifont = 'Terminus_(TTF)'
     let s:guifont = 'Terminess_Nerd_Font:#e-alias'
     set linespace=-2
 
@@ -97,6 +99,9 @@ syntax enable
 set number
 set noruler
 set noshowcmd
+
+set title
+set titlestring=%t\ -\ Nvim
 
 " tab size = 4, spaces instead of tabs, and auto indent
 set shiftwidth=4
@@ -351,6 +356,8 @@ endfunction
 " change directory to current file
 command! Cdhere cd %:h
 
+runtime rename.vim
+
 
 " Better GQ operator that uses colorcolumn as text width {{{
 " See also
@@ -403,7 +410,8 @@ call plug#begin(s:vim_cfg_path . '/plugged')
 " color schemes
 Plug 'ishan9299/nvim-solarized-lua' " Has treesitter support
 
-Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
+Plug 'nvim-tree/nvim-tree.lua'
+" Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'itchyny/lightline.vim'
 Plug 'Lokaltog/vim-easymotion'
 Plug 'tpope/vim-fugitive'
@@ -421,6 +429,7 @@ if g:config_use_nvimlsp
     Plug 'nvimdev/lspsaga.nvim'
     Plug 'seblyng/nvim-echo-diagnostics'
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " Needed for hover highlighting
+    Plug 'antosha417/nvim-lsp-file-operations'
 
     " Autocompletion
     Plug 'Saghen/blink.cmp', { 'tag': 'v1.*' }
@@ -458,7 +467,9 @@ Plug 'MattesGroeger/vim-bookmarks'
 Plug 'tpope/vim-sleuth'
 
 " Scrollbar with diagnostics and search markers
-Plug 'petertriho/nvim-scrollbar'
+if g:config_use_scrollbar
+    Plug 'petertriho/nvim-scrollbar'
+endif
 
 " Move function arguments (and other delimited-by-something items) left and right.
 Plug 'AndrewRadev/sideways.vim'
@@ -611,8 +622,7 @@ nnoremap <leader>n n
 nnoremap <leader>N N
 
 " NERDTree shortcut
-command! NT NERDTreeToggle
-" let NERDTreeWinPos = "right"
+" command! NT NERDTreeToggle
 
 " YCM
 " let g:ycm_use_clangd = 0
@@ -681,7 +691,9 @@ command! UltiSnipReload call UltiSnips#RefreshSnippets()
 
 
 " CtrlP
-let g:ctrlp_show_hidden=1
+let g:ctrlp_show_hidden = 1
+let g:ctrlp_clear_cache_on_exit = 0
+let g:ctrlp_by_filename = 1
 " let g:ctrlp_custom_ignore = '\.pyc'
 let g:ctrlp_open_multiple_files = 'ijr'
 let g:ctrlp_custom_ignore = {
@@ -1279,32 +1291,5 @@ if g:config_use_coc
 endif
 
 if g:config_use_nvimlsp
-    command! IncomingCalls Lspsaga incoming_calls
-    command! OutgoingCalls Lspsaga outgoing_calls
-
-    nnoremap <leader>ac :Lspsaga code_action<cr>
-    nnoremap <leader>fx :lua vim.lsp.buf.code_action({apply=true})<cr>
-
-    " nnoremap <leader>d :Lspsaga show_line_diagnostics<cr>
-    " nnoremap <leader>D :Lspsaga show_buf_diagnostics<cr>
-    nnoremap <leader>d :lua vim.diagnostic.open_float()<cr>
-    nnoremap <leader>D :lua vim.diagnostic.setloclist()<cr>
-
-    " nnoremap <leader>jd :Lspsaga goto_definition<cr>
-    nnoremap <leader>jd :lua vim.lsp.buf.definition()<cr>
-    nmap <leader>jD :vsp<cr><leader>jd
-    nmap <leader>JD :tab split<cr><leader>jd
-    nnoremap <leader>rn :Lspsaga rename<cr>
-    nnoremap <leader>jr :Lspsaga finder<cr>
-    nnoremap <leader>jR :lua vim.lsp.buf.references()<cr>
-
-    cnoreabbrev Lsp Lspsaga
-
-    function LspEnableDebugLogging()
-        lua vim.lsp.set_log_level 'trace'
-        lua require('vim.lsp.log').set_format_func(vim.inspect)
-    endfunction
-
-    command! LspServerCapabilities lua =vim.lsp.get_clients()[1].server_capabilities
-    command! LspEnableDebugLogging call LSPEnableDebugLogging()
+    runtime lsp.vim
 endif

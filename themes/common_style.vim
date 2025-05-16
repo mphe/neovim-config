@@ -44,6 +44,11 @@ function ApplyCommonStyle()
     highlight TabLine gui=NONE
     highlight TabLineFill gui=NONE
 
+    " blink
+    hi clear BlinkCmpCursorLineDocumentationHack
+    hi clear BlinkCmpCursorLineSignatureHack
+    hi clear BlinkCmpCursorLineMenuHack
+
     " vimSet has no highlight for some reason in nvim 0.11
     hi! link vimSet vimCommand
 

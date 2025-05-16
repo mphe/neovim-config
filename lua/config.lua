@@ -3,6 +3,18 @@ local icon_warning = vim.g.config_icon_warning
 local icon_info = vim.g.config_icon_info
 local icon_hint = vim.g.config_icon_hint
 
+-- Recommended by nvim-tree
+-- disable netrw at the very start of your init.lua
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+require("lsp-file-operations").setup()
+
+-- nvim-tree {{{
+require("nvim-tree").setup({})
+vim.api.nvim_create_user_command("NT", "NvimTreeToggle", {})
+-- }}}
+
 -- barbar.nvim {{{
 -- config {{{
 vim.g.barbar_auto_setup = false
@@ -182,6 +194,7 @@ vim.keymap.set("n", "<leader>B", "<Cmd>BufferPick<CR>", { silent = true })
 -- }}}
 
 -- nvim-scrollbar {{{
+if vim.g.config_use_scrollbar == 1 then
 require("scrollbar").setup({
     handle = {
         text = " ",
@@ -245,6 +258,7 @@ require("scrollbar").setup({
 -- end
 --
 -- require("scrollbar.handlers").register("locationlist", ll_handler)
+end
 -- }}}
 
 -- nvim-notify {{{
