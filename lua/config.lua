@@ -525,7 +525,36 @@ vim.api.nvim_create_autocmd("LspTokenUpdate", {
         end,
     })
 
-vim.api.nvim_set_hl(0, 'MyMutableGlobalHL', { fg = 'red' })
+-- Show full diagnostic information
+-- https://github.com/neovim/neovim/issues/19649#issuecomment-1750272564
+local original = vim.lsp.handlers['textDocument/publishDiagnostics']
+vim.lsp.handlers['textDocument/publishDiagnostics'] = function(_, result, ctx, config)
+    vim.tbl_map(function(item)
+        if item.relatedInformation and #item.relatedInformation > 0 then
+            vim.tbl_map(function(k)
+                if k.location then
+                    local tail = vim.fn.fnamemodify(vim.uri_to_fname(k.location.uri), ':t')
+                    k.message = tail ..
+                    '(' .. (k.location.range.start.line + 1) .. ', ' .. (k.location.range.start.character + 1) ..
+                    '): ' .. k.message
+
+               if k.location.uri == vim.uri_from_bufnr(0) then
+                  table.insert(result.diagnostics, {
+                     code = item.code,
+                     message = k.message,
+                     range = k.location.range,
+                     severity = vim.lsp.protocol.DiagnosticSeverity.Hint,
+                     source = item.source,
+                     relatedInformation = {},
+                  })
+               end
+            end
+            item.message = item.message .. '\n' .. k.message
+         end, item.relatedInformation)
+      end
+   end, result.diagnostics)
+   original(_, result, ctx, config)
+end
 
 vim.diagnostic.config({
     signs = {
@@ -572,7 +601,7 @@ vim.lsp.config("basedpyright", {
                     callArgumentNames = false
                 },
                 typeCheckingMode = "off",  -- Use mypy for type checking
-                diagnosticMode = "workspace",
+                -- diagnosticMode = "workspace",
             },
         },
     },
@@ -664,6 +693,7 @@ require("blink.cmp").setup {
         documentation = { auto_show = true },
         accept = {
             auto_brackets = { enabled = false },
+            create_undo_point = true,
         },
         list = {
             selection = {
