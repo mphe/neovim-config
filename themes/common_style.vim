@@ -82,6 +82,7 @@ function ApplyCommonStyle()
     " hi! link @property @variable
     hi! link @constant Constant
     hi! link @namespace @module
+    hi! link @type.qualifier Keyword
 
     " python
     " hi! link @lsp.mod.readonly.python Constant
