@@ -11,7 +11,30 @@ vim.g.loaded_netrwPlugin = 1
 require("lsp-file-operations").setup()
 
 -- nvim-tree {{{
-require("nvim-tree").setup({})
+local function nvim_tree_on_attach(bufnr)
+    local api = require("nvim-tree.api")
+
+    local function opts(desc)
+        return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+    end
+
+    api.config.mappings.default_on_attach(bufnr)
+
+    -- remove a default
+    vim.keymap.del("n", "H", { buffer = bufnr })
+    vim.keymap.del("n", "L", { buffer = bufnr })
+
+    -- override a default
+    -- vim.keymap.set("n", "<C-e>", api.tree.reload,                       opts("Refresh"))
+
+    -- add your mappings
+    -- vim.keymap.set("n", "?",     api.tree.toggle_help,                  opts("Help"))
+end
+
+require("nvim-tree").setup({
+    on_attach = nvim_tree_on_attach,
+})
+
 vim.api.nvim_create_user_command("NT", "NvimTreeToggle", {})
 -- }}}
 
@@ -671,6 +694,8 @@ require("blink.cmp").setup {
         ['<C-e>'] = { "fallback_to_mappings" },
         ['<c-f>'] = { 'scroll_documentation_down', 'fallback' },
         ['<c-b>'] = { 'scroll_documentation_up', 'fallback' },
+        ['<c-j>'] = { 'snippet_forward', 'fallback' },
+        -- ['<C-space>'] = { "show", "fallback" },
     },
 
     cmdline = {

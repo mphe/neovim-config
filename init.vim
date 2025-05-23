@@ -1019,14 +1019,6 @@ autocmd FileType * setlocal formatoptions+=roj
 autocmd BufRead,BufNewFile *.fsh set filetype=glsl
 autocmd BufRead,BufNewFile *.vsh set filetype=glsl
 
-autocmd FileType *
-    \ nmap <silent> <F8> <Plug>(ale_previous_wrap_error)|
-    \ nmap <silent> <F9> <Plug>(ale_next_wrap_error)
-
-" autocmd FileType *
-"     \ nnoremap <F8> :labove<CR>|
-"     \ nnoremap <F9> :lbelow<CR>
-
 au BufEnter * :call CheckSize()
 augroup END
 " -------------------------------------- Autocmds end }}}
