@@ -8,7 +8,7 @@ if has('win32')
     let &t_Ce = "\e[4:0m"
 endif
 
-let s:transparent_background = 0
+let s:transparent_background = 1
 
 function ApplyCommonStylePre()
     augroup AutocmdCommonStylesPre
