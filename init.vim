@@ -411,7 +411,6 @@ call plug#begin(s:vim_cfg_path . '/plugged')
 Plug 'ishan9299/nvim-solarized-lua' " Has treesitter support
 
 Plug 'nvim-tree/nvim-tree.lua'
-" Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'itchyny/lightline.vim'
 Plug 'Lokaltog/vim-easymotion'
 Plug 'tpope/vim-fugitive'
@@ -424,6 +423,7 @@ if g:config_use_coc
 endif
 
 if g:config_use_nvimlsp
+    Plug 'mason-org/mason.nvim'
     Plug 'neovim/nvim-lspconfig'
     Plug 'p00f/clangd_extensions.nvim'
     Plug 'nvimdev/lspsaga.nvim'
