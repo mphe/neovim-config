@@ -1,7 +1,11 @@
 " lightline related configs
 scriptencoding utf-8
 
-let s:diagnostic_symbols = { 'error': g:config_icon_error . ' ', 'warning': g:config_icon_warning . ' ', 'info': g:config_icon_info . ' ' }
+let s:diagnostic_symbols = {
+            \ 'error': g:config_icon_error . ' ',
+            \ 'warning': g:config_icon_warning . ' ',
+            \ 'info': g:config_icon_info . ' '
+            \ }
 
 " lightline {{{
 
@@ -68,19 +72,8 @@ let g:lightline.inactive = {
     \ 'right': [
     \     [ 'lineinfo' ],
     \     [ 'fileformat', 'fileencoding', 'filetype' ],
-    \     [ 'linter_infos', 'linter_warnings', 'linter_errors' ],
     \ ]
     \ }
-
-" let g:lightline.tab = {
-"     \ 'active': ['tabnum'],
-"     \ 'inactive': ['tabnum']
-"     \ }
-
-" let g:lightline.tabline = {
-"     \ 'left': [ ['buffers'] ],
-"     \ 'right': [ ['tabs'] ]
-"     \ }
 
 let g:lightline.component = {
     \ 'lineinfo': '%3l:%-2v / %L',
@@ -100,7 +93,6 @@ let g:lightline.component_expand = {
     \ 'linter_errors': 'LightlineDiagnosticsError',
     \ 'linter_checking': 'LightlineDiagnosticsChecking',
     \ }
-    " \ 'buffers': 'lightline#bufferline#buffers',
 
 let g:lightline.component_function = {
     \ 'fugitive': 'LightLineFugitive',
@@ -121,7 +113,6 @@ let g:lightline.component_type = {
     \ 'linter_errors': 'error',
     \ 'linter_checking': 'info',
     \ }
-    " \ 'buffers': 'tabsel',
 
 " \ 'linter_checking': 'info',
 " \ 'linter_ok': 'info',
