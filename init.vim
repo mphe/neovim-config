@@ -480,9 +480,6 @@ Plug 'tommcdo/vim-exchange'
 " Preview colours in source code while editing
 " Plug 'ap/vim-css-color'
 
-" TODO: Consider removing
-Plug 'Konfekt/FastFold'
-
 Plug 'rcarriga/nvim-notify'
 
 " Required by: telescope, copilot, codeium.nvim
