@@ -221,7 +221,8 @@ if vim.g.config_use_scrollbar == 1 then
 require("scrollbar").setup({
     handle = {
         text = " ",
-        highlight = "Pmenu",
+        blend = 0,
+        highlight = "CursorLine",
     },
     -- marks = {
     --     Search = { text = { "-", "=" }, priority = 0, highlight = "orange" },
