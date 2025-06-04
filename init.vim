@@ -571,11 +571,6 @@ call plug#end()
 
 " -------------------------------------- vim-plug end }}}
 
-" -------------------------------------- lua {{{
-if has('nvim')
-    lua require("config")
-endif
-" -------------------------------------- lua }}}
 
 " -------------------------------------- Style config {{{
 call ApplySolarizedStyle()
@@ -584,8 +579,15 @@ call ApplyCommonStyle()  " Must come afterwards otherwise changes would get over
 " set the split char tmux uses
 set fillchars+=vert:│
 
-
 " -------------------------------------- Style config end }}}
+
+
+" -------------------------------------- lua {{{
+if has('nvim')
+    " Should run after colorscheme config
+    lua require("config")
+endif
+" -------------------------------------- lua }}}
 
 
 " -------------------------------------- Plugin configuration {{{
