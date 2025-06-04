@@ -617,6 +617,22 @@ vim.lsp.enable({
     'vimls',
 })
 
+vim.lsp.config("clangd", {
+    cmd = {
+        "clangd",
+        "--background-index",
+        "--clang-tidy",
+        "--header-insertion=iwyu",
+        "--completion-style=detailed",
+        "--function-arg-placeholders",
+        "--fallback-style=llvm",
+    },
+    settings = {
+        clangd = {
+        },
+    },
+})
+
 vim.lsp.config("basedpyright", {
     settings = {
         basedpyright = {
@@ -796,6 +812,9 @@ require("blink.cmp").setup {
     }
 }
 
+-- }}}
+
+-- lspsaga {{{
 -- https://nvimdev.github.io/lspsaga/
 require("lspsaga").setup {
     ui = {
@@ -835,7 +854,6 @@ require("lspsaga").setup {
         delay = 300,
     }
 }
-
 -- }}}
 
 -- echo diagnostics {{{
@@ -855,4 +873,5 @@ vim.api.nvim_create_autocmd("CursorHold", {
 -- mason {{{
 require("mason").setup({})
 -- }}}
+
 end
