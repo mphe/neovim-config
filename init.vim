@@ -1004,10 +1004,6 @@ autocmd FileType text,markdown,tex,unknown setlocal wrap
 autocmd FileType markdown setlocal shiftwidth=2 | setlocal tabstop=2 | setlocal formatoptions-=tc
 autocmd FileType scala setlocal previewheight=5
 
-" cursorline in php or html files often severe massive lags
-autocmd FileType * setlocal cursorline
-autocmd FileType php,html,tex setlocal nocursorline
-
 " autoclose location list after jump
 autocmd FileType qf nmap <buffer> <cr> <cr>:lcl<cr>
 
