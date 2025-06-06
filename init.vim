@@ -357,6 +357,7 @@ endfunction
 command! Cdhere cd %:h
 
 runtime rename.vim
+runtime restartvim.vim
 
 
 " Better GQ operator that uses colorcolumn as text width {{{
