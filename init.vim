@@ -699,6 +699,7 @@ let g:ctrlp_custom_ignore = {
             \ 'dir':  '\v[\/](\.(godot|import|git|hg|svn|clangd|ccls-cache|tmp|mypy_cache|cache)|node_modules|build)$',
             \ 'file': '\v\.(exe|so|dll|pyc|o|a|obj|uid)$'
             \ }
+let g:ctrlp_working_path_mode = 'rw'
 " let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -c -o --exclude-standard && git submodule --quiet foreach --recursive "git ls-files . -c -o --exclude-standard"', 'find %s -type f']
 
 " vimtex
