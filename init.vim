@@ -318,6 +318,8 @@ let g:nvimgdb_disable_start_keymaps = 1
 " -------------------------------------- Aliases {{{
 " Treat E as e command
 cnoreabbrev E e
+" :e with current relative path inserted
+cnoreabbrev le e %:h/
 
 " -------------------------------------- Aliases end }}}
 
