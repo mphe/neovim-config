@@ -421,12 +421,14 @@ end
 
 -- treesitter {{{
 local use_treesitter = false
+local use_treesitter_fold = false
 local enabled_highlights = {
+    -- markdown = true,
     -- gdscript = true,
     -- gdshader = true,
 }
 
-if use_treesitter then
+if use_treesitter_fold then
     vim.wo.foldmethod = 'expr'
     vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 end
@@ -469,7 +471,8 @@ require'nvim-treesitter.configs'.setup {
         -- list of language that will be disabled
         -- disable = { "c", "rust" },
         disable = function(lang, _buf)
-            return enabled_highlights[lang] == nil
+            return enabled_highlights[lang] ~= true
+
             -- Disable slow treesitter highlight for large files
             -- local max_filesize = 100 * 1024 -- 100 KB
             -- local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
