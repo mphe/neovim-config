@@ -1,5 +1,5 @@
-command! IncomingCalls Lspsaga incoming_calls
-command! OutgoingCalls Lspsaga outgoing_calls
+command! LspIncomingCalls Lspsaga incoming_calls
+command! LspOutgoingCalls Lspsaga outgoing_calls
 
 nnoremap <leader>ac :Lspsaga code_action<cr>
 nnoremap <leader>fx :lua vim.lsp.buf.code_action({apply=true, context = { only = { "quickfix" } }, })<cr>
@@ -15,6 +15,8 @@ nnoremap <f12> :lua vim.lsp.buf.definition()<cr>
 nnoremap <leader>jd :lua vim.lsp.buf.definition()<cr>
 nmap <leader>jD :vsp<cr><leader>jd
 nmap <leader>JD :tab split<cr><leader>jd
+
+nnoremap <leader>pd :Lspsaga peek_definition<cr>
 
 nnoremap <leader>jt :lua vim.lsp.buf.type_definition()<cr>
 nmap <leader>jT :vsp<cr><leader>jt
