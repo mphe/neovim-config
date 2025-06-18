@@ -68,7 +68,16 @@ function ApplyCommonStyle()
     highlight link pythonFunctionCall Function
 
     " Prevent LSP semantic tokens overriding custom highlights
-    hi clear @lsp.type.variable
+    hi @lsp.type.variable guifg=NONE guibg=NONE
+
+    hi link @lsp.typemod.variable.readonly.python Constant
+
+    hi link LspInlayHint Comment
+
+    " augroup python_styles_autocmd
+    "     autocmd!
+    "     autocmd FileType python hi! link LspInlayHint Type
+    " augroup END
 
     " Lspsaga fixes
     hi! link SagaClass Type

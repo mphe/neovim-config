@@ -357,18 +357,6 @@ require("paint").setup({
             pattern = "\\s+case",
             hl = "Keyword",
         },
-        -- Highlight 'self'.
-        {
-            filter = { filetype = "python" },
-            pattern = "%f[%a]self%f[%A]",
-            hl = "Identifier",
-        },
-        -- Treat uppercase identifiers as constants. Overrides semantic tokens.
-        {
-            filter = { filetype = "python" },
-            pattern = "%f[%a0-9_][A-Z0-9_]+%f[^%a0-9_]",
-            hl = "Constant",
-        },
     },
 })
 -- }}}
