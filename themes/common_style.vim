@@ -1,91 +1,40 @@
-if has('nvim')
-    set termguicolors
-endif
+let s:transparent_background = 0
 
-if has('win32')
-    " for wezterm undercurl support
-    let &t_Cs = "\e[4:3m"
-    let &t_Ce = "\e[4:0m"
-endif
+augroup custom_colors
+    autocmd!
+    autocmd ColorSchemePre * call s:ApplyStylePre()
+    autocmd ColorScheme * call s:ApplyStyle()
+augroup END
 
-let s:transparent_background = 1
-
-function ApplyCommonStylePre()
-    augroup AutocmdCommonStylesPre
-        autocmd!
-        autocmd VimEnter * call s:EarlyStyleOverrides()
-        autocmd ColorScheme * call s:EarlyStyleOverrides()
-    augroup END
-
-    call s:EarlyStyleOverrides()
+function! s:ApplyStylePre()
+    " highlight link cppStorageClass Keyword
 endfun
 
-function! s:EarlyStyleOverrides()
-    highlight link cppStorageClass Keyword
-    " highlight link cTypedef Keyword
-endfun
-
-function ApplyCommonStyle()
+function s:ApplyStyle()
     if s:transparent_background
-        highlight Normal     ctermbg=NONE guibg=NONE
+        highlight Normal ctermbg=NONE guibg=NONE
     endif
 
-    augroup CommonSyntaxFixes
-        autocmd!
-        autocmd FileType c,cpp call s:CSyntaxFixes()
-        autocmd FileType scala call s:ScalaSyntaxFixes()
-    augroup END
+    " call s:ScalaSyntaxFixes()  " Check if still needed
 
-    " Neovim 0.11 seems to inverse the status/tab line styles which causes inverted lightline rendering
-    highlight StatusLine gui=NONE
-    highlight StatusLineNC gui=NONE
-    highlight StatusLineTerm gui=NONE
-    highlight StatusLineTermNC gui=NONE
-    highlight TabLine gui=NONE
-    highlight TabLineFill gui=NONE
+    " Internal styles
+    hi! link vimSet vimCommand  " vimSet has no highlight for some reason in nvim 0.11
+    hi! link QuickFixLine CursorLine
+    highlight Comment cterm=NONE gui=NONE  " make comments non-italic
+    highlight Folded cterm=bold gui=bold  " No underline in folds
+    highlight CursorLine cterm=NONE gui=NONE  " Strip modifiers like underline
 
-    " blink
-    hi clear BlinkCmpCursorLineDocumentationHack
-    hi clear BlinkCmpCursorLineSignatureHack
-    hi clear BlinkCmpCursorLineMenuHack
+    hi! link SignColumn LineNr
+    hi! link WinSeparator LineNr
 
-    " vimSet has no highlight for some reason in nvim 0.11
-    hi! link vimSet vimCommand
+    highlight DiagnosticUnderlineWarn gui=undercurl
+    highlight DiagnosticUnderlineHint gui=undercurl
+    highlight DiagnosticUnderlineInfo gui=undercurl
+    highlight DiagnosticUnderlineOk gui=undercurl
+    highlight DiagnosticUnderlineError gui=undercurl
 
-    highlight! link QuickFixLine CursorLine
 
-    " telescope
-    hi! link TelescopeSelection Pmenu
-
-    " make comments non-italic
-    highlight Comment cterm=NONE gui=NONE
-
-    " No underline in folds
-    highlight Folded cterm=bold gui=bold
-
-    " Add this line at the start of the python syntax file
-    " syn match pythonFunctionCall "\zs\(\k\w*\)*\s*\ze("
-    highlight link pythonFunctionCall Function
-
-    " Prevent LSP semantic tokens overriding custom highlights
-    hi @lsp.type.variable guifg=NONE guibg=NONE
-
-    hi link @lsp.typemod.variable.readonly.python Constant
-
-    hi link LspInlayHint Comment
-
-    " augroup python_styles_autocmd
-    "     autocmd!
-    "     autocmd FileType python hi! link LspInlayHint Type
-    " augroup END
-
-    " Lspsaga fixes
-    hi! link SagaClass Type
-    hi! link SagaNamespace @namespace
-    hi! link SagaFolder Normal  " Make Lspsaga's breadcrumb folder not red
-    " hi! link SagaFolder Type
-
-    " treesitter fixes {{{
+    " treesitter / lsp fixes {{{
     hi! link @keyword.storage @keyword
     hi! link @comment Comment
     " hi! link @property @variable
@@ -93,22 +42,27 @@ function ApplyCommonStyle()
     hi! link @namespace @module
     hi! link @type.qualifier Keyword
 
+    " Prevent LSP semantic tokens overriding custom highlights
+    hi @lsp.type.variable guifg=NONE guibg=NONE
+
     " python
-    " hi! link @lsp.mod.readonly.python Constant
-    " hi! link @lsp.typemod.variable.readonly.python Constant
+    hi link @lsp.typemod.variable.readonly.python Constant
 
     " gdscript
     hi! link @attribute.gdscript Keyword
     hi! link @string.special.url.gdscript Macro  " $ or % node paths
     " }}}
-endfun
 
-" https://vi.stackexchange.com/questions/16813/avoid-highlighting-defined-by-matchadd-in-comments
-function! s:CSyntaxFixes()
-    hi link doxygenBrief Comment
-    hi link doxygenStart doxygenBrief
-    hi link doxygenComment doxygenBrief
-    hi link doxygenContinueComment doxygenBrief
+
+    " Plugin styles
+    " telescope
+    hi! link TelescopeSelection Pmenu
+
+    " Lspsaga fixes
+    hi! link SagaClass Type
+    hi! link SagaNamespace @namespace
+    hi! link SagaFolder Normal  " Make Lspsaga's breadcrumb folder not red
+
 endfun
 
 function! s:ScalaSyntaxFixes()

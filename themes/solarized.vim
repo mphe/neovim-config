@@ -1,7 +1,4 @@
 " ------------------ General
-set t_Co=256
-set background=dark
-
 let s:base03  = '#002b36'
 let s:base02  = '#073642'
 let s:base01  = '#586e75'
@@ -33,19 +30,39 @@ let s:slight_cyan = '#71A3A0'
 let s:normal_fg = s:base0
 let s:normal_bg = s:base02
 
-function ApplySolarizedStylePre()
-    augroup BarBarStyles
-        autocmd!
-        autocmd VimEnter * call s:EarlyStyleOverrides()
-        autocmd ColorScheme * call s:EarlyStyleOverrides()
-    augroup END
+augroup custom_solarized_colorscheme
+    autocmd!
+    autocmd ColorSchemePre solarized call s:ApplySolarizedStylePre()
+    autocmd ColorScheme solarized call s:ApplySolarizedStyle()
+augroup END
 
-    call s:EarlyStyleOverrides()
+function s:ApplySolarizedStylePre()
+    if &background !=? 'dark'
+        return
+    endif
 endfun
 
-function ApplySolarizedStyle()
-    colorscheme solarized
+function s:ApplySolarizedStyle()
+    " Neovim 0.11 seems to inverse the status/tab line styles which causes inverted lightline rendering
+    highlight StatusLine gui=NONE
+    highlight StatusLineNC gui=NONE
+    highlight StatusLineTerm gui=NONE
+    highlight StatusLineTermNC gui=NONE
+    highlight TabLine gui=NONE
+    highlight TabLineFill gui=NONE
 
+    " From here on only dark scheme settings
+    if &background !=? 'dark'
+        highlight! link CurrentWordTwins Search
+        highlight! link CurrentWord CurrentWordTwins
+        return
+    endif
+
+    call s:ApplySolarizedDark()
+endfun
+
+
+function s:ApplySolarizedDark()
     " Define a second Normal highlight because Normal might have a transparent background.
     exec 'highlight NormalBgFg gui=NONE guibg=' . s:base03 . ' guifg=' . s:base1
     exec 'highlight BrighterBgFg gui=NONE guibg=' . s:base02 . ' guifg=' . s:base4
@@ -59,41 +76,31 @@ function ApplySolarizedStyle()
     exec 'highlight RedFg guifg=' . s:red
     exec 'highlight WhiteFg guifg=' . s:base2
 
-    augroup SolarizedSyntaxFixes
-        autocmd!
-        autocmd FileType markdown call s:MarkdownStyles()
-    augroup END
+    call s:ApplyBarBar()
 
-    " treesitter {{{
+    hi markdownCode guibg=#223344
+    hi link doxygenBrief Comment
+
+    " treesitter / lsp {{{
     hi! link @module VioletFg
     hi! link @property SlightBlueFg
     hi! link @lsp.type.typeParameter WhiteFg
+    " highlight LspCodeLens guibg=#073642 guifg=#6C71C4
+    hi! link LspCodeLens Comment
+    hi! link LspInlayHint Comment
     " }}}
 
     " Search highlight color
     highlight Search cterm=NONE ctermbg=240 ctermfg=black gui=NONE guibg=#586e75 guifg=#073642
     highlight! link CurSearch Search
     highlight link EasyMotionMoveHL Search
-    " highlight link Search EasyMotionMoveHL
-    " highlight Search cterm=bold,reverse ctermfg=40 gui=bold,reverse guifg=#7fbf00
-
-    " Cursorline
-    set cursorline
-    highlight CursorLine ctermbg=Black cterm=NONE gui=NONE
-    highlight CursorLineNr cterm=bold ctermfg=3 ctermbg=black gui=bold guifg=#b58900 guibg=#073642
-
-    highlight SignColumn cterm=bold ctermbg=black gui=bold guibg=#073642
-    highlight link WinSeparator LineNr
+    highlight CurrentWordTwins ctermbg=black guibg=#094655
+    highlight link CurrentWord CurrentWordTwins
+    " highlight CursorLineNr cterm=bold ctermfg=3 ctermbg=black gui=bold guifg=#b58900 guibg=#073642
 
     highlight clear Error
     exec 'highlight Error cterm=undercurl ctermfg=1 gui=undercurl guisp=' . s:red
     highlight link SpellBad Error
-
-    highlight DiagnosticUnderlineWarn gui=undercurl
-    highlight DiagnosticUnderlineHint gui=undercurl
-    highlight DiagnosticUnderlineInfo gui=undercurl
-    highlight DiagnosticUnderlineOk gui=undercurl
-    highlight DiagnosticUnderlineError gui=undercurl
 
     " exec 'highlight DiagnosticError cterm=bold gui=bold guibg=' . s:base02 . 'guifg=' . s:orange
     " exec 'highlight DiagnosticWarn cterm=bold gui=bold guibg=' . s:base02 . 'guifg=' . s:yellow
@@ -118,8 +125,8 @@ function ApplySolarizedStyle()
     " For some reason removed lines in git diffs are not red when not using fugitive.
     hi! link Removed RedFg
 
-    highlight LspCodeLens guibg=#073642 guifg=#6C71C4
-    highlight! link LspInlayHint LspCodeLens
+    " highlight LspCodeLens guibg=#073642 guifg=#6C71C4
+    " highlight! link LspInlayHint LspCodeLens
 
     " blink.cmp
     hi! link NormalFloat NormalBgFg
@@ -192,9 +199,6 @@ function ApplySolarizedStyle()
     highlight! link ALEVirtualTextWarning ALEWarningSign
     highlight! link ALEVirtualTextInfo ALEInfoSign
 
-    highlight CurrentWordTwins ctermbg=black guibg=#094655
-    highlight link CurrentWord CurrentWordTwins
-
     highlight fugitiveUnstagedSection ctermfg=red guifg=#dc322f
     highlight link fugitiveUntrackedSection fugitiveUnstagedSection
     highlight fugitiveStagedSection ctermfg=green guifg=#859900
@@ -212,20 +216,6 @@ function ApplySolarizedStyle()
     hi link TagbarAccessProtected BlueFg
 endfun
 
-function! s:MarkdownStyles()
-    " These styles also affect the hover popup, hence only apply it when actually editing a markdown file
-    " hi! link markdownCode CocCodeLens
-    " hi! link markdownCode CurrentWord
-    " exec 'highlight markdownCode guibg=' . s:blue3  . ' guifg=' . s:pum_fg
-    " exec 'highlight markdownCode guibg=' . s:base02  . ' guifg=' . s:pum_fg
-    " exec 'highlight markdownCode guibg=' . s:base02
-    highlight markdownCode guibg=#223344
-    " hi! link markdownCodeBlock markdownCode
-endfun
-
-function! s:EarlyStyleOverrides()
-    call s:ApplyBarBar()
-endfun
 
 function s:ApplyBarBar()
     " darker background for active buffers
@@ -292,6 +282,3 @@ function s:ApplyBarBar()
     " highlight BufferCurrentTarget
     " highlight BufferCurrentWARN
 endfun
-
-
-

@@ -3,6 +3,8 @@ scriptencoding utf-8
 " Clean autocmds
 autocmd!
 
+let s:vim_cfg_path = fnamemodify($MYVIMRC, ':p:h')
+
 let s:use_vim_omnisharp = 0
 let g:config_use_coc = 0
 let g:config_use_nvimlsp = 1
@@ -365,45 +367,8 @@ command! Cdhere cd %:h
 runtime rename.vim
 runtime restartvim.vim
 
-
-" Better GQ operator that uses colorcolumn as text width {{{
-" See also
-" - https://learnvimscriptthehardway.stevelosh.com/chapters/33.html
-" - https://vi.stackexchange.com/questions/19770/how-to-create-new-operator-by-using-existing-operator-with-current-motion
-
-function! BetterGQ(type)
-    let old_textwidth = &textwidth
-    exec 'set textwidth=' . &colorcolumn
-
-    call s:ExecuteOperator(a:type, a:0 > 0, 'gq')
-
-    exec 'set textwidth=' . old_textwidth
-endfun
-
-function! s:ExecuteOperator(type, visual, operator)
-  " Use normal! to make sure no user mappings are used
-    if a:visual
-        exec 'normal! gv' . a:operator
-    else
-        if a:type ==# 'line'
-            exec 'normal! ''[V'']' . a:operator
-        else
-            exec 'normal! ''[v'']' . a:operator
-        endif
-    endif
-endfunction
-
-" nnoremap gq :set operatorfunc=BetterGQ<CR>g@
-" vnoremap gq :<c-u>call BetterGQ(visualmode())<!-- <CR> -->
-
-" }}}
-
 " -------------------------------------- Functions end }}}
 
-runtime themes/common_style.vim
-runtime themes/solarized.vim
-call ApplySolarizedStylePre()
-call ApplyCommonStylePre()
 
 " -------------------------------------- vim-plug {{{
 
@@ -411,7 +376,6 @@ if !has('nvim')
     finish
 endif
 
-let s:vim_cfg_path = fnamemodify($MYVIMRC, ':p:h')
 call plug#begin(s:vim_cfg_path . '/plugged')
 
 " color schemes
@@ -580,11 +544,30 @@ call plug#end()
 
 
 " -------------------------------------- Style config {{{
-call ApplySolarizedStyle()
-call ApplyCommonStyle()  " Must come afterwards otherwise changes would get overwritten when changing the colorscheme
+if has('nvim')
+    set termguicolors
+endif
+
+if has('win32')
+    " for wezterm undercurl support
+    let &t_Cs = "\e[4:3m"
+    let &t_Ce = "\e[4:0m"
+endif
+
+set t_Co=256
 
 " set the split char tmux uses
 set fillchars+=vert:│
+set fillchars+=fold:\ ,
+" set fillchars+=fold:─
+highlight! Folded guibg=NONE gui=bold
+set cursorline
+
+runtime themes/common_style.vim
+runtime themes/solarized.vim
+
+set background=dark
+colorscheme solarized
 
 " -------------------------------------- Style config end }}}
 
@@ -830,11 +813,6 @@ let g:easy_align_delimiters = {
       \ '/': { 'pattern': '/' },
       \ }
 
-" vim-cpp-modern
-" let g:cpp_no_function_highlight = 0
-" let g:cpp_simple_highlight = 0
-" let g:cpp_named_requirements_highlight = 1
-
 " echodoc
 " autocmd FileType gdscript3 let g:echodoc#enable_at_startup = 1
 let g:echodoc#enable_at_startup = 0
@@ -915,7 +893,6 @@ let g:bookmark_save_per_working_dir = 1
 let g:bookmark_auto_save = 1
 nmap mm <Plug>BookmarkToggle
 nmap <leader>mm <Plug>BookmarkShowAll
-highlight link BookmarkSign SignColumn
 
 
 fun! Qf_test()
@@ -1173,7 +1150,6 @@ function! F5Refresh()
         if exists(':GrayoutUpdate')
             GrayoutUpdate
         endif
-        LspCxxHighlight
         ALELint
     elseif &filetype ==# 'cs'
         if s:use_vim_omnisharp
@@ -1258,12 +1234,10 @@ function! NeatFoldText()
     return indent . foldtextstart . repeat(foldchar, winwidth(0)-foldtextlength - indent_level) . foldtextend
 endfunction
 
-" set fillchars+=fold:─
-set fillchars+=fold:\ ,
 set foldtext=NeatFoldText()
-highlight! Folded guibg=NONE gui=bold
 
 " better fold text }}}
+
 
 function! CheckSize()
     " Disassemblies can be quite large but should be syntax highlighted
