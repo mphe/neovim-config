@@ -233,6 +233,10 @@ let g:python_indent = {}
 let g:python_indent.open_paren = 'shiftwidth()'
 let g:python_indent.closed_paren_align_last_line = v:false
 
+" NOTE: Treesitter can do this as well when enabled. But I don't like the default highlights for
+" markdown and I don't want to waste my time configuring them to look the same as normal syntax.
+let g:markdown_fenced_languages = ['html', 'python', 'lua', 'vim', 'typescript', 'javascript']
+
 " -------------------------------------- General settings end }}}
 
 " -------------------------------------- Plugin settings before loading {{{
