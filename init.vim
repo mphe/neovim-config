@@ -284,6 +284,10 @@ let g:ale_cs_csc_options = ' /warn:4 /langversion:7.2'
 let g:ale_nasm_nasm_options = '-f elf64'
 let g:ale_lua_luacheck_options = ''
 
+if !has('win32')
+    let g:ale_vim_vint_executable = s:vim_cfg_path . '/vint.sh'
+endif
+
 let g:ale_type_map = {
             \ 'flake8': {'ES': 'I', 'WS': 'I'},
             \ 'mypy':   {'ES': 'I', 'WS': 'I'},
