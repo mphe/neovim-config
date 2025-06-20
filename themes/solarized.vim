@@ -85,9 +85,11 @@ function s:ApplySolarizedDark()
     hi! link @module VioletFg
     hi! link @property SlightBlueFg
     hi! link @lsp.type.typeParameter WhiteFg
+    " hi! link LspCodeLens Comment
+    " hi! link LspInlayHint Comment
+    highlight NonText guibg=#073642 guifg=#6C71C4 gui=NONE
     " highlight LspCodeLens guibg=#073642 guifg=#6C71C4
-    hi! link LspCodeLens Comment
-    hi! link LspInlayHint Comment
+    " highlight! link LspInlayHint LspCodeLens
     " }}}
 
     " Search highlight color
@@ -124,9 +126,6 @@ function s:ApplySolarizedDark()
 
     " For some reason removed lines in git diffs are not red when not using fugitive.
     hi! link Removed RedFg
-
-    " highlight LspCodeLens guibg=#073642 guifg=#6C71C4
-    " highlight! link LspInlayHint LspCodeLens
 
     " blink.cmp
     hi! link NormalFloat NormalBgFg

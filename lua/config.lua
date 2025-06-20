@@ -865,4 +865,22 @@ vim.api.nvim_create_autocmd("CursorHold", {
 require("mason").setup({})
 -- }}}
 
+-- lsp-endhints {{{
+require("lsp-endhints").setup{
+    icons = {
+        type = "",
+        parameter = "",
+        offspec = "",
+        unknown = "",
+    },
+    label = {
+        truncateAtChars = 20,
+        padding = 1,
+        marginLeft = 1,
+        sameKindSeparator = ", ",
+    },
+    autoEnableHints = true,
+}
+-- }}}
+
 end

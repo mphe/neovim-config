@@ -405,6 +405,7 @@ if g:config_use_nvimlsp
     Plug 'seblyng/nvim-echo-diagnostics'
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " Needed for hover highlighting
     Plug 'antosha417/nvim-lsp-file-operations'
+    Plug 'chrisgrieser/nvim-lsp-endhints'
 
     " Autocompletion
     Plug 'Saghen/blink.cmp', { 'tag': 'v1.*' }
