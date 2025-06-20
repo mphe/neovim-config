@@ -538,7 +538,7 @@ Plug 'JafarDakhan/vim-gml', { 'for': 'gml' }
 Plug 'shiracamus/vim-syntax-x86-objdump-d'
 
 " Interact with jupyter from neovim
-Plug 'tzachar/magma-nvim', { 'do': ':UpdateRemotePlugins', 'for': 'python' }
+Plug 'benlubas/molten-nvim', { 'do': ':UpdateRemotePlugins', 'for': 'python' }
 
 " }}}
 
@@ -917,17 +917,17 @@ endfun
 " augroup END
 
 
-" magma-nvim
-nnoremap <silent><expr> <leader>r  :MagmaEvaluateOperator<CR>
-nnoremap <silent>       <leader>rr :MagmaEvaluateLine<CR>
-xnoremap <silent>       <leader>r  :<C-u>MagmaEvaluateVisual<CR>
-nnoremap <silent>       <leader>rc :MagmaReevaluateCell<CR>
-nnoremap <silent>       <leader>rd :MagmaDelete<CR>
-nnoremap <silent>       <leader>ro :MagmaShowOutput<CR>
-nnoremap <silent>       <leader>rq :noautocmd MagmaEnterOutput<CR>
+" molten-nvim
+nnoremap <expr>         <leader>r nvim_exec('MoltenEvaluateOperator', v:true)
+nnoremap <silent>       <leader>rr :MoltenEvaluateLine<CR>
+xnoremap <silent>       <leader>r  :<C-u>MoltenEvaluateVisual<CR>
+nnoremap <silent>       <leader>rc :MoltenReevaluateCell<CR>
+nnoremap <silent>       <leader>rd :MoltenDelete<CR>
+nnoremap <silent>       <leader>ro :MoltenShowOutput<CR>
+nnoremap <silent>       <leader>rq :noautocmd MoltenEnterOutput<CR>
 
-let g:magma_automatically_open_output = v:false
-let g:magma_wrap_output = v:false
+" let g:molten_output_virt_lines = v:true
+let g:molten_virt_text_output = v:true
 
 
 " sideways.vim
