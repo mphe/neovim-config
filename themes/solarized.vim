@@ -137,6 +137,7 @@ function s:ApplySolarizedDark()
     hi! link BlinkCmpMenu NormalBgFg
     hi! link BlinkCmpMenuSelection BrightBgFg
     hi! link BlinkCmpMenuBorder FloatBorder
+    hi! BlinkCmpLabelMatch guifg=NONE guibg=NONE gui=underline
 
     " coc
     highlight link CocErrorSign   DiagnosticError

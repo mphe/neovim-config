@@ -406,6 +406,7 @@ if g:config_use_nvimlsp
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " Needed for hover highlighting
     Plug 'antosha417/nvim-lsp-file-operations'
     Plug 'chrisgrieser/nvim-lsp-endhints'
+    Plug 'xzbdmw/colorful-menu.nvim'
 
     " Autocompletion
     Plug 'Saghen/blink.cmp', { 'tag': 'v1.*' }

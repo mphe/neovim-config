@@ -737,13 +737,23 @@ require("blink.cmp").setup {
         menu = {
             auto_show = true,
             draw = {
-                columns = {
-                    { "kind_icon" },
-                    { "label", "label_description", gap = 1 },
-                    { "source_id" },
-                    -- { "label", "label_description", gap = 1 },
-                    -- { "kind_icon", "kind" }
+                -- colorful-menu.nvim
+                columns = { { "kind_icon" }, { "label", gap = 1 }, { "source_id" }, },
+                components = {
+                    label = {
+                        text = function(ctx)
+                            return require("colorful-menu").blink_components_text(ctx)
+                        end,
+                        highlight = function(ctx)
+                            return require("colorful-menu").blink_components_highlight(ctx)
+                        end,
+                    },
                 },
+                -- columns = {
+                --     { "kind_icon" },
+                --     { "label", "label_description", gap = 1 },
+                --     { "source_id" },
+                -- },
             }
         },
         ghost_text = { enabled = false },
