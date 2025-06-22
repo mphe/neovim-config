@@ -34,4 +34,4 @@ function LspEnableDebugLogging()
 endfunction
 
 command! LspServerCapabilities lua =vim.lsp.get_clients()[1].server_capabilities
-command! LspEnableDebugLogging call LSPEnableDebugLogging()
+command! LspEnableDebugLogging call LspEnableDebugLogging()
