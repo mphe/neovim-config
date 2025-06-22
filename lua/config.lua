@@ -542,7 +542,7 @@ vim.api.nvim_create_autocmd("LspTokenUpdate", {
 
 -- Show full diagnostic information
 -- https://github.com/neovim/neovim/issues/19649#issuecomment-1750272564
-local original = vim.lsp.handlers['textDocument/publishDiagnostics']
+local publishDiagnosticsOriginal = vim.lsp.handlers['textDocument/publishDiagnostics']
 vim.lsp.handlers['textDocument/publishDiagnostics'] = function(_, result, ctx, config)
     vim.tbl_map(function(item)
         if item.relatedInformation and #item.relatedInformation > 0 then
@@ -568,7 +568,7 @@ vim.lsp.handlers['textDocument/publishDiagnostics'] = function(_, result, ctx, c
          end, item.relatedInformation)
       end
    end, result.diagnostics)
-   original(_, result, ctx, config)
+   publishDiagnosticsOriginal(_, result, ctx, config)
 end
 
 vim.diagnostic.config({
@@ -723,7 +723,11 @@ require("blink.cmp").setup {
     },
 
     completion = {
-        documentation = { auto_show = true },
+        documentation = {
+            auto_show = true,
+            auto_show_delay_ms = 100,
+            update_delay_ms = 100,
+        },
         accept = {
             auto_brackets = { enabled = false },
             create_undo_point = true,
@@ -767,7 +771,7 @@ require("blink.cmp").setup {
         enabled = true,
         window = {
             -- border = "none",
-            -- show_documentation = false
+            show_documentation = true
         },
     },
 
@@ -777,6 +781,22 @@ require("blink.cmp").setup {
         default = { 'lsp', 'path', 'snippets', 'buffer' },
 
         providers = {
+            lsp = {
+                fallbacks = {},  -- Always show buffer completion
+                transform_items = function(_ctx, items)
+                    -- Remove auto-completed braces added by the language server
+                    for _, item in ipairs(items) do
+                        -- print(vim.inspect(item))
+                        local insertText = item.insertText
+                        if string.sub(insertText, -1) == "(" then
+                            item.insertText = string.sub(insertText, 0, string.len(insertText) - 1)
+                        elseif string.sub(insertText, -2) == "()" then
+                            item.insertText = string.sub(insertText, 0, string.len(insertText) - 2)
+                        end
+                    end
+                    return items
+                end,
+            },
             path = {
                 opts = {
                     -- Path completion from cwd instead of current buffer's directory
