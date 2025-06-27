@@ -786,12 +786,14 @@ require("blink.cmp").setup {
                 transform_items = function(_ctx, items)
                     -- Remove auto-completed braces added by the language server
                     for _, item in ipairs(items) do
-                        -- print(vim.inspect(item))
                         local insertText = item.insertText
-                        if string.sub(insertText, -1) == "(" then
-                            item.insertText = string.sub(insertText, 0, string.len(insertText) - 1)
-                        elseif string.sub(insertText, -2) == "()" then
-                            item.insertText = string.sub(insertText, 0, string.len(insertText) - 2)
+                        if insertText ~= nil then
+                            -- print(vim.inspect(item))
+                            if string.sub(insertText, -1) == "(" then
+                                item.insertText = string.sub(insertText, 0, string.len(insertText) - 1)
+                            elseif string.sub(insertText, -2) == "()" then
+                                item.insertText = string.sub(insertText, 0, string.len(insertText) - 2)
+                            end
                         end
                     end
                     return items
