@@ -782,7 +782,7 @@ require("blink.cmp").setup {
 
         providers = {
             lsp = {
-                fallbacks = {},  -- Always show buffer completion
+                -- fallbacks = {},  -- Always show buffer completion
                 transform_items = function(_ctx, items)
                     -- Remove auto-completed braces added by the language server
                     for _, item in ipairs(items) do
@@ -799,10 +799,9 @@ require("blink.cmp").setup {
             },
             path = {
                 opts = {
+                    trailing_slash = false,
                     -- Path completion from cwd instead of current buffer's directory
-                    get_cwd = function(_)
-                        return vim.fn.getcwd()
-                    end,
+                    get_cwd = function(_) return vim.fn.getcwd() end,
                 },
             },
             buffer = {

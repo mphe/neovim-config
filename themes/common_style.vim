@@ -7,7 +7,6 @@ augroup custom_colors
 augroup END
 
 function! s:ApplyStylePre()
-    " highlight link cppStorageClass Keyword
 endfun
 
 function s:ApplyStyle()
@@ -15,10 +14,7 @@ function s:ApplyStyle()
         highlight Normal ctermbg=NONE guibg=NONE
     endif
 
-    " call s:ScalaSyntaxFixes()  " Check if still needed
-
     " Internal styles
-    hi! link vimSet vimCommand  " vimSet has no highlight for some reason in nvim 0.11
     hi! link QuickFixLine CursorLine
     highlight Comment cterm=NONE gui=NONE  " make comments non-italic
     highlight Folded cterm=bold gui=bold  " No underline in folds
@@ -32,6 +28,18 @@ function s:ApplyStyle()
     highlight DiagnosticUnderlineInfo gui=undercurl
     highlight DiagnosticUnderlineOk gui=undercurl
     highlight DiagnosticUnderlineError gui=undercurl
+
+    " Language style fixes
+    hi! link vimSet vimCommand  " vimSet has no highlight for some reason in nvim 0.11
+    hi! link cStorageClass cStatement  " const
+    hi! link cppStorageClass cStorageClass
+    hi! link cStructure cStatement  " class, struct, namespace, ...
+    hi! link cppStructure cStructure
+    hi! link cModifier cStatement  " inline, ...
+    hi! link cppModifier cModifier
+
+    " TODO: find out if still needed
+    " call s:ScalaSyntaxFixes()
 
 
     " treesitter / lsp fixes {{{
@@ -53,12 +61,12 @@ function s:ApplyStyle()
     hi! link @string.special.url.gdscript Macro  " $ or % node paths
     " }}}
 
-
     " Plugin styles
     " telescope
     hi! link TelescopeSelection Pmenu
 
-    " Lspsaga fixes
+    " Lspsaga
+    hi! link SagaActionTitle Title
     hi! link SagaClass Type
     hi! link SagaNamespace @namespace
     hi! link SagaFolder Normal  " Make Lspsaga's breadcrumb folder not red

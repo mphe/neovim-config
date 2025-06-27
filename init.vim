@@ -61,7 +61,8 @@ if exists('g:neovide')
 
     " Use Nerd Font because Bitmap fonts are not supported and disable AA
     " let s:guifont = 'Terminus_(TTF)'
-    let s:guifont = 'Terminess_Nerd_Font:#e-alias'
+    " let s:guifont = 'Terminess_Nerd_Font:#e-alias'
+    let s:guifont = 'Terminus_(TTF)_for_Windows,Symbols_Nerd_Font'
     set linespace=-2
 
     " Control + shift + c/v for copy & paste
@@ -1138,6 +1139,8 @@ map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans
 
 " F5
 function! F5Refresh()
+    syn sync fromstart
+
     if &filetype ==# 'java'
         Validate
     elseif &filetype ==# 'tex'
@@ -1156,13 +1159,14 @@ function! F5Refresh()
         if exists(':GrayoutUpdate')
             GrayoutUpdate
         endif
-        ALELint
     elseif &filetype ==# 'cs'
         if s:use_vim_omnisharp
             OmniSharpHighlight
         endif
     else
-        ALELint
+        if exists(':ALELint')
+            ALELint
+        endif
     endif
 endfun
 

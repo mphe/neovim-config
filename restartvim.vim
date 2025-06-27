@@ -28,6 +28,4 @@ endfun
 
 
 command! Restart call s:restart()
-
-
-
+command! Restore call s:maybe_restore()

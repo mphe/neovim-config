@@ -104,18 +104,10 @@ function s:ApplySolarizedDark()
     exec 'highlight Error cterm=undercurl ctermfg=1 gui=undercurl guisp=' . s:red
     highlight link SpellBad Error
 
-    " exec 'highlight DiagnosticError cterm=bold gui=bold guibg=' . s:base02 . 'guifg=' . s:orange
-    " exec 'highlight DiagnosticWarn cterm=bold gui=bold guibg=' . s:base02 . 'guifg=' . s:yellow
-    " exec 'highlight DiagnosticInfo cterm=bold gui=bold guibg=' . s:base03 . ' guifg=' . s:base1
     exec 'highlight! DiagnosticError cterm=bold gui=bold guifg=' . s:orange
     exec 'highlight! DiagnosticWarn cterm=bold gui=bold guifg=' . s:yellow
     exec 'highlight! DiagnosticInfo cterm=bold gui=bold guifg=' . s:base1
     highlight! link DiagnosticHint DiagnosticInfo
-
-    " highlight link DiagnosticVirtualTextError DiagnosticError
-    " highlight link DiagnosticVirtualTextWarn DiagnosticWarn
-    " highlight link DiagnosticVirtualTextInfo DiagnosticInfo
-    " highlight link DiagnosticVirtualTextHint DiagnosticHint
 
     hi! link WinBar Normal
     hi! link WinBarNC Normal
@@ -139,75 +131,74 @@ function s:ApplySolarizedDark()
     hi! link BlinkCmpMenuBorder FloatBorder
     hi! BlinkCmpLabelMatch guifg=NONE guibg=NONE gui=underline
 
+    " Lspsaga
+    hi! link SagaLightBulb Type
+
     " coc
-    highlight link CocErrorSign   DiagnosticError
-    highlight link CocWarningSign DiagnosticWarn
-    highlight link CocInfoSign    DiagnosticInfo
-    highlight link CocHintSign CocInfoSign
-    highlight CocErrorFloat   cterm=NONE ctermbg=black ctermfg=9   gui=NONE guibg=#094655 guifg=#cb4b16
-    highlight CocWarningFloat cterm=NONE ctermbg=black ctermfg=130 gui=NONE guibg=#094655 guifg=#b58900
-    highlight CocInfoFloat    cterm=NONE ctermbg=black ctermfg=11  gui=NONE guibg=#094655
-    highlight link CocHintFloat CocInfoFloat
-    " highlight link NormalFloat CursorLine
-    highlight link CocFadeOut Comment
+    if g:config_use_coc
+        highlight link CocErrorSign   DiagnosticError
+        highlight link CocWarningSign DiagnosticWarn
+        highlight link CocInfoSign    DiagnosticInfo
+        highlight link CocHintSign CocInfoSign
+        highlight CocErrorFloat   cterm=NONE ctermbg=black ctermfg=9   gui=NONE guibg=#094655 guifg=#cb4b16
+        highlight CocWarningFloat cterm=NONE ctermbg=black ctermfg=130 gui=NONE guibg=#094655 guifg=#b58900
+        highlight CocInfoFloat    cterm=NONE ctermbg=black ctermfg=11  gui=NONE guibg=#094655
+        highlight link CocHintFloat CocInfoFloat
+        " highlight link NormalFloat CursorLine
+        highlight link CocFadeOut Comment
 
-    " fix completion menu colors
-    " hi link CocMenuSel PmenuSel
-    " hi link CocFloating Pmenu
-    hi link CocMenuSel BrightBgFg
-    hi link CocFloating NormalBgFg
-    " hi link CocFloating BrighterBgFg
-    exec 'highlight CocFloatingBorder guifg=' . s:blue
+        " fix completion menu colors
+        " hi link CocMenuSel PmenuSel
+        " hi link CocFloating Pmenu
+        hi link CocMenuSel BrightBgFg
+        hi link CocFloating NormalBgFg
+        " hi link CocFloating BrighterBgFg
+        exec 'highlight CocFloatingBorder guifg=' . s:blue
 
-    highlight CocUnderline cterm=underline gui=underline
-    " highlight CocErrorLine ctermbg=52 guibg=#4F2938
-    " highlight link CocErrorHighlight Error
-    highlight CocCodeLens guibg=#073642 guifg=#6C71C4
-    highlight! link CocInlayHint CocCodeLens
+        highlight CocUnderline cterm=underline gui=underline
+        " highlight CocErrorLine ctermbg=52 guibg=#4F2938
+        " highlight link CocErrorHighlight Error
+        highlight CocCodeLens guibg=#073642 guifg=#6C71C4
+        highlight! link CocInlayHint CocCodeLens
 
-    highlight link CocInlayHintType Comment
-    " exec 'highlight CocInlayHintType guifg=' . s:yellow . ' guibg=#333333'
-    " exec 'highlight CocInlayHintType guifg=' . s:base01 . ' guibg=' . s:normal_bg
-    " exec 'highlight CocInlayHintType guifg=' . s:yellow . ' guibg=' . s:pum_bg
-    " exec 'highlight CocInlayHintType guibg=' . s:normal_bg
+        highlight link CocInlayHintType Comment
+        " exec 'highlight CocInlayHintType guifg=' . s:yellow . ' guibg=#333333'
+        " exec 'highlight CocInlayHintType guifg=' . s:base01 . ' guibg=' . s:normal_bg
+        " exec 'highlight CocInlayHintType guifg=' . s:yellow . ' guibg=' . s:pum_bg
+        " exec 'highlight CocInlayHintType guibg=' . s:normal_bg
 
-    " template arguments
-    exec 'hi CocSemTypeTypeParameter guifg=' . s:base2
-    hi link CocSemType CocSemTypeType
-    hi link CocSemTypeClass CocSemTypeType
-    hi link CocSemTypeStruct CocSemTypeType
-    hi link CocSemTypeEnumMember @constant
-    hi link CocSemTypeModVariableReadonly SlightCyanFg
-    hi link CocSemTypeModParameterReadonly CocSemTypeModVariableReadonly
-    hi link CocSemTypeEvent @property
+        " template arguments
+        exec 'hi CocSemTypeTypeParameter guifg=' . s:base2
+        hi link CocSemType CocSemTypeType
+        hi link CocSemTypeClass CocSemTypeType
+        hi link CocSemTypeStruct CocSemTypeType
+        hi link CocSemTypeEnumMember @constant
+        hi link CocSemTypeModVariableReadonly SlightCyanFg
+        hi link CocSemTypeModParameterReadonly CocSemTypeModVariableReadonly
+        hi link CocSemTypeEvent @property
 
-    " coc-lightbulb
-    exec 'hi LightBulbDefaultSign guibg=' . s:normal_bg
+        " coc-lightbulb
+        exec 'hi LightBulbDefaultSign guibg=' . s:normal_bg
 
-    " ale
-    highlight! link ALEError CocErrorHighlight
-    highlight! link ALEErrorLine CocErrorLine
-    highlight! link ALEErrorSign CocErrorSign
-    highlight! link ALEWarning CocWarningHighlight
-    highlight! link ALEWarningLine CocWarningLine
-    highlight! link ALEWarningSign CocWarningSign
-    highlight! link ALEInfo CocInfoHighlight
-    highlight! link ALEInfoLine CocInfoLine
-    highlight! link ALEInfoSign CocInfoSign
+        " ale
+        highlight! link ALEError CocErrorHighlight
+        highlight! link ALEErrorLine CocErrorLine
+        highlight! link ALEErrorSign CocErrorSign
+        highlight! link ALEWarning CocWarningHighlight
+        highlight! link ALEWarningLine CocWarningLine
+        highlight! link ALEWarningSign CocWarningSign
+        highlight! link ALEInfo CocInfoHighlight
+        highlight! link ALEInfoLine CocInfoLine
+        highlight! link ALEInfoSign CocInfoSign
 
-    highlight! link ALEVirtualTextError ALEErrorSign
-    highlight! link ALEVirtualTextWarning ALEWarningSign
-    highlight! link ALEVirtualTextInfo ALEInfoSign
+        highlight! link ALEVirtualTextError ALEErrorSign
+        highlight! link ALEVirtualTextWarning ALEWarningSign
+        highlight! link ALEVirtualTextInfo ALEInfoSign
+    endif
 
     highlight fugitiveUnstagedSection ctermfg=red guifg=#dc322f
     highlight link fugitiveUntrackedSection fugitiveUnstagedSection
     highlight fugitiveStagedSection ctermfg=green guifg=#859900
-
-    highlight link cStorageClass cStatement
-    highlight link cppModifier cStatement
-    highlight link cppStructure cStatement
-    highlight link cModifier cStatement
-    highlight link cStructure cStatement
 
     hi texStatement ctermbg=NONE guibg=NONE
     exec 'highlight VirtColumn guifg=' . s:normal_bg . ' guibg=NONE'
