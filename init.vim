@@ -400,6 +400,7 @@ endif
 
 if g:config_use_nvimlsp
     Plug 'mason-org/mason.nvim'
+    Plug 'mason-org/mason-lspconfig.nvim'
     Plug 'neovim/nvim-lspconfig'
     Plug 'p00f/clangd_extensions.nvim'
     Plug 'nvimdev/lspsaga.nvim'
