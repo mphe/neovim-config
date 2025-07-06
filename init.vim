@@ -408,6 +408,7 @@ if g:config_use_nvimlsp
     Plug 'antosha417/nvim-lsp-file-operations'
     Plug 'chrisgrieser/nvim-lsp-endhints'
     Plug 'xzbdmw/colorful-menu.nvim'
+    Plug 'barreiroleo/ltex_extra.nvim'
 
     " Autocompletion
     Plug 'Saghen/blink.cmp', { 'tag': 'v1.*' }

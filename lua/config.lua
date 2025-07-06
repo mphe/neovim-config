@@ -602,6 +602,7 @@ vim.lsp.enable({
     'gopls',
     'jsonls',
     'ltex',
+    'ltex_plus',
     'lua_ls',
     'tsserver',
     'omnisharp',
@@ -623,6 +624,33 @@ vim.lsp.config("clangd", {
         },
     },
 })
+
+for _, key in pairs { "ltex", "ltex_plus" } do
+    vim.lsp.config(key, {
+        on_attach = function(_, _)
+            require("ltex_extra").setup {
+                load_langs = { "en-US", "de-DE", },
+                path = vim.fn.expand("~") .. "/.ltex",
+            }
+        end,
+        settings = {
+            ltex = {
+                language = "de-DE",
+                -- language = "en-US",
+                diagnosticSeverity = "information",
+                disabledRules = {
+                    ["en-US"] = {
+                        "WHITESPACE_RULE",
+                    }
+                },
+                -- dictionary = {
+                --     ["en-US"] = { ":~/.ltex/en-US.txt" },
+                --     ["de-DE"] = { ":~/.ltex/de-DE.txt" },
+                -- },
+            },
+        },
+    })
+end
 
 vim.lsp.config("basedpyright", {
     settings = {
