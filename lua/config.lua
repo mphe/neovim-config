@@ -635,7 +635,7 @@ for _, key in pairs { "ltex", "ltex_plus" } do
         end,
         settings = {
             ltex = {
-                language = "de-DE",
+                -- language = "de-DE",
                 -- language = "en-US",
                 diagnosticSeverity = "information",
                 disabledRules = {
@@ -923,7 +923,7 @@ vim.api.nvim_create_autocmd("CursorHold", {
 -- mason {{{
 require("mason").setup({})
 require("mason-lspconfig").setup({
-    ensure_installed = { "lua_ls", "ltex-ls-plus", },
+    ensure_installed = { "lua_ls", "ltex_plus", },
     automatic_enable = {
         exclude = {}
     }
