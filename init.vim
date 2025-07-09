@@ -410,6 +410,7 @@ if g:config_use_nvimlsp
     Plug 'chrisgrieser/nvim-lsp-endhints'
     Plug 'xzbdmw/colorful-menu.nvim'
     Plug 'barreiroleo/ltex_extra.nvim'
+    Plug 'r0nsha/qfpreview.nvim'  " displays a preview popup for quickfix and loc list
 
     " Autocompletion
     Plug 'Saghen/blink.cmp', { 'tag': 'v1.*' }
