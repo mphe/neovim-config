@@ -643,6 +643,12 @@ for _, key in pairs { "ltex", "ltex_plus" } do
                         "WHITESPACE_RULE",
                     }
                 },
+                enabled = {
+                    "bib",
+                    "latex",
+                    "tex",
+                    "markdown"
+                }
                 -- dictionary = {
                 --     ["en-US"] = { ":~/.ltex/en-US.txt" },
                 --     ["de-DE"] = { ":~/.ltex/de-DE.txt" },
