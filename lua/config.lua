@@ -57,7 +57,7 @@ require'bufferline'.setup {
   clickable = true,
 
   -- Excludes buffers from the tabline
-  -- exclude_ft = {'javascript'},
+  exclude_ft = { "qf" },
   -- exclude_name = {'package.json'},
 
   -- A buffer to this direction will be focused (if it exists) when closing the current buffer.
