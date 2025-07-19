@@ -955,14 +955,18 @@ require("lsp-endhints").setup{
 
 -- qfpreview {{{
 require('qfpreview').setup({
-    -- number | "fill"
-    height = 30,
-    -- whether to show the buffer's name
-    show_name = true,
-    -- the window's throttle time in milliseconds
-    throttle = 100,
-    -- additinonal window configuration
-    win = {}
+    ui = {
+        -- number | "fill"
+        height = 30,
+        -- additinonal window configuration
+        win = {}
+    },
+    opts = {
+        -- whether to enable lsp clients
+        lsp = true,
+        -- whether to enable diagnostics
+        diagnostics = true
+    }
 })
 -- }}}
 
