@@ -386,7 +386,9 @@ call plug#begin(s:vim_cfg_path . '/plugged')
 " color schemes
 Plug 'ishan9299/nvim-solarized-lua' " Has treesitter support
 
-Plug 'nvim-tree/nvim-tree.lua'
+Plug 'MunifTanjim/nui.nvim'  " dependency of neo-tree
+Plug 'nvim-neo-tree/neo-tree.nvim'
+
 Plug 'itchyny/lightline.vim'
 Plug 'Lokaltog/vim-easymotion'
 Plug 'tpope/vim-fugitive'
@@ -463,10 +465,10 @@ Plug 'tommcdo/vim-exchange'
 
 Plug 'rcarriga/nvim-notify'
 
-" Required by: telescope, copilot, codeium.nvim
+" Required by: telescope, copilot, codeium.nvim, neo-tree
 Plug 'nvim-lua/plenary.nvim'
 
-" Required by barbar.nvim, dashboard-nvim and lsp stuff
+" Required by barbar.nvim, dashboard-nvim and lsp stuff, neo-tree
 Plug 'kyazdani42/nvim-web-devicons'
 
 Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }

@@ -10,33 +10,16 @@ vim.g.loaded_netrwPlugin = 1
 
 require("lsp-file-operations").setup()
 
--- nvim-tree {{{
-local function nvim_tree_on_attach(bufnr)
-    local api = require("nvim-tree.api")
-
-    local function opts(desc)
-        return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
-    end
-
-    api.config.mappings.default_on_attach(bufnr)
-
-    -- remove a default
-    vim.keymap.del("n", "H", { buffer = bufnr })
-    vim.keymap.del("n", "L", { buffer = bufnr })
-
-    -- override a default
-    -- vim.keymap.set("n", "<C-e>", api.tree.reload,                       opts("Refresh"))
-
-    -- add your mappings
-    -- vim.keymap.set("n", "?",     api.tree.toggle_help,                  opts("Help"))
-end
-
-require("nvim-tree").setup({
-    on_attach = nvim_tree_on_attach,
+require("neo-tree").setup({
+    filesystem = {
+        bind_to_cwd = true, -- true creates a 2-way binding between vim's cwd and neo-tree's root
+        cwd_target = {
+            sidebar = "tab",   -- sidebar is when position = left or right
+            current = "window" -- current is when position = current
+        },
+    }
 })
-
-vim.api.nvim_create_user_command("NT", "NvimTreeToggle", {})
--- }}}
+vim.api.nvim_create_user_command("NT", "Neotree toggle reveal_force_cwd", {})
 
 -- barbar.nvim {{{
 -- config {{{
