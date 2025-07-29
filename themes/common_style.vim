@@ -37,6 +37,7 @@ function s:ApplyStyle()
     hi! link cppStructure cStructure
     hi! link cModifier cStatement  " inline, ...
     hi! link cppModifier cModifier
+    hi! link cppOperator Function  " Operator overloads; makes it more readable in class declarations
 
     " TODO: find out if still needed
     " call s:ScalaSyntaxFixes()
