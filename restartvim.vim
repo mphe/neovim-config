@@ -22,7 +22,7 @@ endfun
 
 
 function s:restart()
-    exec 'mksession ' . g:restart_vim_session_file
+    exec 'mksession! ' . g:restart_vim_session_file
     qall
 endfun
 
