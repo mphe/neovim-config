@@ -321,7 +321,7 @@ require("paint").setup({
         {
             -- Highlight tags in C++
             filter = { filetype = "cpp" },
-            pattern = "%[%[(%a+).-%]%]",
+            pattern = "%[%[([a-zA-Z_]+).-%]%]",
             hl = "Keyword",
         },
         {
