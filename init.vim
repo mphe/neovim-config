@@ -340,7 +340,13 @@ cnoreabbrev le e %:h/
 
 " -------------------------------------- Functions and Commands {{{
 
-command! OpenExplorer silent exec '!xdg-open .'
+if has('win32')
+    command! OpenExplorerCWD silent exec '!explorer .'
+    command! OpenExplorer silent exec '!explorer %:h'
+else
+    command! OpenExplorerCWD silent exec '!xdg-open .'
+    command! OpenExplorer silent exec '!xdg-open %:h'
+endif
 
 " Function for time measurement
 function! HowLong(command)
