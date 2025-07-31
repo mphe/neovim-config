@@ -601,6 +601,10 @@ vim.lsp.config("clangd", {
         "--completion-style=detailed",
         "--function-arg-placeholders",
         "--fallback-style=llvm",
+        "--rename-file-limit=0",
+        "--limit-references=0",
+        "--header-insertion-decorators",
+        "--experimental-modules-support",
     },
     settings = {
         clangd = {
