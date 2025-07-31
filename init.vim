@@ -140,6 +140,7 @@ set nofoldenable  " don't fold anything automatically
 set foldlevelstart=99
 " Skip over closed folds with { }
 set foldopen-=block
+let g:xml_syntax_folding = 1
 
 " global clipboard
 " set clipboard+=unnamed
