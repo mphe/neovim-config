@@ -67,8 +67,10 @@ if exists('g:neovide')
 
     " Control + shift + c/v for copy & paste
     lua vim.api.nvim_set_keymap("v", "<sc-c>", '"+y', { noremap = true })
+    lua vim.api.nvim_set_keymap('v', '<sc-v>', '"+P', { noremap = true })
     lua vim.api.nvim_set_keymap("i", "<sc-v>", '<ESC>"+p', { noremap = true })
     lua vim.api.nvim_set_keymap("n", "<sc-v>", '"+p', { noremap = true })
+    lua vim.api.nvim_set_keymap("c", "<sc-v>", "<C-R>+", { noremap = true })
 endif
 
 
