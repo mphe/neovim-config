@@ -426,6 +426,7 @@ if g:config_use_nvimlsp
     Plug 'xzbdmw/colorful-menu.nvim'
     Plug 'barreiroleo/ltex_extra.nvim'
     Plug 'r0nsha/qfpreview.nvim'  " displays a preview popup for quickfix and loc list
+    Plug 'VidocqH/lsp-lens.nvim'
 
     " Autocompletion
     Plug 'Saghen/blink.cmp', { 'tag': 'v1.*' }

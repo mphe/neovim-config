@@ -9,6 +9,9 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 require("lsp-file-operations").setup()
+require'lsp-lens'.setup({
+    enable = false,
+})
 
 require("neo-tree").setup({
     filesystem = {
