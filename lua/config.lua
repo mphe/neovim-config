@@ -805,7 +805,7 @@ require("blink.cmp").setup {
 
         providers = {
             lsp = {
-                -- fallbacks = {},  -- Always show buffer completion
+                fallbacks = {},  -- Always show buffer completion
                 transform_items = function(_ctx, items)
                     -- Remove auto-completed braces added by the language server
                     for _, item in ipairs(items) do
@@ -830,13 +830,17 @@ require("blink.cmp").setup {
                 },
             },
             buffer = {
+                max_items = 100,
+                score_offset = -1000,
                 opts = {
+                    -- get all buffers, even ones like neo-tree
+                    get_bufnrs = vim.api.nvim_list_bufs,
                     -- Buffer completion from all open buffers
-                    get_bufnrs = function()
-                        return vim.tbl_filter(function(bufnr)
-                            return vim.bo[bufnr].buftype == ''
-                        end, vim.api.nvim_list_bufs())
-                    end
+                    -- get_bufnrs = function()
+                    --     return vim.tbl_filter(function(bufnr)
+                    --         return vim.bo[bufnr].buftype == ''
+                    --     end, vim.api.nvim_list_bufs())
+                    -- end
                 }
             }
         }
@@ -849,8 +853,10 @@ require("blink.cmp").setup {
     -- See the fuzzy documentation for more information
     fuzzy = {
         implementation = "prefer_rust_with_warning",
+        max_typos = function(_) return 0 end,  -- disable the typo resistance
         sorts = {
             "exact",
+            -- require("clangd_extensions.cmp_scores"),  -- Clangd sorting https://github.com/p00f/clangd_extensions.nvim?tab=readme-ov-file#completion-scores
             "score",
             "sort_text",
         },
