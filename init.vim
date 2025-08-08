@@ -88,8 +88,12 @@ call ChangeFontSize(0)
 
 
 if has('win32')
-    nnoremap <c-z> :tab terminal wsl<cr>
-    autocmd TermOpen * startinsert
+    if g:config_use_nvimlsp
+        nnoremap <c-z> :Lspsaga term_toggle<cr>
+    else
+        nnoremap <c-z> :tab terminal wsl<cr>
+        autocmd TermOpen * startinsert
+    endif
 endif
 
 if g:config_use_nvimlsp
