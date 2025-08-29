@@ -427,6 +427,7 @@ if g:config_use_nvimlsp
     Plug 'barreiroleo/ltex_extra.nvim'
     Plug 'r0nsha/qfpreview.nvim'  " displays a preview popup for quickfix and loc list
     Plug 'VidocqH/lsp-lens.nvim'
+    Plug 'Fildo7525/pretty_hover'
 
     " Autocompletion
     Plug 'Saghen/blink.cmp', { 'tag': 'v1.*' }

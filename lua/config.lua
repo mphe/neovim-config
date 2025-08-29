@@ -12,6 +12,7 @@ require("lsp-file-operations").setup()
 require'lsp-lens'.setup({
     enable = false,
 })
+require("pretty_hover").setup({})
 
 require("neo-tree").setup({
     filesystem = {
@@ -750,6 +751,16 @@ require("blink.cmp").setup {
             auto_show = true,
             auto_show_delay_ms = 100,
             update_delay_ms = 100,
+
+            -- Requires the pretty_hover plugin
+            draw = function(opts)
+                if opts.item and opts.item.documentation and opts.item.documentation.value then
+                    local out = require("pretty_hover.parser").parse(opts.item.documentation.value)
+                    opts.item.documentation.value = out:string()
+                end
+
+                opts.default_implementation(opts)
+            end,
         },
         accept = {
             auto_brackets = { enabled = false },

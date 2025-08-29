@@ -26,6 +26,8 @@ nnoremap <leader>rn :Lspsaga rename<cr>
 nnoremap <leader>jr :Lspsaga finder<cr>
 nnoremap <leader>jR :lua vim.lsp.buf.references()<cr>
 
+nnoremap K :lua require("pretty_hover").hover()<cr>
+
 cnoreabbrev Lsp Lspsaga
 
 function LspEnableDebugLogging()
