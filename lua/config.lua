@@ -608,7 +608,7 @@ vim.lsp.config("clangd", {
         "--rename-file-limit=0",
         "--limit-references=0",
         "--header-insertion-decorators",
-        "--experimental-modules-support",
+        -- "--experimental-modules-support",  -- can cause crashes
     },
     settings = {
         clangd = {
