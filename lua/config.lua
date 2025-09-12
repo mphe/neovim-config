@@ -977,4 +977,16 @@ require('qfpreview').setup({
 })
 -- }}}
 
+
+-- Additional LSP config {{{
+function LSP_hover()
+    local pretty_hover = require("pretty_hover")
+    if not pretty_hover or not pcall(pretty_hover.hover) then
+        vim.lsp.buf.hover()
+    end
+end
+
+vim.api.nvim_set_keymap('n', 'K', '<cmd>lua LSP_hover()<CR>', { noremap = true, silent = true })
+-- }}}
+
 end
