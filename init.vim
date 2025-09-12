@@ -713,7 +713,7 @@ let g:ctrlp_by_filename = 1
 " let g:ctrlp_custom_ignore = '\.pyc'
 let g:ctrlp_open_multiple_files = 'ijr'
 let g:ctrlp_custom_ignore = {
-            \ 'dir':  '\v[\/](\.(godot|import|git|hg|svn|clangd|ccls-cache|tmp|mypy_cache|cache)|node_modules|build)$',
+            \ 'dir':  '\v[\/](\.(vs|godot|import|git|hg|svn|clangd|ccls-cache|tmp|mypy_cache|cache)|node_modules|build)$',
             \ 'file': '\v\.(exe|so|dll|pyc|o|a|obj|uid)$'
             \ }
 let g:ctrlp_working_path_mode = 'rw'
