@@ -29,6 +29,8 @@ function s:ApplyStyle()
     highlight DiagnosticUnderlineOk gui=undercurl
     highlight DiagnosticUnderlineError gui=undercurl
 
+    hi! link qfError DiagnosticError
+
     " Language style fixes
     hi! link vimSet vimCommand  " vimSet has no highlight for some reason in nvim 0.11
     hi! link cStorageClass cStatement  " const
