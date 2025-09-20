@@ -35,3 +35,7 @@ endfunction
 
 command! LspServerCapabilities lua =vim.lsp.get_clients()[1].server_capabilities
 command! LspEnableDebugLogging call LspEnableDebugLogging()
+
+
+" unmap default nvim LSP binding
+nunmap grt
