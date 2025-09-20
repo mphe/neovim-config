@@ -84,7 +84,7 @@ function s:ApplySolarizedDark()
     " treesitter / lsp {{{
     hi! link @module VioletFg
     hi! link @property SlightBlueFg
-    hi! link @lsp.type.typeParameter WhiteFg
+    hi! link @lsp.type.typeParameter WhiteFg  " c++ templates parameters
     " hi! link LspCodeLens Comment
     " hi! link LspInlayHint Comment
     highlight NonText guibg=#073642 guifg=#6C71C4 gui=NONE

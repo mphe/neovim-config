@@ -395,10 +395,11 @@ end
 -- }}}
 
 -- treesitter {{{
-local use_treesitter = false
+local use_treesitter = true
 local use_treesitter_fold = false
 local enabled_highlights = {
-    -- markdown = true,
+    markdown = true,
+    markdown_inline = true,
     -- gdscript = true,
     -- gdshader = true,
 }
