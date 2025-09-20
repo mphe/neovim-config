@@ -577,8 +577,8 @@ vim.lsp.inlay_hint.enable(true)
 vim.highlight.priorities.semantic_tokens = 95
 
 vim.lsp.enable({
-    'basedpyright',
-    -- 'jedi_language_server',
+    -- 'basedpyright',
+    'jedi_language_server',
     'bashls',
     'clangd',
     'cmake',
