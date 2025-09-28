@@ -12,11 +12,16 @@ let g:config_use_dashboard = has('win32')
 let g:config_use_copilot = 1
 let g:config_use_codeium = 0
 let g:config_use_scrollbar = 1  " Might cause performance issues on Windows
+let g:config_use_lightline = 0  " Might cause performance issues on Windows
 
 let g:config_icon_error = ' '
 let g:config_icon_warning = ' '
 let g:config_icon_info = ' '
 let g:config_icon_hint = ' '
+let g:config_separator_left = ''  " 
+let g:config_separator_right = ''  " 
+let g:config_subseparator_left = ''
+let g:config_subseparator_right = ''
 
 
 " Default font settings
@@ -101,6 +106,8 @@ if g:config_use_nvimlsp
     nunmap gri
     nunmap gra
     nunmap grn
+    nunmap grt
+    nnoremap <nowait> gr gr
 endif
 
 " -------------------------------------- General settings start {{{
@@ -398,11 +405,17 @@ call plug#begin(s:vim_cfg_path . '/plugged')
 
 " color schemes
 Plug 'ishan9299/nvim-solarized-lua' " Has treesitter support
+Plug 'folke/tokyonight.nvim'
 
 Plug 'MunifTanjim/nui.nvim'  " dependency of neo-tree
 Plug 'nvim-neo-tree/neo-tree.nvim'
 
-Plug 'itchyny/lightline.vim'
+if g:config_use_lightline
+    Plug 'itchyny/lightline.vim'
+else
+    Plug 'nvim-lualine/lualine.nvim'
+endif
+
 Plug 'Lokaltog/vim-easymotion'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
@@ -585,9 +598,8 @@ set t_Co=256
 
 " set the split char tmux uses
 set fillchars+=vert:│
-set fillchars+=fold:\ ,
-" set fillchars+=fold:─
-highlight! Folded guibg=NONE gui=bold
+" set fillchars+=fold:\ ,
+set fillchars+=fold:─
 set cursorline
 
 runtime themes/common_style.vim
@@ -626,7 +638,9 @@ let g:localvimrc_name = [ '.lvimrc', ]
 let g:localvimrc_persistent = 1
 
 " lightline
-runtime lightline_cfg.vim
+if g:config_use_lightline
+    runtime lightline_cfg.vim
+endif
 
 " easymotion
 let g:EasyMotion_smartcase = 1

@@ -78,6 +78,8 @@ function s:ApplySolarizedDark()
 
     call s:ApplyBarBar()
 
+    hi! Folded guibg=NONE gui=bold
+
     hi markdownCode guibg=#223344
     hi link doxygenBrief Comment
 
@@ -118,6 +120,9 @@ function s:ApplySolarizedDark()
 
     " For some reason removed lines in git diffs are not red when not using fugitive.
     hi! link Removed RedFg
+    " hi! DiffAdd guifg=NONE guibg=#004e41
+    " hi! DiffAdd guifg=NONE guibg=#003626
+    " hi! DiffChange guifg=NONE guibg=#363600
 
     " blink.cmp
     hi! link NormalFloat NormalBgFg
