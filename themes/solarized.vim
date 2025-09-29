@@ -80,7 +80,7 @@ function s:ApplySolarizedDark()
 
     hi! Folded guibg=NONE gui=bold
 
-    hi markdownCode guibg=#223344
+    exec 'hi markdownCode guibg=#223344 guifg=' . s:base1
     hi link doxygenBrief Comment
 
     " treesitter / lsp {{{
