@@ -21,11 +21,17 @@ function s:maybe_restore()
 endfun
 
 
-function s:restart()
+function s:save_session()
     exec 'mksession! ' . g:restart_vim_session_file
+endfun
+
+
+function s:restart()
+    call s:save_session()
     qall
 endfun
 
 
+command! SaveSession call s:restart()
 command! Restart call s:restart()
 command! Restore call s:maybe_restore()
