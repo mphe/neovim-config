@@ -11,7 +11,7 @@ let g:config_use_nvimlsp = 1
 let g:config_use_dashboard = has('win32')
 let g:config_use_copilot = 1
 let g:config_use_codeium = 0
-let g:config_use_scrollbar = 1  " Might cause performance issues on Windows
+let g:config_use_scrollbar = !has('win32')  " Might cause performance issues on Windows
 let g:config_use_lightline = 0  " Might cause performance issues on Windows
 
 let g:config_icon_error = ' '
