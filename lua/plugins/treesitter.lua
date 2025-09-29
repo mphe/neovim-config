@@ -1,8 +1,8 @@
-local use_treesitter = true
 local use_treesitter_fold = false
 local enabled_highlights = {
     markdown = true,
     markdown_inline = true,
+    vimdoc = true
     -- gdscript = true,
     -- gdshader = true,
 }
@@ -23,6 +23,8 @@ require'nvim-treesitter.configs'.setup {
         -- "gdshader",
         "go",
         "python",
+        "lua",
+        "vimdoc",
     },
 
     -- Install parsers synchronously (only applied to `ensure_installed`)
@@ -42,7 +44,7 @@ require'nvim-treesitter.configs'.setup {
         enable = false
     },
     highlight = {
-        enable = use_treesitter,
+        enable = true,
 
         -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
         -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
