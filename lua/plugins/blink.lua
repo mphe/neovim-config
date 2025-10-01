@@ -1,4 +1,3 @@
--- https://cmp.saghen.dev/installation
 require("blink.cmp").setup {
     -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
     -- 'super-tab' for mappings similar to vscode (tab to accept)
@@ -160,9 +159,9 @@ require("blink.cmp").setup {
     -- See the fuzzy documentation for more information
     fuzzy = {
         implementation = "prefer_rust_with_warning",
-        max_typos = function(_) return 0 end,  -- disable the typo resistance
+        max_typos = function(_) return 1 end,  -- disable the typo resistance
         sorts = {
-            "exact",
+            -- "exact",
             -- require("clangd_extensions.cmp_scores"),  -- Clangd sorting https://github.com/p00f/clangd_extensions.nvim?tab=readme-ov-file#completion-scores
             "score",
             "sort_text",
