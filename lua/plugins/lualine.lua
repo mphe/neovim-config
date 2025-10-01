@@ -10,6 +10,23 @@ if vim.g.colors_name == "solarized" then
     -- custom_theme.normal.b = { bg = custom_theme.normal.c.bg, fg = "#b58900" }
 end
 
+local diagnostics_component = {
+    'diagnostics',
+    symbols = {
+        error = vim.g.config_icon_error .. " ",
+        warn = vim.g.config_icon_warning .. " ",
+        info = vim.g.config_icon_info .. " ",
+        hint = vim.g.config_icon_hint .. " ",
+    },
+}
+
+local lspstatus_component = { 'lsp_status', ignore_lsp = {"copilot"} }
+
+local filename_component = {
+    "filename",
+    path = 1,  -- relative path
+}
+
 require("lualine").setup {
     options = {
         theme = custom_theme or "auto",
@@ -18,20 +35,17 @@ require("lualine").setup {
     },
     sections = {
         lualine_a = {'mode'},
-        lualine_b = {'filename'},
+        lualine_b = {filename_component},
         lualine_c = {'branch'},
-        lualine_x = {'diagnostics', 'encoding', 'fileformat', 'filetype'},
-        lualine_y = {
-            { 'lsp_status', ignore_lsp = {"copilot"} },
-            "searchcount"
-        },
+        lualine_x = { diagnostics_component, 'encoding', 'fileformat', 'filetype' },
+        lualine_y = { lspstatus_component, "searchcount" },
         lualine_z = {'progress', 'location'}
     },
     inactive_sections = {
         lualine_a = {},
-        lualine_b = {'filename'},
+        lualine_b = {filename_component},
         lualine_c = {},
-        lualine_x = {'diagnostics'},
+        lualine_x = {diagnostics_component},
         lualine_y = {},
         lualine_z = {'progress', 'location'}
     },
