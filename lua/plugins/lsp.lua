@@ -75,6 +75,18 @@ vim.diagnostic.config({
         },
         priority = 100,
     },
+    float = {
+        -- Support URL references in diagnostic message. Supported by LSP spec, but not by Nvim by default.
+        format = function(diagnostic)
+            local msg = diagnostic.message
+            local lsp_data = diagnostic.user_data and diagnostic.user_data.lsp
+
+            if lsp_data and lsp_data.codeDescription and lsp_data.codeDescription.href then
+                msg = msg .. "\nMore info: " .. lsp_data.codeDescription.href
+            end
+            return msg
+        end,
+    },
     -- virtual_lines = true,
     virtual_text = true,
 })
