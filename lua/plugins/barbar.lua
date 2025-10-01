@@ -43,10 +43,10 @@ require'bufferline'.setup {
     button = '',
     -- Enables / disables diagnostic symbols
     diagnostics = {
-      [vim.diagnostic.severity.ERROR] = {enabled = false, icon = icon_error},
-      [vim.diagnostic.severity.WARN] = {enabled = false, icon = icon_warning},
-      [vim.diagnostic.severity.INFO] = {enabled = false, icon = icon_info},
-      [vim.diagnostic.severity.HINT] = {enabled = false, icon = icon_hint},
+      [vim.diagnostic.severity.ERROR] = {enabled = false, icon = vim.g.config_icon_error},
+      [vim.diagnostic.severity.WARN] = {enabled = false, icon = vim.g.config_icon_warning},
+      [vim.diagnostic.severity.INFO] = {enabled = false, icon = vim.g.config_icon_info},
+      [vim.diagnostic.severity.HINT] = {enabled = false, icon = vim.g.config_icon_hint},
     },
     filetype = {
       -- Sets the icon's highlight group.
