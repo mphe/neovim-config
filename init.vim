@@ -156,11 +156,12 @@ set display+=lastline
 " set smartcase
 " set ignorecase
 
-set colorcolumn=100
-
 " Make gq break lines at 100 but don't automatically break lines while typing
 set textwidth=100
 set formatoptions-=tc
+
+" Show color column after textwidth, so textwidth and column don't overlap
+set colorcolumn=+1
 
 set mouse=a
 
