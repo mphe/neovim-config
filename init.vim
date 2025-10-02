@@ -153,8 +153,9 @@ set breakindent
 
 set display+=lastline
 
-" set smartcase
-" set ignorecase
+" Case insensitive search by default, except when typing uppercase letters
+set ignorecase
+set smartcase
 
 " Make gq break lines at 100 but don't automatically break lines while typing
 set textwidth=100
@@ -351,7 +352,6 @@ else
     Plug 'nvim-lualine/lualine.nvim'
 endif
 
-Plug 'Lokaltog/vim-easymotion'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
@@ -576,15 +576,6 @@ let g:localvimrc_persistent = 1
 if g:config_use_lightline
     runtime lightline_cfg.vim
 endif
-
-" easymotion
-let g:EasyMotion_smartcase = 1
-map / <Plug>(easymotion-sn)
-omap / <Plug>(easymotion-tn)
-map n <Plug>(easymotion-next)
-map N <Plug>(easymotion-prev)
-nnoremap <leader>n n
-nnoremap <leader>N N
 
 " NERDTree shortcut
 " command! NT NERDTreeToggle
