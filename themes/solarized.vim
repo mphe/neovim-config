@@ -95,8 +95,9 @@ function s:ApplySolarizedDark()
     " }}}
 
     " Search highlight color
-    highlight Search cterm=NONE ctermbg=240 ctermfg=black gui=NONE guibg=#586e75 guifg=#073642
-    highlight! link CurSearch Search
+    hi! link IncSearch CurSearch
+    " highlight Search cterm=NONE ctermbg=240 ctermfg=black gui=NONE guibg=#586e75 guifg=#073642
+    " highlight! link CurSearch Search
     highlight link EasyMotionMoveHL Search
     highlight CurrentWordTwins ctermbg=black guibg=#094655
     highlight link CurrentWord CurrentWordTwins
