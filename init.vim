@@ -537,8 +537,8 @@ endif
 
 set t_Co=256
 
-" set the split char tmux uses
-set fillchars+=vert:│
+" set fillchars+=vert:│
+set fillchars+=vert:▏
 " set fillchars+=fold:\ ,
 set fillchars+=fold:─
 set cursorline
