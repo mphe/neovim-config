@@ -373,7 +373,7 @@ if g:config_use_nvimlsp
     Plug 'chrisgrieser/nvim-lsp-endhints'
     Plug 'xzbdmw/colorful-menu.nvim'
     Plug 'barreiroleo/ltex_extra.nvim'
-    Plug 'r0nsha/qfpreview.nvim'  " displays a preview popup for quickfix and loc list
+    " Plug 'r0nsha/qfpreview.nvim'  " displays a preview popup for quickfix and loc list
     Plug 'VidocqH/lsp-lens.nvim'
     Plug 'Fildo7525/pretty_hover'
 
@@ -382,6 +382,12 @@ if g:config_use_nvimlsp
     " Plug 'Saghen/blink.compat'
     " Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 endif
+
+" Edit the quickfix/location list freely
+Plug 'itchyny/vim-qfedit'
+
+" Better quickfix/location list formatting
+Plug 'yorickpeterse/nvim-pqf'
 
 Plug 'Raimondi/delimitMate'
 Plug 'airblade/vim-gitgutter'

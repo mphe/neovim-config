@@ -1,9 +1,20 @@
+local utils = require("utils")
+
 -- Recommended by nvim-tree
 -- disable netrw at the very start of your init.lua
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 require("plugins.lualine")
+
+utils.setup_plugin("pqf", {
+    signs = {
+        error = { text = vim.g.config_icon_error, hl = 'DiagnosticSignError' },
+        warning = { text  = vim.g.config_icon_warning, hl = 'DiagnosticSignWarn' },
+        info = { text = vim.g.config_icon_info, hl = 'DiagnosticSignInfo' },
+        hint = { text = vim.g.config_icon_hint, hl = 'DiagnosticSignHint' },
+    },
+})
 
 require("neo-tree").setup({
     filesystem = {
@@ -264,7 +275,7 @@ require("lsp-endhints").setup{
 -- }}}
 
 -- qfpreview {{{
-require('qfpreview').setup({
+utils.setup_plugin("qfpreview", {
     ui = {
         -- number | "fill"
         height = 30,
