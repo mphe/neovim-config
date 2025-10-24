@@ -190,7 +190,14 @@ let g:python_indent.closed_paren_align_last_line = v:false
 " markdown and I don't want to waste my time configuring them to look the same as normal syntax.
 let g:markdown_fenced_languages = ['html', 'python', 'lua', 'vim', 'typescript', 'javascript']
 
+" Always open quickfix/loclist at the bottom, full width
+augroup qf_layout
+  autocmd!
+  autocmd FileType qf wincmd J
+augroup END
+
 " -------------------------------------- General settings end }}}
+
 
 " -------------------------------------- Plugin settings before loading {{{
 " ale
@@ -868,11 +875,11 @@ nmap mm <Plug>BookmarkToggle
 nmap <leader>mm <Plug>BookmarkShowAll
 
 
-fun! Qf_test()
-    lua ll_handler(vim.fn.bufnr())
-    lua require('scrollbar.handlers').show();require('scrollbar').render()
-endfun
-
+" fun! Qf_test()
+"     lua ll_handler(vim.fn.bufnr())
+"     lua require('scrollbar.handlers').show();require('scrollbar').render()
+" endfun
+"
 " augroup scrollbar_loclist
 "     autocmd!
 "     autocmd User ALELintPost,ALEFixPost,CocDiagnosticChange call Qf_test()
@@ -1184,6 +1191,7 @@ endif
 " }}}
 
 " -------------------------------------- Key mappings end }}}
+
 
 " -------------------------------------- auto correct {{{
 iabbrev cosnt const
