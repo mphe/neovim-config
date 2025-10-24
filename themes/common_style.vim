@@ -53,7 +53,7 @@ function s:ApplyStyle()
     hi! link @namespace @module
     hi! link @type.qualifier Keyword
     hi! link @markup.raw.markdown_inline markdownCode
-    hi! link @markup.raw.block.markdown markdownCodeDelimiter
+    " hi! link @markup.raw.block.markdown markdownCodeDelimiter
     hi! link @markup.quote.markdown markdownBlockquote
     hi! link @markup.list markdownListMarker
     hi! link @markup.link.url markdownUrl
