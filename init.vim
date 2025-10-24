@@ -40,7 +40,7 @@ if g:config_use_nvimlsp
     nunmap gri
     nunmap gra
     nunmap grn
-    nunmap grt
+    " nunmap grt
     nnoremap <nowait> gr gr
 endif
 
