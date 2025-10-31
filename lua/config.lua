@@ -23,6 +23,11 @@ require("neo-tree").setup({
             sidebar = "tab",   -- sidebar is when position = left or right
             current = "window" -- current is when position = current
         },
+        window = {
+            mappings = {
+                ["/"] = "noop",
+            },
+        },
     }
 })
 vim.api.nvim_create_user_command("NT", "Neotree toggle reveal_force_cwd", {})
@@ -265,7 +270,7 @@ require("lsp-endhints").setup{
         unknown = "",
     },
     label = {
-        truncateAtChars = 20,
+        truncateAtChars = 50,
         padding = 1,
         marginLeft = 1,
         sameKindSeparator = ", ",
