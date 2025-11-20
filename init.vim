@@ -346,6 +346,9 @@ endif
 
 call plug#begin(s:vim_cfg_path . '/plugged')
 
+" Required by: telescope, copilot, codeium.nvim, neo-tree, cmake-tools.nvim
+Plug 'nvim-lua/plenary.nvim'
+
 " color schemes
 Plug 'ishan9299/nvim-solarized-lua' " Has treesitter support
 Plug 'folke/tokyonight.nvim'
@@ -393,9 +396,6 @@ endif
 " Edit the quickfix/location list freely
 Plug 'itchyny/vim-qfedit'
 
-" Better quickfix/location list formatting
-Plug 'yorickpeterse/nvim-pqf'
-
 Plug 'Raimondi/delimitMate'
 Plug 'airblade/vim-gitgutter'
 Plug 'jeetsukumaran/vim-buffergator', { 'on': 'BuffergatorOpen' }
@@ -440,9 +440,6 @@ Plug 'tommcdo/vim-exchange'
 " Plug 'ap/vim-css-color'
 
 Plug 'rcarriga/nvim-notify'
-
-" Required by: telescope, copilot, codeium.nvim, neo-tree
-Plug 'nvim-lua/plenary.nvim'
 
 " Required by barbar.nvim, dashboard-nvim and lsp stuff, neo-tree
 Plug 'kyazdani42/nvim-web-devicons'
@@ -519,6 +516,7 @@ Plug 'weirongxu/plantuml-previewer.vim', { 'for': 'plantuml' }
 Plug 'mzlogin/vim-markdown-toc', { 'for': 'markdown' }  " Generate TOC in markdown files
 Plug 'JafarDakhan/vim-gml', { 'for': 'gml' }
 Plug 'shiracamus/vim-syntax-x86-objdump-d'
+Plug 's3rvac/vim-syntax-jira'
 
 " Interact with jupyter from neovim
 Plug 'benlubas/molten-nvim', { 'do': ':UpdateRemotePlugins', 'for': 'python' }

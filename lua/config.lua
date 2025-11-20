@@ -254,7 +254,11 @@ vim.api.nvim_create_autocmd("CursorHold", {
 -- mason {{{
 require("mason").setup({})
 require("mason-lspconfig").setup({
-    ensure_installed = { "lua_ls", "ltex_plus", },
+    ensure_installed = {
+        "lua_ls",
+        "ltex_plus",
+        "neocmake",
+    },
     automatic_enable = {
         exclude = {}
     }

@@ -99,7 +99,6 @@ vim.lsp.enable({
     'jedi_language_server',
     'bashls',
     'clangd',
-    'cmake',
     'csharp_ls',
     'diagnosticls',
     'gdscript',
@@ -216,6 +215,15 @@ vim.lsp.config("gopls", {
             staticcheck = true,
             directoryFilters = { "-.git", "-.vscode", "-.idea", "-.vscode-test", "-node_modules" },
         },
+    },
+})
+
+vim.lsp.config("neocmake", {
+    init_options = {
+        lint = {
+            enable = false
+        },
+        scan_cmake_in_package = false -- default is true
     },
 })
 
