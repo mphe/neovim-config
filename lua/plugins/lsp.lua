@@ -27,7 +27,7 @@ vim.api.nvim_create_autocmd("LspTokenUpdate", {
         if
             token.type == "variable"
             and token.modifiers.readonly
-            and (token.modifiers.globalScope or token.modifiers.fileScope)
+            and (token.modifiers.globalScope or token.modifiers.fileScope or token.modifiers.classScope)
             then
                 st.highlight_token(token, args.buf, args.data.client_id, "@constant")
             end
