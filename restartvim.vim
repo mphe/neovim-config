@@ -17,6 +17,8 @@ function s:maybe_restore()
     if filereadable(g:restart_vim_session_file)
         exec 'source ' . g:restart_vim_session_file
         call delete(g:restart_vim_session_file)
+    else
+        echo 'No session to restore'
     endif
 endfun
 
@@ -32,6 +34,6 @@ function s:restart()
 endfun
 
 
-command! SaveSession call s:restart()
+command! SaveSession call s:save_session()
 command! Restart call s:restart()
 command! Restore call s:maybe_restore()
