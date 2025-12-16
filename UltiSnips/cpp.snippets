@@ -151,3 +151,33 @@ auto operator->() const -> ${1:T}*
 	${0}
 }
 endsnippet
+
+snippet timeit "Code to measure elapsed time"
+const auto time_begin = std::chrono::steady_clock::now();
+${0}
+const auto elapsed = std::chrono::steady_clock::now() - time_begin;
+std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count() << " ms\n";
+std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count() << " us\n";
+endsnippet
+
+snippet benchmark "Benchmark scaffolding"
+#include <chrono>
+#include <iostream>
+
+int main(int argc, char* argv[])
+{
+	// prepare here
+	${1}
+
+	const auto time_begin = std::chrono::steady_clock::now();
+
+	// code to measure here
+	${2}${0}
+
+	const auto elapsed = std::chrono::steady_clock::now() - time_begin;
+	std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count() << " ms\n";
+	std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count() << " us\n";
+
+	return 0;
+}
+endsnippet
