@@ -9,4 +9,18 @@ function M.setup_plugin(name, config)
     end
 end
 
+
+function M.find_plugin(name)
+    local has_plugin, plugin = pcall(require, name)
+    if has_plugin then
+        return plugin
+    end
+    return nil
+end
+
+
+function M.has_plugin(name)
+    return M.find_plugin(name) ~= nil
+end
+
 return M

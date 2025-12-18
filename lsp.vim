@@ -16,7 +16,13 @@ nnoremap <leader>jd :lua vim.lsp.buf.definition()<cr>
 nmap <leader>jD :vsp<cr><leader>jd
 nmap <leader>JD :tab split<cr><leader>jd
 
-nnoremap <leader>pd :Lspsaga peek_definition<cr>
+" nnoremap <leader>pd :Lspsaga peek_definition<cr>
+nnoremap <leader>pd <cmd>lua require('goto-preview').goto_preview_definition()<CR>
+nnoremap <leader>pt <cmd>lua require('goto-preview').goto_preview_type_definition()<CR>
+" nnoremap <leader>pi <cmd>lua require('goto-preview').goto_preview_implementation()<CR>
+" nnoremap <leader>pD <cmd>lua require('goto-preview').goto_preview_declaration()<CR>
+" nnoremap <leader>P <cmd>lua require('goto-preview').close_all_win()<CR>
+nnoremap <leader>pr <cmd>lua require('goto-preview').goto_preview_references()<CR>
 
 nnoremap <leader>jt :lua vim.lsp.buf.type_definition()<cr>
 nmap <leader>jT :vsp<cr><leader>jt

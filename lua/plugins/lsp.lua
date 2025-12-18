@@ -1,7 +1,9 @@
+local utils = require("utils")
+
 vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
         local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
-        local buf = args.buf
+        -- local buf = args.buf
 
         -- vim.keymap.del('n', 'grt', { buffer = buf })
 
@@ -18,9 +20,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
 })
 
 -- Custom highlight conditions (https://github.com/neovim/neovim/pull/22022)
-local st = vim.lsp.semantic_tokens
 vim.api.nvim_create_autocmd("LspTokenUpdate", {
     callback = function(args)
+        local st = vim.lsp.semantic_tokens
         local token = args.data.token
 
         -- Highlight global/filescope constant variables with @constant
@@ -64,6 +66,7 @@ vim.lsp.handlers['textDocument/publishDiagnostics'] = function(_, result, ctx, c
    end, result.diagnostics)
    publishDiagnosticsOriginal(_, result, ctx, config)
 end
+
 
 vim.diagnostic.config({
     signs = {
@@ -228,13 +231,17 @@ vim.lsp.config("neocmake", {
 })
 
 
--- Pretty hover integration {{{
-function LSP_hover()
-    local pretty_hover = require("pretty_hover")
-    if not pretty_hover or not pcall(pretty_hover.hover) then
-        vim.lsp.buf.hover()
-    end
+-- Pretty hover integration
+if utils.has_plugin("pretty_hover") then
+    vim.keymap.set('n', 'K', require("pretty_hover").hover, { noremap = true, silent = true })
 end
 
-vim.api.nvim_set_keymap('n', 'K', '<cmd>lua LSP_hover()<CR>', { noremap = true, silent = true })
--- }}}
+
+-- Disable lsp logging by default to not infinitely grow the lsp log file
+vim.lsp.set_log_level("off")
+
+vim.api.nvim_create_user_command("LspLogClear", function()
+    local lsplogpath = vim.fn.stdpath("state") .. "/lsp.log"
+    print(lsplogpath)
+    if io.close(io.open(lsplogpath, "w+b")) == false then vim.notify("Clearning LSP Log failed.", vim.log.levels.WARN) end
+end, { nargs = 0 })

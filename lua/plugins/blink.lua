@@ -1,3 +1,9 @@
+local utils = require("utils")
+
+if not utils.has_plugin("blink.cmp") then
+    return
+end
+
 require("blink.cmp").setup {
     -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
     -- 'super-tab' for mappings similar to vscode (tab to accept)
@@ -168,3 +174,10 @@ require("blink.cmp").setup {
         },
     }
 }
+
+-- Merge extended blink.cmp LSP capabilities
+local custom_capabilities = {}
+
+vim.lsp.config("*", {
+    capabilities = require("blink.cmp").get_lsp_capabilities(custom_capabilities)
+})

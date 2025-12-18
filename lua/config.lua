@@ -16,6 +16,12 @@ utils.setup_plugin("pqf", {
     },
 })
 
+require('goto-preview').setup({
+    width = 120,
+    height = 45,
+    bufhidden = "hide",
+})
+
 require("neo-tree").setup({
     filesystem = {
         bind_to_cwd = true, -- true creates a 2-way binding between vim's cwd and neo-tree's root
@@ -257,7 +263,7 @@ require("mason-lspconfig").setup({
     ensure_installed = {
         "lua_ls",
         "ltex_plus",
-        "neocmake",
+        -- "neocmake",
     },
     automatic_enable = {
         exclude = {}
