@@ -115,6 +115,7 @@ vim.lsp.enable({
     'tsserver',
     'omnisharp',
     'vimls',
+    "rust_analyzer",
 })
 
 vim.lsp.config("clangd", {
@@ -235,7 +236,6 @@ vim.lsp.config("neocmake", {
 if utils.has_plugin("pretty_hover") then
     vim.keymap.set('n', 'K', require("pretty_hover").hover, { noremap = true, silent = true })
 end
-
 
 -- Disable lsp logging by default to not infinitely grow the lsp log file
 vim.lsp.set_log_level("off")

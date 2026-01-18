@@ -67,6 +67,10 @@ function s:ApplyStyle()
     " gdscript
     hi! link @attribute.gdscript Keyword
     hi! link @string.special.url.gdscript Macro  " $ or % node paths
+
+    " rust
+    hi link @lsp.type.const.rust Constant
+    hi link @lsp.type.typeAlias.rust Type
     " }}}
 
     " Plugin styles

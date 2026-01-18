@@ -228,6 +228,7 @@ let g:ale_linters = {
     \ 'go': [],
     \ 'cs': [ 'OmniSharp' ],
     \ 'glsl': [ 'glslang' ],
+    \ 'rust' : [],
     \ }
 let g:ale_fixers = {
     \ 'cpp': [],
@@ -236,7 +237,10 @@ let g:ale_fixers = {
     \ }
 
 let g:ale_linters_ignore = [ 'lacheck', 'pyright', 'shell']
-let g:ale_pattern_options = {'\.tex$': {'ale_enabled': 0}}
+let g:ale_pattern_options = {
+            \ '\.tex$': {'ale_enabled': 0},
+            \ '\.rs$': {'ale_enabled': 0}
+            \ }
 
 let g:ale_cs_csc_options = ' /warn:4 /langversion:7.2'
 let g:ale_nasm_nasm_options = '-f elf64'
@@ -622,6 +626,9 @@ let g:SimpylFold_fold_docstring = 1
 let delimitMate_expand_cr = 1
 let delimitMate_expand_space = 1
 let delimitMate_jump_expansion = 1
+let g:delimitMate_matchpairs = '(:),[:],{:}'
+au FileType html let b:delimitMate_matchpairs = '(:),[:],{:},<:>'
+
 
 " easytags
 let g:easytags_async = 1
