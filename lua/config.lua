@@ -271,9 +271,9 @@ require("mason-lspconfig").setup({
 require("lsp-endhints").setup{
     icons = {
         type = "",
-        parameter = "",
-        offspec = "",
-        unknown = "",
+        -- parameter = "",
+        -- offspec = "",
+        -- unknown = "",
     },
     label = {
         truncateAtChars = 50,
@@ -283,6 +283,20 @@ require("lsp-endhints").setup{
     },
     autoEnableHints = true,
 }
+
+vim.api.nvim_create_user_command("LspEndhintsToggle", require("lsp-endhints").toggle, {})
+
+-- vim.api.nvim_create_autocmd("FileType", {
+--     callback = function(args)
+--         local bufnr = args.buf
+--         local client = vim.lsp.get_client_by_id(args.data.client_id)
+--         if client.name == "rust_analyzer" then
+--             return
+--         end
+--         require("lsp-endhints").enable()
+--     end,
+-- })
+
 -- }}}
 
 -- qfpreview {{{
