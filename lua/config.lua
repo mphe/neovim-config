@@ -5,8 +5,6 @@ local utils = require("utils")
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
-require("plugins.lualine")
-
 utils.setup_plugin("pqf", {
     signs = {
         error = { text = vim.g.config_icon_error, hl = 'DiagnosticSignError' },
@@ -213,14 +211,15 @@ require("lspsaga").setup {
         -- debounce = 0,
     },
     symbol_in_winbar = {
-        -- enable = false,
+        enable = false,
         separator = ' > ',
         -- color_mode = false,
-        -- show_file = false,
-        -- folder_level = 0,
+        show_file = false,
+        folder_level = 0,
         hide_keyword = true,
         show_server_name = true,
         only_in_cursor = false,
+        delay = 300,
     },
     code_action = {
         keys = {
@@ -237,9 +236,6 @@ require("lspsaga").setup {
         -- left_width = 0.2,
         -- right_width = 0.5,
     },
-    breadcrumbs = {
-        delay = 300,
-    }
 }
 -- }}}
 
@@ -308,3 +304,5 @@ utils.setup_plugin("qfpreview", {
 
 
 end
+
+require("plugins.lualine")

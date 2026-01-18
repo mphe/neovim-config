@@ -544,7 +544,7 @@ endif
 set t_Co=256
 
 " set fillchars+=vert:│
-set fillchars+=vert:▏
+set fillchars+=vert:▏,fold:─,horiz:▁,horizdown:▁,horizup:▁,vertleft:▏,vertright:🭼,verthoriz:🭼
 " set fillchars+=fold:\ ,
 set fillchars+=fold:─
 set cursorline

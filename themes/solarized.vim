@@ -112,8 +112,8 @@ function s:ApplySolarizedDark()
     exec 'highlight! DiagnosticInfo cterm=bold gui=bold guifg=' . s:base1
     highlight! link DiagnosticHint DiagnosticInfo
 
-    hi! link WinBar Normal
-    hi! link WinBarNC Normal
+    hi! link WinBar TabLine
+    hi! link WinBarNC TabLine
     highlight PmenuSbar  ctermfg=12 ctermbg=0
     hi! link Pmenu BrightBgFg
     hi! link FloatBorder BlueFg
