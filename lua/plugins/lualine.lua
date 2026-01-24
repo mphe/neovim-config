@@ -4,8 +4,12 @@ if vim.g.colors_name == "solarized" then
     custom_theme = require'lualine.themes.solarized_dark'
     custom_theme.command = { a = custom_theme.insert.a }
     custom_theme.insert = { a = custom_theme.normal.a }
-    custom_theme.normal.a = { bg = custom_theme.normal.b.bg, fg = custom_theme.normal.b.fg, gui = "bold" }
-    custom_theme.normal.b = { fg = "#6c71c4", bg = custom_theme.normal.c.bg, }
+    custom_theme.normal.a = { fg = "#002b36", bg = "#93a1a1", gui = "bold" }
+    -- custom_theme.normal.b = { fg = "#6c71c4", bg = "#002b36", }
+    custom_theme.normal.b = { fg = "#6c71c4", bg = "#073642" }
+    -- custom_theme.normal.c = "Comment"
+    -- custom_theme.normal.c = { fg = "#586e75", bg = "#002b36" }
+    -- custom_theme.normal.c = { fg = "#586e75", bg = "#073642" }
     custom_theme.inactive.b = custom_theme.normal.b
 end
 
@@ -43,7 +47,7 @@ local filename_component = {
 
 local filename_component_short = {
     "filename",
-    path = 1,  -- relative path
+    path = 0,  -- relative path
     padding = 0,
     shorting_target = 80,
     color = "Comment",
@@ -76,7 +80,7 @@ end
 
 local winbar = {
     lualine_c = { file_icon_component, filename_component_short, breadcrumbs, },
-    lualine_x = { diagnostics_component, get_encoding, fileformat, 'filetype', },
+    lualine_x = { diagnostics_component},
 }
 
 require("lualine").setup {
@@ -90,7 +94,7 @@ require("lualine").setup {
         lualine_a = {'mode'},
         lualine_b = {filename_component},
         lualine_c = {},
-        lualine_x = { "searchcount", { "branch", color = "Comment"} },
+        lualine_x = { "searchcount", { "branch", color = "Comment" }, "filesize", get_encoding, fileformat, 'filetype',  },
         lualine_y = { lspstatus_component, },
         lualine_z = {'progress', 'location'}
     },
