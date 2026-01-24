@@ -193,79 +193,48 @@ if vim.g.config_use_nvimlsp == 1 then
     require("plugins.lsp")
     require("plugins.blink")
     require("lsp-file-operations").setup()
-    require("pretty_hover").setup({})
+
+    if utils.setup_plugin("pretty_hover") then
+        vim.api.nvim_create_autocmd('LspAttach', {
+            callback = function(_)
+                vim.keymap.set('n', 'K', require("pretty_hover").hover, { noremap = true, silent = true })
+            end,
+        })
+    end
 
     require'lsp-lens'.setup({
         enable = false,
     })
 
--- lspsaga {{{
--- https://nvimdev.github.io/lspsaga/
-require("lspsaga").setup {
-    ui = {
-        border = "rounded",
-        button = { "", "" }  -- Remove slanted powerline symbols appearing in floating window titles
-    },
-    lightbulb = {
-        virtual_text = false,
-        -- debounce = 0,
-    },
-    symbol_in_winbar = {
-        enable = false,
-        separator = ' > ',
-        -- color_mode = false,
-        show_file = false,
-        folder_level = 0,
-        hide_keyword = true,
-        show_server_name = true,
-        only_in_cursor = false,
-        delay = 300,
-    },
-    code_action = {
-        keys = {
-            quit = { "q", "<esc>" }
-        }
-    },
-    finder = {
-        keys = {
-            -- shuttle = "<c-w>",
-            quit = { "q", "<esc>" },
-            toggle_or_open = { "o", "<cr>" }
+    require("plugins.lspsaga")
+
+    -- echo diagnostics {{{
+    -- https://github.com/seblyng/nvim-echo-diagnostics
+    require("echo-diagnostics").setup({
+        show_diagnostic_number = false,
+        show_diagnostic_source = true,
+    })
+
+    vim.api.nvim_create_autocmd("CursorHold", {
+        pattern = { "*", },
+        callback = require("echo-diagnostics").echo_line_diagnostic,
+        group = vim.api.nvim_create_augroup("echo_diagnostics", { clear = true }),
+    })
+    -- }}}
+
+    -- mason {{{
+    require("mason").setup({})
+    require("mason-lspconfig").setup({
+        ensure_installed = {
+            "lua_ls",
+            "ltex_plus",
+            -- "neocmake",
         },
-        layout = "normal",
-        -- left_width = 0.2,
-        -- right_width = 0.5,
-    },
-}
--- }}}
-
--- echo diagnostics {{{
--- https://github.com/seblyng/nvim-echo-diagnostics
-require("echo-diagnostics").setup({
-    show_diagnostic_number = false,
-    show_diagnostic_source = true,
-})
-
-vim.api.nvim_create_autocmd("CursorHold", {
-    pattern = { "*", },
-    callback = require("echo-diagnostics").echo_line_diagnostic,
-    group = vim.api.nvim_create_augroup("echo_diagnostics", { clear = true }),
-})
--- }}}
-
--- mason {{{
-require("mason").setup({})
-require("mason-lspconfig").setup({
-    ensure_installed = {
-        "lua_ls",
-        "ltex_plus",
-        -- "neocmake",
-    },
-    automatic_enable = {
-        exclude = {}
-    }
-})
--- }}}
+        automatic_enable = {
+            exclude = {}
+        }
+    })
+    -- }}}
 
 -- lsp-endhints {{{
 require("lsp-endhints").setup{
