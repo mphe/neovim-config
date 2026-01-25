@@ -194,6 +194,9 @@ let g:python_indent.closed_paren_align_last_line = v:false
 " markdown and I don't want to waste my time configuring them to look the same as normal syntax.
 let g:markdown_fenced_languages = ['html', 'python', 'lua', 'vim', 'typescript', 'javascript']
 
+" Stop the default arduino ftplugin from messing with indent settings
+let g:arduino_recommended_style = 0
+
 " Always open quickfix/loclist at the bottom, full width
 augroup qf_layout
   autocmd!
