@@ -54,6 +54,7 @@ endif
 " Edit the quickfix/location list freely
 Plug 'itchyny/vim-qfedit'
 
+Plug 'tommcdo/vim-exchange'
 Plug 'NMAC427/guess-indent.nvim'
 Plug 'Raimondi/delimitMate'
 Plug 'airblade/vim-gitgutter'
@@ -61,7 +62,7 @@ Plug 'jeetsukumaran/vim-buffergator', { 'on': 'BuffergatorOpen' }
 Plug 'majutsushi/tagbar', { 'on': 'TagbarOpen' }
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-Plug 'kien/ctrlp.vim'
+Plug 'ctrlpvim/ctrlp.vim'
 Plug 'kshenoy/vim-signature'
 Plug 'dense-analysis/ale'
 " Plug 'Shougo/vimproc.vim' " TODO: Is this obsolete?

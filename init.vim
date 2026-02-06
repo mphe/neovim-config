@@ -489,6 +489,9 @@ command! UltiSnipReload call UltiSnips#RefreshSnippets()
 
 
 " CtrlP
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlPMixed'
+let g:ctrlp_switch_buffer = 'et'  " If a file is already open, open it again in a new pane instead of switching to the existing pane
 let g:ctrlp_show_hidden = 1
 let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_by_filename = 1
@@ -500,6 +503,8 @@ let g:ctrlp_custom_ignore = {
             \ }
 let g:ctrlp_working_path_mode = 'rw'
 " let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -c -o --exclude-standard && git submodule --quiet foreach --recursive "git ls-files . -c -o --exclude-standard"', 'find %s -type f']
+
+nnoremap <leader>l :CtrlPMixed<CR>
 
 " vimtex
 let g:vimtex_view_method = 'zathura'
@@ -768,7 +773,7 @@ endif
 let g:gdscript_use_python_indent = 1
 
 " telescope
-nnoremap <leader>l :Telescope buffers<CR>
+" nnoremap <leader>l :Telescope buffers<CR>
 
 " vim-exchange
 nmap cx <Plug>(Exchange)

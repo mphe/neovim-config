@@ -5,15 +5,6 @@ local utils = require("utils")
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
-utils.setup_plugin("pqf", {
-    signs = {
-        error = { text = vim.g.config_icon_error, hl = 'DiagnosticSignError' },
-        warning = { text  = vim.g.config_icon_warning, hl = 'DiagnosticSignWarn' },
-        info = { text = vim.g.config_icon_info, hl = 'DiagnosticSignInfo' },
-        hint = { text = vim.g.config_icon_hint, hl = 'DiagnosticSignHint' },
-    },
-})
-
 require('goto-preview').setup({
     width = 120,
     height = 45,
@@ -21,6 +12,31 @@ require('goto-preview').setup({
 })
 
 require("neo-tree").setup({
+    -- Prevent truncating (https://github.com/nvim-neo-tree/neo-tree.nvim/issues/486)
+    renderers = {
+        directory = {
+            { "indent" },
+            { "icon" },
+            { "current_filter" },
+            { "name" },
+            { "clipboard" },
+            { "diagnostics", errors_only = true },
+        },
+        file = {
+            { "indent" },
+            { "icon" },
+            {
+                "name",
+                use_git_status_colors = true,
+                zindex = 10
+            },
+            { "clipboard" },
+            { "bufnr" },
+            { "modified" },
+            { "diagnostics" },
+            { "git_status" },
+        },
+    },
     filesystem = {
         bind_to_cwd = true, -- true creates a 2-way binding between vim's cwd and neo-tree's root
         cwd_target = {
@@ -30,6 +46,12 @@ require("neo-tree").setup({
         window = {
             mappings = {
                 ["/"] = "noop",
+                ["H"] = "noop",
+                -- Open file without losing focus
+                ["go"] = function(state)
+                    state.commands["open"](state)
+                    vim.cmd("Neotree reveal")
+                end,
             },
         },
     }

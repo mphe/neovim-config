@@ -138,7 +138,7 @@ require("blink.cmp").setup {
                 opts = {
                     trailing_slash = false,
                     -- Path completion from cwd instead of current buffer's directory
-                    get_cwd = function(_) return vim.fn.getcwd() end,
+                    -- get_cwd = function(_) return vim.fn.getcwd() end,
                 },
             },
             buffer = {
