@@ -781,6 +781,9 @@ nmap cxx <Plug>(ExchangeLine)
 nmap cxc <Plug>(ExchangeClear)
 xmap X <Plug>(Exchange)
 
+" rulebook
+command! IgnoreWarning Rulebook ignoreRule
+
 " -------------------------------------- Plugin configuration end }}}
 
 

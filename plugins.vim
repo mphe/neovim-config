@@ -44,6 +44,7 @@ if g:config_use_nvimlsp
     Plug 'VidocqH/lsp-lens.nvim'
     Plug 'Fildo7525/pretty_hover'
     Plug 'rmagatti/goto-preview'
+    Plug 'chrisgrieser/nvim-rulebook'
 
     " Autocompletion
     Plug 'Saghen/blink.cmp', { 'tag': 'v1.*' }
