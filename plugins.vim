@@ -123,6 +123,7 @@ if g:config_use_copilot
     " Plug 'github/copilot.vim'
     " Plug 'samodostal/copilot-client.lua'
     Plug 'zbirenbaum/copilot.lua'
+    Plug 'CopilotC-Nvim/CopilotChat.nvim'
 elseif g:config_use_codeium
     Plug 'Exafunction/codeium.vim', { 'branch': 'main' }
 endif

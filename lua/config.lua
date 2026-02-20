@@ -182,6 +182,7 @@ require("paint").setup({
 
 if vim.g.config_use_copilot == 1 then
     require("plugins.copilot")
+    utils.setup_plugin("CopilotChat")
 end
 
 require("plugins.treesitter")
