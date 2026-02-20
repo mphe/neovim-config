@@ -63,7 +63,10 @@ Plug 'jeetsukumaran/vim-buffergator', { 'on': 'BuffergatorOpen' }
 Plug 'majutsushi/tagbar', { 'on': 'TagbarOpen' }
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-Plug 'ctrlpvim/ctrlp.vim'
+
+if !g:config_use_telescope
+    Plug 'ctrlpvim/ctrlp.vim'
+endif
 Plug 'kshenoy/vim-signature'
 Plug 'dense-analysis/ale'
 " Plug 'Shougo/vimproc.vim' " TODO: Is this obsolete?

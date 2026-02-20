@@ -5,6 +5,7 @@ autocmd!
 
 let s:vim_cfg_path = fnamemodify($MYVIMRC, ':p:h')
 
+let g:config_use_telescope = 1
 let g:use_vim_omnisharp = 0
 let g:config_use_coc = 0
 let g:config_use_nvimlsp = 1
@@ -773,7 +774,10 @@ endif
 let g:gdscript_use_python_indent = 1
 
 " telescope
-" nnoremap <leader>l :Telescope buffers<CR>
+if g:config_use_telescope
+    nnoremap <c-p> :Telescope find_files<CR>
+    nnoremap <leader>l :Telescope buffers<CR>
+endif
 
 " vim-exchange
 nmap cx <Plug>(Exchange)
