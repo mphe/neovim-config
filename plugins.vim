@@ -50,6 +50,10 @@ if g:config_use_nvimlsp
     Plug 'Saghen/blink.cmp', { 'tag': 'v1.*' }
     " Plug 'Saghen/blink.compat'
     " Plug 'quangnguyen30192/cmp-nvim-ultisnips'
+    if g:config_use_copilot
+        Plug 'fang2hou/blink-copilot'
+        Plug 'pxwg/blink-cmp-copilot-chat'
+    endif
 endif
 
 " Edit the quickfix/location list freely

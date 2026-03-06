@@ -1,5 +1,6 @@
 vim.g.barbar_auto_setup = false
 require'bufferline'.setup {
+  animation = false,
   auto_hide = 1,
   exclude_ft = { "qf" },
   focus_on_close = 'previous',

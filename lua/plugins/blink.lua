@@ -113,10 +113,15 @@ require("blink.cmp").setup {
     -- Default list of enabled providers defined so that you can extend it
     -- elsewhere in your config, without redefining it, due to `opts_extend`
     sources = {
-        default = { 'lsp', 'path', 'snippets', 'buffer' },
+        default = { 'lsp', 'path', 'snippets', 'buffer', },
+
+        per_filetype = {
+            ["copilot-chat"] = { "copilot_c", "path", "snippets", "buffer",  },  -- Add the copilot-chat source for relevant filetype
+        },
 
         providers = {
             lsp = {
+                score_offset = 100,
                 fallbacks = {},  -- Always show buffer completion
                 transform_items = function(_ctx, items)
                     -- Remove auto-completed braces added by the language server
@@ -133,6 +138,16 @@ require("blink.cmp").setup {
                     end
                     return items
                 end,
+            },
+            copilot = {
+                name = "copilot",
+                module = "blink-copilot",
+                score_offset = -200,
+                async = true,
+            },
+            copilot_c = {
+                name = "CopilotChat",
+                module = "blink-cmp-copilot-chat",
             },
             path = {
                 opts = {
@@ -174,13 +189,6 @@ require("blink.cmp").setup {
         },
     }
 }
-
--- Merge extended blink.cmp LSP capabilities
-local custom_capabilities = {}
-
-vim.lsp.config("*", {
-    capabilities = require("blink.cmp").get_lsp_capabilities(custom_capabilities)
-})
 
 
 -- Disable automatic line break while blink menu is open to prevent breaking text replacement

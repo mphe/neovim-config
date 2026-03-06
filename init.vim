@@ -889,6 +889,9 @@ nnoremap gz `[v`]
 
 command! PabsFormat %s/:/\r    {\r\r    } \/\/
 
+" Transforms C++ initializers from `double x{0.0}` syntax to `double x = 0.0`
+command! -range CppFormatInitializers <line1>,<line2>s/\s*{\s*\([^ ]\+\)\s*}/ = \1/
+
 command! FollowSymlink exec 'file '.resolve(expand('%:p')) | e
 
 command! -range=% StripTrailingSpaces <line1>,<line2>s/\s\+$//e

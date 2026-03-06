@@ -182,7 +182,15 @@ require("paint").setup({
 
 if vim.g.config_use_copilot == 1 then
     require("plugins.copilot")
-    utils.setup_plugin("CopilotChat")
+
+    utils.setup_plugin("CopilotChat", {
+        model = "claude-opus-4.6",
+        auto_insert_mode = true,
+        chat_autocomplete = false,  -- handled by blink-cmp-copilot-chat
+        mappings = {
+            jump_to_diff = "",
+        },
+    })
 end
 
 require("plugins.treesitter")
@@ -190,9 +198,13 @@ require("plugins.treesitter")
 -- dashboard-nvim {{{
 if vim.g.config_use_dashboard == 1 then
     require('dashboard').setup {
+        theme = "hyper",
         disable_move = false,
         change_to_vcs_root = true,
-        shortcut_type = "number"
+        shortcut_type = "number",
+        config = {
+            shortcut = require("localconfig").get_dashboard_shortcuts(),
+        },
     }
 end
 -- }}}
@@ -240,6 +252,24 @@ require('telescope').setup{
             "%.a",
             "%.obj",
             "%.uid",
+        },
+    },
+    pickers = {
+        find_files = {
+            mappings = {
+                i = {
+                    -- Yank the selected path (https://github.com/nvim-telescope/telescope-file-browser.nvim/issues/327)
+                    ["<C-y>"] = function()
+                        local entry = require("telescope.actions.state").get_selected_entry()
+                        local cb_opts = vim.opt.clipboard:get()
+                        if vim.tbl_contains(cb_opts, "unnamed") then vim.fn.setreg("*", entry.path) end
+                        if vim.tbl_contains(cb_opts, "unnamedplus") then
+                            vim.fn.setreg("+", entry.path)
+                        end
+                        vim.fn.setreg("", entry.path)
+                    end,
+                },
+            },
         },
     },
 }
