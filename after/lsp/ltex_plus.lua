@@ -1,3 +1,7 @@
+local disabled_rules = {
+    "WHITESPACE_RULE",
+}
+
 return {
     on_attach = function(_, _)
         require("ltex_extra").setup {
@@ -12,9 +16,8 @@ return {
             -- language = "en-US",
             diagnosticSeverity = "information",
             disabledRules = {
-                ["en-US"] = {
-                    "WHITESPACE_RULE",
-                }
+                ["en-US"] = disabled_rules,
+                ["de-DE"] = disabled_rules,
             },
             enabled = {
                 "bib",

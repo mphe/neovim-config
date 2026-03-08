@@ -342,6 +342,8 @@ require("lsp-endhints").setup{
 
 vim.api.nvim_create_user_command("LspEndhintsToggle", require("lsp-endhints").toggle, {})
 
+require("custom.inlayhints").setup()  -- must be initialized after lsp-endhints
+
 -- vim.api.nvim_create_autocmd("FileType", {
 --     callback = function(args)
 --         local bufnr = args.buf

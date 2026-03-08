@@ -14,6 +14,15 @@ return {
     },
     settings = {
         clangd = {
+            InlayHints = {
+                Enabled = true,
+                BlockEnd = false,
+                Designators = true,
+                ParameterNames = true,
+                DeducedTypes = true,
+                DefaultArguments = true,
+                TypeNameLimit = 0,
+            },
         },
     },
 }

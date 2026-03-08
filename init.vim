@@ -858,9 +858,6 @@ inoremap jk <Esc>
 vnoremap > >gv
 vnoremap < <gv
 
-" Comment shortcut for insert mode
-imap <F2> <c-_><c-_>
-
 " better j and k
 nmap j gj
 nmap k gk
@@ -949,6 +946,16 @@ nnoremap ; @:
 " Find next character when using f/F or t/T
 nnoremap <space> ;
 vnoremap <space> ;
+
+" Toggle inlay hint visibility: all on and inline / only type hints and at eol
+function! F2Toggle()
+    if g:config_use_nvimlsp
+        lua require("lsp-endhints").toggle()
+        InlayHintsFilterToggle
+    endif
+endfunction
+
+nnoremap <F2> :call F2Toggle()<CR>
 
 map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
             \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"

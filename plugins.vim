@@ -48,6 +48,7 @@ if g:config_use_nvimlsp
 
     " Autocompletion
     Plug 'Saghen/blink.cmp', { 'tag': 'v1.*' }
+    Plug 'rafamadriz/friendly-snippets'
     " Plug 'Saghen/blink.compat'
     " Plug 'quangnguyen30192/cmp-nvim-ultisnips'
     if g:config_use_copilot
