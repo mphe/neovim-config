@@ -11,7 +11,7 @@ local inlayHintHandlerOriginal = vim.lsp.handlers["textDocument/inlayHint"]
 
 
 local function inlayHintHandlerCustom(err, result, ctx, cfg)
-    if config.enabled then
+    if config.enabled and result ~= nil then
         local filtered_result = vim.iter(result):filter(function(hint)
             return config.kinds_whitelist[hint.kind] ~= nil
         end)
