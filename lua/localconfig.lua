@@ -4,6 +4,10 @@
 local M = {}
 
 function M.get_dashboard_shortcuts()
+end
+
+
+function M.get_copilot_chat_sticky_prompts()
     return {}
 end
 

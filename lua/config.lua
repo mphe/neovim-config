@@ -185,11 +185,21 @@ if vim.g.config_use_copilot == 1 then
 
     utils.setup_plugin("CopilotChat", {
         model = "claude-opus-4.6",
-        auto_insert_mode = true,
+        auto_insert_mode = false,
         chat_autocomplete = false,  -- handled by blink-cmp-copilot-chat
         mappings = {
             jump_to_diff = "",
+            accept_diff = "",
         },
+        sticky = require("localconfig").get_copilot_chat_sticky_prompts(),
+        resources = { "selection", "buffer" }
+    })
+
+    vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'copilot-chat',
+        callback = function()
+            vim.opt_local.concealcursor = 'nv'
+        end,
     })
 end
 
@@ -267,6 +277,7 @@ require('telescope').setup{
                             vim.fn.setreg("+", entry.path)
                         end
                         vim.fn.setreg("", entry.path)
+                        telescope_actions.close()
                     end,
                 },
             },
