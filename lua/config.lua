@@ -269,15 +269,16 @@ require('telescope').setup{
             mappings = {
                 i = {
                     -- Yank the selected path (https://github.com/nvim-telescope/telescope-file-browser.nvim/issues/327)
-                    ["<C-y>"] = function()
+                    ["<C-y>"] = function(prompt_bufnr)
                         local entry = require("telescope.actions.state").get_selected_entry()
+                        -- local relpath = entry[1]
                         local cb_opts = vim.opt.clipboard:get()
                         if vim.tbl_contains(cb_opts, "unnamed") then vim.fn.setreg("*", entry.path) end
                         if vim.tbl_contains(cb_opts, "unnamedplus") then
                             vim.fn.setreg("+", entry.path)
                         end
                         vim.fn.setreg("", entry.path)
-                        telescope_actions.close()
+                        telescope_actions.close(prompt_bufnr)
                     end,
                 },
             },
@@ -287,18 +288,30 @@ require('telescope').setup{
 
 -- }}}
 
+utils.setup_plugin("windows", {})
+
 if vim.g.config_use_nvimlsp == 1 then
+    require("diagnostics")
     require("plugins.lsp")
     require("plugins.blink")
     require("lsp-file-operations").setup()
 
-    if utils.setup_plugin("pretty_hover") then
-        vim.api.nvim_create_autocmd('LspAttach', {
-            callback = function(_)
-                vim.keymap.set('n', 'K', require("pretty_hover").hover, { noremap = true, silent = true })
-            end,
-        })
-    end
+    -- utils.setup_plugin("pretty_hover", {
+    --     hl = {
+    --         -- custom_warning = {
+    --         --     color = "#FBBF24",
+    --         --     detect = { "\\*\\*[wW]arning\\*\\*" },
+    --         --     line = false,
+    --         -- },
+    --     },
+    -- })
+    -- if utils.has_plugin("pretty_hover") then
+    --     vim.api.nvim_create_autocmd('LspAttach', {
+    --         callback = function(_)
+    --             vim.keymap.set('n', 'K', require("pretty_hover").hover, { noremap = true, silent = true })
+    --         end,
+    --     })
+    -- end
 
     require'lsp-lens'.setup({
         enable = false,

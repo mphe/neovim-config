@@ -16,6 +16,7 @@ end
 local diagnostic_spacing = " "
 local diagnostics_component = {
     'diagnostics',
+    sections = { "error", "warn", "info", },
     symbols = {
         error = vim.g.config_icon_error .. diagnostic_spacing,
         warn = vim.g.config_icon_warning .. diagnostic_spacing,

@@ -5,11 +5,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
         -- local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
         -- local buf = args.buf
 
-        -- Pretty hover integration
-        if utils.has_plugin("pretty_hover") then
-            vim.keymap.set('n', 'K', require("pretty_hover").hover, { noremap = true, silent = true })
-        end
-
         -- vim.keymap.del('n', 'grt', { buffer = buf })
     end,
 })
@@ -29,65 +24,58 @@ vim.api.nvim_create_autocmd("LspTokenUpdate", {
     end,
 })
 
--- Show full diagnostic information
--- https://github.com/neovim/neovim/issues/19649#issuecomment-1750272564
-local publishDiagnosticsOriginal = vim.lsp.handlers['textDocument/publishDiagnostics']
+local hover_highlights = {
+    { pattern = '%*%*[wW]arning:%*%*', hl = 'DiagnosticWarn' },
+    { pattern = '%*%*[nN]ote:%*%*', hl = 'Todo' },
+    { pattern = '%*%*[dD]eprecated:%*%*', hl = 'DiagnosticUnnecessary' },
+}
 
-local function publishDiagnosticsCustom(_, result, ctx, config)
-    vim.tbl_map(function(item)
-        if item.relatedInformation and #item.relatedInformation > 0 then
-            vim.tbl_map(function(k)
-                if k.location then
-                    local tail = vim.fn.fnamemodify(vim.uri_to_fname(k.location.uri), ':t')
-                    k.message = tail ..
-                    '(' .. (k.location.range.start.line + 1) .. ', ' .. (k.location.range.start.character + 1) ..
-                    '): ' .. k.message
+-- Apply custom highlights and conceals to the LSP hover content
+vim.api.nvim_create_autocmd('WinNew', {
+    callback = function()
+        local win = vim.api.nvim_get_current_win()
+        local config = vim.api.nvim_win_get_config(win)
+        local ns = vim.api.nvim_create_namespace('custom_hover_hl')
+        if config.relative == '' then return end
 
-               if k.location.uri == vim.uri_from_bufnr(0) then
-                  table.insert(result.diagnostics, {
-                     code = item.code,
-                     message = k.message,
-                     range = k.location.range,
-                     severity = vim.lsp.protocol.DiagnosticSeverity.Hint,
-                     source = item.source,
-                     relatedInformation = {},
-                  })
-               end
+        vim.defer_fn(function()
+            if not vim.api.nvim_win_is_valid(win) then
+                return
             end
-            item.message = item.message .. '\n' .. k.message
-         end, item.relatedInformation)
-      end
-   end, result.diagnostics)
-   publishDiagnosticsOriginal(_, result, ctx, config)
-end
+            local bufnr = vim.api.nvim_win_get_buf(win)
+            local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+            for i, line in ipairs(lines) do
+                -- Conceal "#" markdown header prefix
+                local _, end_col = line:find('^#+%s?')
+                if end_col then
+                    vim.api.nvim_buf_set_extmark(bufnr, ns, i - 1, 0, {
+                        end_col = end_col,
+                        conceal = '',
+                    })
+                end
 
-vim.lsp.handlers['textDocument/publishDiagnostics'] = publishDiagnosticsCustom
-
-vim.diagnostic.config({
-    signs = {
-        text = {
-            [vim.diagnostic.severity.ERROR] = vim.g.config_icon_error,
-            [vim.diagnostic.severity.WARN] = vim.g.config_icon_warning,
-            [vim.diagnostic.severity.INFO] = vim.g.config_icon_info,
-            [vim.diagnostic.severity.HINT] = vim.g.config_icon_hint,
-        },
-        priority = 100,
-    },
-    float = {
-        -- Support URL references in diagnostic message. Supported by LSP spec, but not by Nvim by default.
-        format = function(diagnostic)
-            local msg = diagnostic.message
-            local lsp_data = diagnostic.user_data and diagnostic.user_data.lsp
-
-            if lsp_data and lsp_data.codeDescription and lsp_data.codeDescription.href then
-                msg = msg .. "\nMore info: " .. lsp_data.codeDescription.href
+                -- Apply custom highlights
+                for _, entry in ipairs(hover_highlights) do
+                    local start = 1
+                    while true do
+                        local s, e = line:find(entry.pattern, start)
+                        if not s then break end
+                        vim.api.nvim_buf_set_extmark(bufnr, ns, i - 1, s - 1, {
+                            end_col = e,
+                            hl_group = entry.hl,
+                            priority = 200,
+                        })
+                        start = e + 1
+                    end
+                end
             end
-            return msg
-        end,
-    },
-    -- virtual_lines = true,
-    virtual_text = true,
+
+            vim.wo[win].conceallevel = 2
+            vim.wo[win].concealcursor = 'nv'
+        end, 50)
+    end,
 })
+
 
 vim.lsp.inlay_hint.enable(true)
 vim.highlight.priorities.semantic_tokens = 95

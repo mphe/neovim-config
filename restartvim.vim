@@ -8,7 +8,6 @@ let g:restart_vim_session_file = '.lastsession.vim'
 
 augroup au_restart_vim
     au!
-    " kinda fix tagbar cursor lag
     autocmd VimEnter * call s:maybe_restore()
 augroup END
 
@@ -16,6 +15,7 @@ augroup END
 function s:maybe_restore()
     if filereadable(g:restart_vim_session_file)
         exec 'source ' . g:restart_vim_session_file
+        windo filetype detect
         call delete(g:restart_vim_session_file)
     else
         echo 'No session to restore'
