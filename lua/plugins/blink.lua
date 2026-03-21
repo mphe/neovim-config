@@ -4,6 +4,19 @@ if not utils.has_plugin("blink.cmp") then
     return
 end
 
+local custom_doc_draw_handler = nil
+
+if utils.has_plugin("pretty_hover") then
+    custom_doc_draw_handler = function(opts)
+        if opts.item and opts.item.documentation and opts.item.documentation.value then
+            local out = require("pretty_hover.parser").parse(opts.item.documentation.value)
+            opts.item.documentation.value = out:string()
+        end
+
+        opts.default_implementation(opts)
+    end
+end
+
 require("blink.cmp").setup {
     -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
     -- 'super-tab' for mappings similar to vscode (tab to accept)
@@ -52,16 +65,7 @@ require("blink.cmp").setup {
             auto_show = true,
             auto_show_delay_ms = 100,
             update_delay_ms = 100,
-
-            -- Requires the pretty_hover plugin
-            draw = function(opts)
-                if opts.item and opts.item.documentation and opts.item.documentation.value then
-                    local out = require("pretty_hover.parser").parse(opts.item.documentation.value)
-                    opts.item.documentation.value = out:string()
-                end
-
-                opts.default_implementation(opts)
-            end,
+            draw = custom_doc_draw_handler,
         },
         accept = {
             auto_brackets = { enabled = false },

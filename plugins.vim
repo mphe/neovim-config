@@ -31,6 +31,7 @@ endif
 if g:config_use_nvimlsp
     Plug 'mason-org/mason.nvim'
     Plug 'mason-org/mason-lspconfig.nvim'
+    Plug 'WhoIsSethDaniel/mason-tool-installer.nvim'
     Plug 'neovim/nvim-lspconfig'
     Plug 'p00f/clangd_extensions.nvim'
     Plug 'nvimdev/lspsaga.nvim'
@@ -47,7 +48,7 @@ if g:config_use_nvimlsp
     Plug 'chrisgrieser/nvim-rulebook'
 
     " Autocompletion
-    Plug 'Saghen/blink.cmp', { 'tag': 'v1.*' }
+    Plug 'Saghen/blink.cmp', { 'tag': 'v1.9.1' }  " 1.10.0+ is bugged again and crashes nvim because of frizbee
     Plug 'rafamadriz/friendly-snippets'
     " Plug 'Saghen/blink.compat'
     " Plug 'quangnguyen30192/cmp-nvim-ultisnips'
@@ -114,7 +115,7 @@ Plug 'rcarriga/nvim-notify'
 " Required by barbar.nvim, dashboard-nvim and lsp stuff, neo-tree
 Plug 'kyazdani42/nvim-web-devicons'
 
-Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }
+Plug 'nvim-telescope/telescope.nvim'
 
 " Fix CursorHold performance
 " FIXME: Maybe remove, apparently not needed anymore

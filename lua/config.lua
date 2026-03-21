@@ -296,22 +296,13 @@ if vim.g.config_use_nvimlsp == 1 then
     require("plugins.blink")
     require("lsp-file-operations").setup()
 
-    -- utils.setup_plugin("pretty_hover", {
-    --     hl = {
-    --         -- custom_warning = {
-    --         --     color = "#FBBF24",
-    --         --     detect = { "\\*\\*[wW]arning\\*\\*" },
-    --         --     line = false,
-    --         -- },
-    --     },
-    -- })
-    -- if utils.has_plugin("pretty_hover") then
-    --     vim.api.nvim_create_autocmd('LspAttach', {
-    --         callback = function(_)
-    --             vim.keymap.set('n', 'K', require("pretty_hover").hover, { noremap = true, silent = true })
-    --         end,
-    --     })
-    -- end
+    if utils.setup_plugin("pretty_hover") then
+        vim.api.nvim_create_autocmd('LspAttach', {
+            callback = function(_)
+                vim.keymap.set('n', 'K', require("pretty_hover").hover, { noremap = true, silent = true })
+            end,
+        })
+    end
 
     require'lsp-lens'.setup({
         enable = false,
@@ -345,6 +336,9 @@ if vim.g.config_use_nvimlsp == 1 then
             exclude = {}
         }
     })
+    require('mason-tool-installer').setup {
+        "tree-sitter-cli",
+    }
     -- }}}
 
 -- lsp-endhints {{{
