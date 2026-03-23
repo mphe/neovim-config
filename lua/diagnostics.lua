@@ -30,9 +30,12 @@ local function show_related_information(diagnostics)
     end, diagnostics)
 end
 
+-- Remap "hint" diagnostics to "info"
 local function remap_severities(diagnostics)
+    local exclude_lsps = {}
+
     vim.tbl_map(function(item)
-        if item.source ~= "clang" then
+        if exclude_lsps[item.source] == nil then
             if item.severity == vim.diagnostic.severity.HINT then
                 item.severity = vim.diagnostic.severity.INFO
             end
@@ -43,8 +46,8 @@ end
 local publishDiagnosticsOriginal = vim.lsp.handlers['textDocument/publishDiagnostics']
 
 vim.lsp.handlers['textDocument/publishDiagnostics'] = function(_, result, ctx, config)
-    -- show_related_information(result.diagnostics)
     remap_severities(result.diagnostics)
+    show_related_information(result.diagnostics)
     return publishDiagnosticsOriginal(_, result, ctx, config)
 end
 

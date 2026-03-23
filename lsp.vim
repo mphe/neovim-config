@@ -29,10 +29,9 @@ nmap <leader>jT :vsp<cr><leader>jt
 nmap <leader>JT :tab split<cr><leader>jt
 
 nnoremap <leader>rn :Lspsaga rename<cr>
-nnoremap <leader>jr :Lspsaga finder<cr>
+nnoremap <leader>jr :Telescope lsp_references<cr>
+" nnoremap <leader>jr :Lspsaga finder<cr>
 nnoremap <leader>jR :lua vim.lsp.buf.references()<cr>
-
-cnoreabbrev Lsp Lspsaga
 
 function LspEnableDebugLogging()
     lua vim.lsp.set_log_level 'trace'
@@ -41,3 +40,7 @@ endfunction
 
 command! LspServerCapabilities lua =vim.lsp.get_clients()[1].server_capabilities
 command! LspEnableDebugLogging call LspEnableDebugLogging()
+
+if has("nvim-0.12")
+    command LspLog :lua vim.cmd('tabnew ' .. vim.lsp.log.get_filename())
+endif

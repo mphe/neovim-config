@@ -5,9 +5,10 @@ vim.api.nvim_create_autocmd('FileType', {
     pattern = {
         "markdown",
         "markdown_inline",
-        "vimdoc"
+        "vimdoc",
+        "copilot-chat",
     },
-    callback = function()
+    callback = function(ev)
         -- syntax highlighting, provided by Neovim
         vim.treesitter.start()
 
@@ -21,5 +22,8 @@ vim.api.nvim_create_autocmd('FileType', {
         if use_treesitter_indent then
             vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
         end
+
+        -- Keep normal syntax highlighting because sometimes they complement each other
+        vim.bo[ev.buf].syntax = 'ON'
     end,
 })
