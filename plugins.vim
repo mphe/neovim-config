@@ -172,6 +172,7 @@ Plug 'lervag/vimtex', { 'for': 'tex' }
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 " If you have nodejs
 " Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
+Plug 'MeanderingProgrammer/render-markdown.nvim'
 
 Plug 'tpope/vim-liquid', { 'for': 'liquid' }  " jekyll
 

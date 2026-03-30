@@ -49,6 +49,8 @@ if g:config_use_nvimlsp
     nnoremap <nowait> gr gr
 endif
 
+runtime restartvim.vim
+
 " -------------------------------------- General settings start {{{
 syntax enable
 set number
@@ -107,10 +109,6 @@ let mapleader = ','
 " Don't wrap lines
 set nowrap
 
-" set breakindentopt=shift:2
-" set showbreak=↳\ |
-" set showbreak=⇥\ |
-" set showbreak=⭲\ |
 set cpoptions+=n " remove background from line number column on wrapped lines
 
 " Change buffers without writing changes to a file
@@ -154,7 +152,10 @@ set fileformats=unix,dos
 
 set linebreak
 set breakindent
-" set breakindentopt=shift:4
+set breakindentopt+=list:-1
+" set showbreak=↳\ |
+" set showbreak=⇥ \ |
+" set showbreak=⭲ \ |
 
 set display+=lastline
 
@@ -168,6 +169,21 @@ set formatoptions-=tc
 
 " Show color column after textwidth, so textwidth and column don't overlap
 set colorcolumn=+1
+
+" hide colorcolumn on windows with `wrap`, otherwise the colorcolumn also wraps and is displayed in
+" the signcolumn
+augroup auto_colorcolumn_wrap
+    autocmd!
+    autocmd OptionSet wrap
+        \ if v:option_new
+        \ | setlocal colorcolumn=
+        \ | else
+        \ | setlocal colorcolumn<
+        \ | endif
+    autocmd BufWinEnter * if &wrap | setlocal colorcolumn= | else | setlocal colorcolumn< | endif
+    autocmd SessionLoadPost * windo if &wrap | setlocal colorcolumn= | else | setlocal colorcolumn< | endif
+    autocmd VimEnter * windo if &wrap | setlocal colorcolumn= | else | setlocal colorcolumn< | endif
+augroup END
 
 set mouse=a
 
@@ -216,7 +232,7 @@ let g:ale_disable_lsp = 1
 " let g:ale_lint_on_filetype_changed = 1
 " let g:ale_lint_on_text_changed = 1
 " let g:ale_lint_on_save = 1
-" let g:ale_lint_on_insert_leave = 0
+let g:ale_lint_on_insert_leave = 0
 " let g:ale_lint_delay = 2000
 
 " can all be disabled because it's managed by internal nvim-lsp
@@ -280,14 +296,6 @@ let b:ale_python_pyright_config = {
 \   'disableLanguageServices': v:true,
 \ },
 \}
-let g:ale_use_neovim_diagnostics_api = 1
-let g:ale_completion_enabled = 0
-" let g:ale_lint_on_enter = 1
-" let g:ale_lint_on_filetype_changed = 1
-" let g:ale_lint_on_text_changed = 1
-" let g:ale_lint_on_save = 1
-" let g:ale_lint_on_insert_leave = 0
-" let g:ale_lint_delay = 2000
 
 " nvim-gdb
 let g:nvimgdb_disable_start_keymaps = 1
@@ -345,7 +353,6 @@ endfunction
 command! Cdhere cd %:h
 
 runtime rename.vim
-runtime restartvim.vim
 
 " -------------------------------------- Functions end }}}
 
@@ -397,7 +404,7 @@ endif
 " -------------------------------------- Plugin configuration {{{
 
 " gitgutter - https://github.com/airblade/vim-gitgutter
-let g:gitgutter_set_sign_backgrounds = 1
+let g:gitgutter_set_sign_backgrounds = 0
 let g:gitgutter_sign_added = '│'
 let g:gitgutter_sign_modified = '│'
 let g:gitgutter_sign_priority = 0

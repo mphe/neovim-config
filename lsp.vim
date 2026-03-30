@@ -1,6 +1,8 @@
 command! LspIncomingCalls Lspsaga incoming_calls
 command! LspOutgoingCalls Lspsaga outgoing_calls
 
+nunmap grt
+
 nnoremap <leader>ac :Lspsaga code_action<cr>
 nnoremap <leader>fx :lua vim.lsp.buf.code_action({apply=true, context = { only = { "quickfix" } }, })<cr>
 

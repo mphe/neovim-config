@@ -21,6 +21,7 @@ function s:ApplyStyle()
     highlight CursorLine cterm=NONE gui=NONE  " Strip modifiers like underline
 
     hi! link SignColumn LineNr
+    hi! link FoldColumn LineNr
     hi! link WinSeparator LineNr
 
     highlight DiagnosticUnderlineWarn gui=undercurl

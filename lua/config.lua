@@ -190,21 +190,28 @@ if vim.g.config_use_copilot == 1 then
         mappings = {
             jump_to_diff = "",
             accept_diff = "",
+            reset = "",
         },
         sticky = require("localconfig").get_copilot_chat_sticky_prompts(),
         resources = { "selection", "buffer" }
     })
 
-    vim.api.nvim_create_autocmd('FileType', {
-        pattern = 'copilot-chat',
-        callback = function()
-            vim.opt_local.concealcursor = 'nv'
-        end,
-    })
+    if utils.has_plugin("CopilotChat") then
+        vim.keymap.set('n', '<F3>', '<cmd>CopilotChatToggle<CR>', { noremap = true, silent = true })
+
+        -- vim.api.nvim_create_autocmd('FileType', {
+        --     pattern = 'copilot-chat',
+        --     callback = function()
+        --         vim.opt_local.concealcursor = 'nv'
+        --     end,
+        -- })
+    end
 end
 
 require("plugins.treesitter")
 require("plugins.telescope")
+require("plugins.render-markdown")
+utils.setup_plugin("windows", {})
 
 -- dashboard-nvim {{{
 if vim.g.config_use_dashboard == 1 then
@@ -220,8 +227,6 @@ if vim.g.config_use_dashboard == 1 then
 end
 -- }}}
 
-
-utils.setup_plugin("windows", {})
 
 if vim.g.config_use_nvimlsp == 1 then
     require("diagnostics")

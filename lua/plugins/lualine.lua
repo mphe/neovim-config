@@ -48,7 +48,8 @@ local filename_component = {
 
 local filename_component_short = {
     "filename",
-    path = 0,  -- relative path
+    path = 0,  -- only filename
+    newfile_status = true,
     padding = 0,
     shorting_target = 80,
     color = "Comment",
@@ -79,6 +80,21 @@ local function get_encoding()
     return enc
 end
 
+local function get_project_name()
+    local icon = "  "
+    local cwd = vim.fn.getcwd()
+    local filepath = vim.fn.expand('%:p')
+    if filepath ~= '' and filepath:sub(1, #cwd) ~= cwd then
+        local dir = vim.fn.fnamemodify(filepath, ':h')
+        local git_root = vim.fn.finddir('.git', dir .. ';')
+        if git_root ~= '' then
+            return icon .. vim.fn.fnamemodify(vim.fn.fnamemodify(git_root, ':h'), ':t') .. ' ↗'
+        end
+        return icon .. '[external]'
+    end
+    return icon .. vim.fn.fnamemodify(cwd, ':t')
+end
+
 local winbar = {
     lualine_c = { file_icon_component, filename_component_short, breadcrumbs, },
     lualine_x = { diagnostics_component},
@@ -95,7 +111,7 @@ require("lualine").setup {
         lualine_a = {'mode'},
         lualine_b = {filename_component},
         lualine_c = {},
-        lualine_x = { "searchcount", { "branch", color = "Comment" }, "filesize", get_encoding, fileformat, 'filetype',  },
+        lualine_x = { "searchcount", get_project_name, { "branch", color = "Comment" }, "filesize", get_encoding, fileformat, 'filetype',  },
         lualine_y = { lspstatus_component, },
         lualine_z = {'progress', 'location'}
     },

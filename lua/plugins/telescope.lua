@@ -49,6 +49,8 @@ require("telescope").setup{
     pickers = {
         lsp_references = {
             initial_mode = "normal",
+            include_current_line = true,
+            jump_type = "never",
         },
         lsp_definitions = {
             initial_mode = "normal",

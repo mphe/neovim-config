@@ -30,23 +30,27 @@ local function show_related_information(diagnostics)
     end, diagnostics)
 end
 
--- Remap "hint" diagnostics to "info"
-local function remap_severities(diagnostics)
-    local exclude_lsps = {}
 
-    vim.tbl_map(function(item)
-        if exclude_lsps[item.source] == nil then
-            if item.severity == vim.diagnostic.severity.HINT then
-                item.severity = vim.diagnostic.severity.INFO
-            end
+-- Remap "hint" diagnostics to "info"
+local exclude_lsps = {}
+local function remap_severities(item)
+    if exclude_lsps[item.source] == nil then
+        if item.severity == vim.diagnostic.severity.HINT then
+            item.severity = vim.diagnostic.severity.INFO
         end
-    end, diagnostics)
+    end
 end
 
 local publishDiagnosticsOriginal = vim.lsp.handlers['textDocument/publishDiagnostics']
 
 vim.lsp.handlers['textDocument/publishDiagnostics'] = function(_, result, ctx, config)
-    remap_severities(result.diagnostics)
+    vim.tbl_map(function(item)
+        -- remove all \r chars
+        item.message = string.gsub(item.message, '\r', '')
+
+        remap_severities(item)
+    end, result.diagnostics)
+
     show_related_information(result.diagnostics)
     return publishDiagnosticsOriginal(_, result, ctx, config)
 end
@@ -83,8 +87,8 @@ vim.diagnostic.config({
             -- Force suffix on new line only when it will be rendered as link. This prevents weird
             -- highlighting with underlines if it causes a line break.
             if lsp_data and lsp_data.codeDescription and lsp_data.codeDescription.href then
-                -- msg = string.format("%s\n⮡  [More info](%s)", msg, lsp_data.codeDescription.href)
-                msg = msg .. "\n"  -- Force suffix on new line
+                msg = string.format("%s\n⮡  More info: %s\n", msg, lsp_data.codeDescription.href)
+                -- msg = msg .. "\n"  -- Force suffix on new line
             end
 
             return msg
@@ -102,20 +106,20 @@ vim.diagnostic.config({
         end,
 
         -- Append the diagnostic code and format it as link to the documentation URL if available
-        suffix = function(diagnostic)
-            local code = diagnostic.code
-            local lsp_data = diagnostic.user_data and diagnostic.user_data.lsp
-
-            if code then
-                if lsp_data and lsp_data.codeDescription and lsp_data.codeDescription.href then
-                    return string.format("[%s](%s)", code, lsp_data.codeDescription.href), "markdownLinkText"
-                else
-                    return string.format(" [[%s]]", code)
-                end
-            end
-
-            return ""
-        end,
+        -- suffix = function(diagnostic)
+        --     local code = diagnostic.code
+        --     local lsp_data = diagnostic.user_data and diagnostic.user_data.lsp
+        --
+        --     if code then
+        --         if lsp_data and lsp_data.codeDescription and lsp_data.codeDescription.href then
+        --             return string.format("[%s](%s)", code, lsp_data.codeDescription.href), "markdownLinkText"
+        --         else
+        --             return string.format(" [[%s]]", code)
+        --         end
+        --     end
+        --
+        --     return ""
+        -- end,
     },
     -- virtual_lines = true,
     virtual_text = true,
@@ -126,7 +130,7 @@ local orig_open_float = vim.diagnostic.open_float
 vim.diagnostic.open_float = function(opts, ...)
     local float_bufnr, win_id = orig_open_float(opts, ...)
     if float_bufnr then
-        vim.bo[float_bufnr].filetype = 'markdown'
+        -- vim.bo[float_bufnr].filetype = 'markdown'
         vim.wo[win_id].conceallevel = 2
         vim.wo[win_id].concealcursor = 'nv'
     end

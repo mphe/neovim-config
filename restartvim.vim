@@ -15,7 +15,9 @@ augroup END
 function s:maybe_restore()
     if filereadable(g:restart_vim_session_file)
         exec 'source ' . g:restart_vim_session_file
+        let l:win = winnr()  " windo moves the cursor, restore it afterwards
         windo filetype detect
+        exec l:win . 'wincmd w'
         call delete(g:restart_vim_session_file)
     else
         echo 'No session to restore'
@@ -30,7 +32,11 @@ endfun
 
 function s:restart()
     call s:save_session()
-    qall
+    if exists(':restart')
+        restart
+    else
+        qall
+    endif
 endfun
 
 
