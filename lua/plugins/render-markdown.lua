@@ -9,6 +9,7 @@ local default_code_options = {
     width = "block",
     right_pad = 1,
     highlight = 'RenderMarkdownCode',
+    highlight_border = "RenderMarkdownCodeBorder",
     highlight_inline = "markdownCode",
     language = true,
     border = "thin",
@@ -57,6 +58,8 @@ utils.setup_plugin("render-markdown", {
                 code = {
                     style = "normal",
                     highlight = "",
+                    highlight_border = "",
+                    border = "thin",
                 },
             },
         },

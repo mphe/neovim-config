@@ -7,6 +7,10 @@ function M.get_dashboard_shortcuts()
 end
 
 
+function M.get_copilot_chat_model()
+    return "gpt-5.3-codex"
+end
+
 function M.get_copilot_chat_sticky_prompts()
     return {}
 end

@@ -1,4 +1,5 @@
 local utils = require("utils")
+local localconfig = require("localconfig")
 
 -- Recommended by nvim-tree
 -- disable netrw at the very start of your init.lua
@@ -184,7 +185,7 @@ if vim.g.config_use_copilot == 1 then
     require("plugins.copilot")
 
     utils.setup_plugin("CopilotChat", {
-        model = "claude-opus-4.6",
+        model = localconfig.get_copilot_chat_model(),
         auto_insert_mode = false,
         chat_autocomplete = false,  -- handled by blink-cmp-copilot-chat
         mappings = {
@@ -192,7 +193,7 @@ if vim.g.config_use_copilot == 1 then
             accept_diff = "",
             reset = "",
         },
-        sticky = require("localconfig").get_copilot_chat_sticky_prompts(),
+        sticky = localconfig.get_copilot_chat_sticky_prompts(),
         resources = { "selection", "buffer" }
     })
 
@@ -221,7 +222,7 @@ if vim.g.config_use_dashboard == 1 then
         change_to_vcs_root = true,
         shortcut_type = "number",
         config = {
-            shortcut = require("localconfig").get_dashboard_shortcuts(),
+            shortcut = localconfig.get_dashboard_shortcuts(),
         },
     }
 end

@@ -1,5 +1,8 @@
 let s:vim_cfg_path = fnamemodify($MYVIMRC, ':p:h')
 
+packadd nvim.undotree
+packadd nvim.difftool
+
 call plug#begin(s:vim_cfg_path . '/plugged')
 
 " Required by: telescope, copilot, codeium.nvim, neo-tree, cmake-tools.nvim
