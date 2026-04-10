@@ -194,7 +194,9 @@ if vim.g.config_use_copilot == 1 then
             reset = "",
         },
         sticky = localconfig.get_copilot_chat_sticky_prompts(),
-        resources = { "selection", "buffer" }
+        resources = { "selection", "buffer" },
+        show_help = false,
+        show_folds = false,
     })
 
     if utils.has_plugin("CopilotChat") then

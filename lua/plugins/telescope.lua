@@ -1,4 +1,61 @@
 local telescope_actions = require("telescope.actions")
+
+
+-- Yank the selected path in file picker (https://github.com/nvim-telescope/telescope-file-browser.nvim/issues/327)
+local function get_selected_path()
+    return require("telescope.actions.state").get_selected_entry().path
+end
+
+local function yank(text)
+    local cb_opts = vim.opt.clipboard:get()
+    if vim.tbl_contains(cb_opts, "unnamed") then
+        vim.fn.setreg("*", text)
+    end
+    if vim.tbl_contains(cb_opts, "unnamedplus") then
+        vim.fn.setreg("+", text)
+    end
+    vim.fn.setreg("", text)
+end
+
+
+local function open_file_path_yank_picker(opts)
+    opts = opts or {}
+    opts.insert = opts.insert or false
+    opts.switch_to_insert = opts.switch_to_insert or false
+    opts.close = opts.close or true
+    opts.yank = opts.yank or true
+
+    require("telescope.builtin").find_files({
+        attach_mappings = function(_, map)
+            map("i", "<CR>", function(prompt_bufnr)
+                local path = get_selected_path()
+
+                if opts.yank then
+                    yank(path)
+                end
+
+                if opts.insert then
+                    vim.schedule(function()
+                        vim.api.nvim_put({ path }, "c", true, true)
+                    end)
+                end
+
+                if opts.switch_to_insert then
+                    vim.schedule(function()
+                        vim.cmd('startinsert!')
+                    end)
+                end
+
+                if opts.close then
+                    telescope_actions.close(prompt_bufnr)
+                end
+            end)
+            return true
+        end,
+    })
+end
+
+
 require("telescope").setup{
     defaults = {
         -- preview = false,
@@ -58,22 +115,16 @@ require("telescope").setup{
         find_files = {
             mappings = {
                 i = {
-                    -- Yank the selected path (https://github.com/nvim-telescope/telescope-file-browser.nvim/issues/327)
-                    ["<C-y>"] = function(prompt_bufnr)
-                        local entry = require("telescope.actions.state").get_selected_entry()
-                        -- local relpath = entry[1]
-                        local cb_opts = vim.opt.clipboard:get()
-                        if vim.tbl_contains(cb_opts, "unnamed") then vim.fn.setreg("*", entry.path) end
-                        if vim.tbl_contains(cb_opts, "unnamedplus") then
-                            vim.fn.setreg("+", entry.path)
-                        end
-                        vim.fn.setreg("", entry.path)
-                        telescope_actions.close(prompt_bufnr)
-                    end,
+                    ["<C-y>"] = function() yank(get_selected_path()) end,
                 },
             },
         },
     },
 }
+
+
+vim.keymap.set("n", "<C-t>", open_file_path_yank_picker, { desc = "Pick file and yank path" })
+vim.keymap.set("i", "<C-t>", function() open_file_path_yank_picker({ insert = true, switch_to_insert = true }) end, { desc = "Pick file and yank path" })
+
 
 vim.cmd([[hi! link TelescopeBorder FloatBorder]])

@@ -60,6 +60,8 @@ set noshowcmd
 set title
 set titlestring=%t\ -\ Nvim
 
+set exrc
+
 " tab size = 4, spaces instead of tabs, and auto indent
 set shiftwidth=4
 " set tabstop=4
@@ -170,19 +172,22 @@ set formatoptions-=tc
 " Show color column after textwidth, so textwidth and column don't overlap
 set colorcolumn=+1
 
+function! s:UpdateColorcolumn() abort
+    if &buftype ==# 'nofile' || &wrap
+        setlocal colorcolumn=
+    else
+        setlocal colorcolumn<
+    endif
+endfunction
+
 " hide colorcolumn on windows with `wrap`, otherwise the colorcolumn also wraps and is displayed in
 " the signcolumn
 augroup auto_colorcolumn_wrap
     autocmd!
-    autocmd OptionSet wrap
-        \ if v:option_new
-        \ | setlocal colorcolumn=
-        \ | else
-        \ | setlocal colorcolumn<
-        \ | endif
-    autocmd BufWinEnter * if &wrap | setlocal colorcolumn= | else | setlocal colorcolumn< | endif
-    autocmd SessionLoadPost * windo if &wrap | setlocal colorcolumn= | else | setlocal colorcolumn< | endif
-    autocmd VimEnter * windo if &wrap | setlocal colorcolumn= | else | setlocal colorcolumn< | endif
+    autocmd OptionSet wrap call <SID>UpdateColorcolumn()
+    autocmd BufWinEnter,WinEnter * call <SID>UpdateColorcolumn()
+    autocmd SessionLoadPost * windo call <SID>UpdateColorcolumn()
+    autocmd VimEnter * windo call <SID>UpdateColorcolumn()
 augroup END
 
 set mouse=a
@@ -379,7 +384,7 @@ endif
 set t_Co=256
 
 " set fillchars+=vert:│
-set fillchars+=vert:▏,fold:─,horiz:▁,horizdown:▁,horizup:▁,vertleft:▏,vertright:🭼,verthoriz:🭼
+set fillchars+=eob:\ ,vert:▏,fold:─,horiz:▁,horizdown:▁,horizup:▁,vertleft:▏,vertright:🭼,verthoriz:🭼
 " set fillchars+=fold:\ ,
 set fillchars+=fold:─
 set cursorline
@@ -854,10 +859,10 @@ nnoremap <C-h> 3zh
 nnoremap <leader>o o<ESC>
 nnoremap <leader>O O<ESC>
 
-" Shortcuts for :w 
-inoremap <c-s> <c-o>:w<CR>
-noremap <c-s> :w<CR>
-vnoremap <c-s> <ESC>:w<CR>gv
+" Shortcuts for :w
+inoremap <c-s> <c-o>:update<CR>
+noremap <c-s> :update<CR>
+vnoremap <c-s> <ESC>:update<CR>gv
 
 " Shortcut for <Esc>
 inoremap jk <Esc>

@@ -84,14 +84,21 @@ local function get_project_name()
     local icon = "  "
     local cwd = vim.fn.getcwd()
     local filepath = vim.fn.expand('%:p')
+
+    -- Remove prefixes like "fugitive:///"
+    filepath = filepath:gsub('^%a+:[/\\][/\\][/\\]?', '')
+
     if filepath ~= '' and filepath:sub(1, #cwd) ~= cwd then
         local dir = vim.fn.fnamemodify(filepath, ':h')
         local git_root = vim.fn.finddir('.git', dir .. ';')
+
         if git_root ~= '' then
             return icon .. vim.fn.fnamemodify(vim.fn.fnamemodify(git_root, ':h'), ':t') .. ' ↗'
         end
+
         return icon .. '[external]'
     end
+
     return icon .. vim.fn.fnamemodify(cwd, ':t')
 end
 

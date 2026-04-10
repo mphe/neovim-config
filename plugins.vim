@@ -24,7 +24,6 @@ endif
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
-" Plug 'tpope/vim-sleuth'  " Auto detect indent
 Plug 'tomtom/tcomment_vim'
 
 if g:config_use_coc

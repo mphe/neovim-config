@@ -45,6 +45,9 @@ function s:ApplyStyle()
     " TODO: find out if still needed
     " call s:ScalaSyntaxFixes()
 
+    hi SignatureMarkText guibg=NONE
+    hi SignatureMarkerText guibg=NONE
+
 
     " treesitter / lsp fixes {{{
     hi! link @keyword.storage @keyword

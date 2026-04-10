@@ -31,8 +31,8 @@ nmap <leader>jT :vsp<cr><leader>jt
 nmap <leader>JT :tab split<cr><leader>jt
 
 nnoremap <leader>rn :Lspsaga rename<cr>
-nnoremap <leader>jr :Telescope lsp_references<cr>
-" nnoremap <leader>jr :Lspsaga finder<cr>
+" nnoremap <leader>jr :Telescope lsp_references<cr>
+nnoremap <leader>jr :Lspsaga finder<cr>
 nnoremap <leader>jR :lua vim.lsp.buf.references()<cr>
 
 function LspEnableDebugLogging()
