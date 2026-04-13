@@ -59,7 +59,7 @@ utils.setup_plugin("render-markdown", {
                     style = "normal",
                     highlight = "",
                     highlight_border = "",
-                    border = "thin",
+                    border = "hide",
                 },
             },
         },

@@ -9,7 +9,7 @@ return {
             path = vim.fn.expand("~") .. "/.ltex",
         }
     end,
-    filetypes = { "bib", "tex", "markdown", "bib", },
+    filetypes = { "bib", "tex", "markdown", "bib", "jira", },
     settings = {
         ltex = {
             -- language = "de-DE",

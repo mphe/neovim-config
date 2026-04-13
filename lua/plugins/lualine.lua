@@ -82,11 +82,11 @@ end
 
 local function get_project_name()
     local icon = "  "
-    local cwd = vim.fn.getcwd()
-    local filepath = vim.fn.expand('%:p')
+    local cwd = vim.fs.normalize(vim.fn.getcwd())
+    local filepath = vim.fs.normalize(vim.fn.expand('%:p'))
 
     -- Remove prefixes like "fugitive:///"
-    filepath = filepath:gsub('^%a+:[/\\][/\\][/\\]?', '')
+    filepath = filepath:gsub('^%a+:///?', '')
 
     if filepath ~= '' and filepath:sub(1, #cwd) ~= cwd then
         local dir = vim.fn.fnamemodify(filepath, ':h')
