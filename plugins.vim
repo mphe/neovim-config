@@ -64,9 +64,12 @@ endif
 Plug 'anuvyklack/middleclass'  " dependency of windows.nvim
 Plug 'anuvyklack/windows.nvim'
 
+
 " Edit the quickfix/location list freely
 Plug 'itchyny/vim-qfedit'
 
+Plug 'folke/snacks.nvim'
+Plug 'stevearc/overseer.nvim'
 Plug 'tommcdo/vim-exchange'
 Plug 'NMAC427/guess-indent.nvim'
 Plug 'Raimondi/delimitMate'
@@ -97,6 +100,8 @@ Plug 'embear/vim-localvimrc'
 Plug 'inkarkat/vim-ingo-library'
 Plug 'inkarkat/vim-EnhancedJumps'
 Plug 'MattesGroeger/vim-bookmarks'
+Plug 'J-Cowsert/classlayout.nvim'
+Plug 'evilwaveforms/disenchant'
 
 " Scrollbar with diagnostics and search markers
 if g:config_use_scrollbar
@@ -118,6 +123,7 @@ Plug 'rcarriga/nvim-notify'
 Plug 'kyazdani42/nvim-web-devicons'
 
 Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-ui-select.nvim'
 
 " Fix CursorHold performance
 " FIXME: Maybe remove, apparently not needed anymore
@@ -135,6 +141,9 @@ if g:config_use_copilot
     " Plug 'github/copilot.vim'
     " Plug 'samodostal/copilot-client.lua'
     Plug 'zbirenbaum/copilot.lua'
+    " Plug 'ravitemer/mcphub.nvim', { 'do': 'npm install -g mcp-hub@latest' }
+    " Plug 'ravitemer/codecompanion-history.nvim'
+    " Plug 'olimorris/codecompanion.nvim'
     Plug 'CopilotC-Nvim/CopilotChat.nvim'
 elseif g:config_use_codeium
     Plug 'Exafunction/codeium.vim', { 'branch': 'main' }

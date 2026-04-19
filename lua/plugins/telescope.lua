@@ -57,6 +57,11 @@ end
 
 
 require("telescope").setup{
+    extensions = {
+        ["ui-select"] = {
+            require("telescope.themes").get_dropdown {},
+        },
+    },
     defaults = {
         -- preview = false,
         mappings = {
@@ -122,6 +127,7 @@ require("telescope").setup{
     },
 }
 
+require("telescope").load_extension("ui-select")
 
 vim.keymap.set("n", "<C-t>", open_file_path_yank_picker, { desc = "Pick file and yank path" })
 vim.keymap.set("i", "<C-t>", function() open_file_path_yank_picker({ insert = true, switch_to_insert = true }) end, { desc = "Pick file and yank path" })

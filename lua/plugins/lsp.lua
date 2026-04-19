@@ -103,7 +103,7 @@ vim.lsp.enable({
 })
 
 
--- Disable lsp logging by default to not infinitely grow the lsp log file
+-- Only log LSP errors by default to not infinitely grow the lsp log file
 vim.lsp.set_log_level("ERROR")
 
 vim.api.nvim_create_user_command("LspLogClear", function()

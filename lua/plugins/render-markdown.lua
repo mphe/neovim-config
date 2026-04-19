@@ -15,9 +15,17 @@ local default_code_options = {
     border = "thin",
 }
 
+local default_options_anticonceal = {
+    anti_conceal = {
+        enabled = true,
+    },
+    win_options = default_win_options,
+    code = default_code_options,
+}
+
 
 utils.setup_plugin("render-markdown", {
-    file_types = { 'markdown', 'vimwiki', 'copilot-chat' },
+    file_types = { 'markdown', 'vimwiki', 'copilot-chat', 'codecompanion' },
     render_modes = true,
     anti_conceal = {
         -- enabled = false,
@@ -64,14 +72,9 @@ utils.setup_plugin("render-markdown", {
             },
         },
         filetype = {
-            -- CopilotChat window has buftype nofile, so we need a filetype entry which cancels-out the nofile override
-            ["copilot-chat"] = {
-                anti_conceal = {
-                    enabled = true,
-                },
-                win_options = default_win_options,
-                code = default_code_options,
-            }
+            -- CopilotChat/CodeCompanion window has buftype nofile, so we need a filetype entry which cancels-out the nofile override
+            ["copilot-chat"] = default_options_anticonceal,
+            ["codecompanion"] = default_options_anticonceal,
         }
     },
     heading = { enabled = false },

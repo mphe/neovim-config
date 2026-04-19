@@ -6,6 +6,10 @@ local localconfig = require("localconfig")
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
+utils.setup_plugin("snacks", {
+    input = { enabled = true },
+})
+
 require('goto-preview').setup({
     width = 120,
     height = 45,
@@ -183,38 +187,13 @@ require("paint").setup({
 
 if vim.g.config_use_copilot == 1 then
     require("plugins.copilot")
-
-    utils.setup_plugin("CopilotChat", {
-        model = localconfig.get_copilot_chat_model(),
-        auto_insert_mode = false,
-        chat_autocomplete = false,  -- handled by blink-cmp-copilot-chat
-        mappings = {
-            jump_to_diff = "",
-            accept_diff = "",
-            reset = "",
-        },
-        sticky = localconfig.get_copilot_chat_sticky_prompts(),
-        resources = { "selection", "buffer" },
-        show_help = false,
-        show_folds = false,
-    })
-
-    if utils.has_plugin("CopilotChat") then
-        vim.keymap.set('n', '<F3>', '<cmd>CopilotChatToggle<CR>', { noremap = true, silent = true })
-
-        -- vim.api.nvim_create_autocmd('FileType', {
-        --     pattern = 'copilot-chat',
-        --     callback = function()
-        --         vim.opt_local.concealcursor = 'nv'
-        --     end,
-        -- })
-    end
 end
 
 require("plugins.treesitter")
 require("plugins.telescope")
 require("plugins.render-markdown")
 utils.setup_plugin("windows", {})
+utils.setup_plugin("overseer", {})
 
 -- dashboard-nvim {{{
 if vim.g.config_use_dashboard == 1 then

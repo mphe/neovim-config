@@ -7,6 +7,7 @@ vim.api.nvim_create_autocmd('FileType', {
         "markdown_inline",
         "vimdoc",
         "copilot-chat",
+        "qml",
     },
     callback = function(ev)
         -- syntax highlighting, provided by Neovim
