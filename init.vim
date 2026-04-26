@@ -200,6 +200,8 @@ set signcolumn=yes
 " Default default border style of floating windows (Neovim 0.11+)
 set winborder=rounded
 
+set matchtime=1
+
 " Enable doxygen tag highlighting
 let g:load_doxygen_syntax = 1
 

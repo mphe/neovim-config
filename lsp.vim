@@ -1,15 +1,16 @@
-command! LspIncomingCalls Lspsaga incoming_calls
-command! LspOutgoingCalls Lspsaga outgoing_calls
+command! LspIncomingCalls Trouble lsp_incoming_calls
+command! LspOutgoingCalls Trouble lsp_outgoing_calls
 
 nunmap grt
 
-nnoremap <leader>ac :Lspsaga code_action<cr>
+" nnoremap <leader>ac :Lspsaga code_action<cr>
+" nnoremap <leader>ac :lua require("actions-preview").code_actions()<cr>
+nnoremap <silent> <leader>ac :lua require("tiny-code-action").code_action()<cr>
 nnoremap <leader>fx :lua vim.lsp.buf.code_action({apply=true, context = { only = { "quickfix" } }, })<cr>
 
-" nnoremap <leader>d :Lspsaga show_line_diagnostics<cr>
-" nnoremap <leader>D :Lspsaga show_buf_diagnostics<cr>
 nnoremap <leader>d :lua vim.diagnostic.open_float()<cr>
-nnoremap <leader>D :lua vim.diagnostic.setloclist()<cr>
+" nnoremap <leader>D :lua vim.diagnostic.setloclist()<cr>
+nnoremap <leader>D :Trouble diagnostics<cr>
 
 nnoremap <leader>gi :lua vim.lsp.buf.signature_help()<cr>
 
@@ -18,7 +19,6 @@ nnoremap <leader>jd :lua vim.lsp.buf.definition()<cr>
 nmap <leader>jD :vsp<cr><leader>jd
 nmap <leader>JD :tab split<cr><leader>jd
 
-" nnoremap <leader>pd :Lspsaga peek_definition<cr>
 nnoremap <leader>pd <cmd>lua require('goto-preview').goto_preview_definition()<CR>
 nnoremap <leader>pt <cmd>lua require('goto-preview').goto_preview_type_definition()<CR>
 " nnoremap <leader>pi <cmd>lua require('goto-preview').goto_preview_implementation()<CR>
@@ -31,8 +31,7 @@ nmap <leader>jT :vsp<cr><leader>jt
 nmap <leader>JT :tab split<cr><leader>jt
 
 nnoremap <leader>rn :lua vim.lsp.buf.rename()<cr>
-nnoremap <leader>rn :Lspsaga rename<cr>
-nnoremap <leader>jr :Lspsaga finder<cr>
+nnoremap <leader>jr :Trouble lsp_references<cr>
 nnoremap <leader>jR :lua vim.lsp.buf.references()<cr>
 
 function LspEnableDebugLogging()

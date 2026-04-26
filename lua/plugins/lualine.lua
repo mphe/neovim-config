@@ -31,6 +31,10 @@ local diagnostics_component = {
     },
 }
 
+local workspace_diagnostics_component = vim.deepcopy(diagnostics_component)
+workspace_diagnostics_component.sources = { "nvim_workspace_diagnostic" }
+workspace_diagnostics_component.sections = { "error", "warn" }
+
 local lspstatus_component = { 'lsp_status', ignore_lsp = {"copilot"} }
 
 local file_icon_component = {
@@ -118,7 +122,7 @@ require("lualine").setup {
         lualine_a = {'mode'},
         lualine_b = {filename_component},
         lualine_c = {},
-        lualine_x = { "searchcount", get_project_name, { "branch", color = "Comment" }, "filesize", get_encoding, fileformat, 'filetype',  },
+        lualine_x = { "searchcount", workspace_diagnostics_component, get_project_name, { "branch", color = "Comment" }, "filesize", get_encoding, fileformat, 'filetype',  },
         lualine_y = { lspstatus_component, },
         lualine_z = {'progress', 'location'}
     },

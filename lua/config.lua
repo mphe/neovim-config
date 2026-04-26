@@ -193,7 +193,33 @@ require("plugins.treesitter")
 require("plugins.telescope")
 require("plugins.render-markdown")
 utils.setup_plugin("windows", {})
-utils.setup_plugin("overseer", {})
+if utils.setup_plugin("overseer", {}) then
+    vim.api.nvim_set_keymap("n", "<F4>", ":OverseerRun<CR>", { noremap = true, silent = true })
+end
+
+utils.setup_plugin("trouble", {
+    focus = true,
+    restore = true,
+    win = {
+        size = {
+            height = 20
+        }
+    },
+    keys = {
+        ["<esc>"] = "close",
+    }
+})
+
+if utils.has_plugin("trouble") then
+    vim.api.nvim_create_user_command("Diagnostics", "Trouble diagnostics", {})
+
+    -- Automatically open Trouble quickfix
+    vim.api.nvim_create_autocmd("QuickFixCmdPost", {
+        callback = function()
+            vim.cmd([[Trouble qflist open]])
+        end,
+    })
+end
 
 -- dashboard-nvim {{{
 if vim.g.config_use_dashboard == 1 then
@@ -215,6 +241,20 @@ if vim.g.config_use_nvimlsp == 1 then
     require("plugins.lsp")
     require("plugins.blink")
     require("lsp-file-operations").setup()
+    require("tiny-code-action").setup {
+        picker = {
+            "buffer",
+            opts = {
+                hotkeys = true, -- Enable hotkeys for quick selection of actions
+                auto_accept = true, -- Automatically accept the selected action (With hotkeys)
+                auto_preview = true, -- Enable or disable automatic preview
+                winborder = "rounded", -- Border style for picker and preview windows
+                keymaps = {
+                    close = { "q", "<Esc>" },
+                },
+            },
+        },
+    }
 
     if utils.setup_plugin("pretty_hover") then
         vim.api.nvim_create_autocmd('LspAttach', {

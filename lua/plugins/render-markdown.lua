@@ -1,34 +1,8 @@
 local utils = require("utils")
 
-local default_win_options = {
-    conceallevel = { default = vim.o.conceallevel, rendered = 3 },
-    concealcursor = { default = vim.o.concealcursor, rendered = "" },
-}
-
-local default_code_options = {
-    width = "block",
-    right_pad = 1,
-    highlight = 'RenderMarkdownCode',
-    highlight_border = "RenderMarkdownCodeBorder",
-    highlight_inline = "markdownCode",
-    language = true,
-    border = "thin",
-}
-
-local default_options_anticonceal = {
+local default_options = {
     anti_conceal = {
         enabled = true,
-    },
-    win_options = default_win_options,
-    code = default_code_options,
-}
-
-
-utils.setup_plugin("render-markdown", {
-    file_types = { 'markdown', 'vimwiki', 'copilot-chat', 'codecompanion' },
-    render_modes = true,
-    anti_conceal = {
-        -- enabled = false,
         -- ignore = {
         --     -- code_background = false,
         --     -- indent = false,
@@ -52,7 +26,27 @@ utils.setup_plugin("render-markdown", {
         --     -- virtual_lines = false,
         -- },
     },
-    win_options = default_win_options,
+    win_options = {
+        conceallevel = { default = vim.o.conceallevel, rendered = 3 },
+        concealcursor = { default = vim.o.concealcursor, rendered = "" },
+    },
+    code = {
+        width = "block",
+        right_pad = 1,
+        highlight = 'RenderMarkdownCode',
+        highlight_border = "RenderMarkdownCodeBorder",
+        highlight_inline = "markdownCode",
+        language = true,
+        border = "thin",
+    },
+}
+
+
+utils.setup_plugin("render-markdown", {
+    file_types = { 'markdown', 'vimwiki', 'copilot-chat', 'codecompanion' },
+    render_modes = true,
+    anti_conceal = default_options.anti_conceal,
+    win_options = default_options.win_options,
     overrides = {
         buftype = {
             nofile = {
@@ -73,16 +67,13 @@ utils.setup_plugin("render-markdown", {
         },
         filetype = {
             -- CopilotChat/CodeCompanion window has buftype nofile, so we need a filetype entry which cancels-out the nofile override
-            ["copilot-chat"] = default_options_anticonceal,
-            ["codecompanion"] = default_options_anticonceal,
+            ["copilot-chat"] = default_options,
+            ["codecompanion"] = default_options,
         }
     },
     heading = { enabled = false },
     paragraph = { enabled = false },
-    code = default_code_options,
-    -- dash = { enabled = false },
-    -- bullet = { enabled = false },
-    -- checkbox = { enabled = false },
+    code = default_options.code,
     quote = {
         repeat_linebreak = true,
     },
@@ -90,10 +81,13 @@ utils.setup_plugin("render-markdown", {
         enabled = true,
         alignment_indicator = "",
     },
-    -- callout = { enabled = false },
-    -- link = { enabled = false },
     sign = { enabled = false },
     indent = { enabled = false },
+    -- dash = { enabled = false },
+    -- bullet = { enabled = false },
+    -- checkbox = { enabled = false },
+    -- callout = { enabled = false },
+    -- link = { enabled = false },
     -- html = { enabled = false },
     -- latex = { enabled = false },
 })

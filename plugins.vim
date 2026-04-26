@@ -48,6 +48,7 @@ if g:config_use_nvimlsp
     " Plug 'Fildo7525/pretty_hover'
     Plug 'rmagatti/goto-preview'
     Plug 'chrisgrieser/nvim-rulebook'
+    Plug 'rachartier/tiny-code-action.nvim'
 
     " Autocompletion
     Plug 'Saghen/blink.cmp', { 'tag': 'v1.9.1' }  " 1.10.0+ is bugged again and crashes nvim because of frizbee
@@ -68,6 +69,7 @@ Plug 'anuvyklack/windows.nvim'
 " Edit the quickfix/location list freely
 Plug 'itchyny/vim-qfedit'
 
+Plug 'folke/trouble.nvim'
 Plug 'folke/snacks.nvim'
 Plug 'stevearc/overseer.nvim'
 Plug 'tommcdo/vim-exchange'
