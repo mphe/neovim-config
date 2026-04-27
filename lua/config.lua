@@ -200,13 +200,40 @@ end
 utils.setup_plugin("trouble", {
     focus = true,
     restore = true,
+    auto_jump = false,
+    auto_refresh = false,
     win = {
-        size = {
-            height = 20
-        }
+        size = { height = 20 },
+        minimal = false,
+    },
+    preview = {
+        type = "split",
+        relative = "win",
+        position = "right",
+        size = { width = 0.5, },
+        scratch = false,
     },
     keys = {
         ["<esc>"] = "close",
+        ["<cr>"] = "jump_close",
+        o = "jump",
+    },
+    modes = {
+        lsp_references = {
+            auto_jump = false,
+            win = {
+                size = { height = 30, },
+            },
+            params = {
+                include_declaration = true,
+            },
+        },
+        lsp_base = {
+            auto_jump = false,
+            params = {
+                include_current = true,
+            },
+        },
     }
 })
 
