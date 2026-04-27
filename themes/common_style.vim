@@ -50,6 +50,7 @@ function s:ApplyStyle()
 
 
     " treesitter / lsp fixes {{{
+    hi! link @constructor Type
     hi! link @keyword.storage @keyword
     hi! link @comment Comment
     " hi! link @property @variable
@@ -87,6 +88,10 @@ function s:ApplyStyle()
     hi! link SagaClass Type
     hi! link SagaNamespace @namespace
     hi! link SagaFolder Normal  " Make Lspsaga's breadcrumb folder not red
+
+    " snacks
+    hi! link SnacksInputBorder FloatBorder
+    hi! link SnacksInputTitle FloatTitle
 
 endfun
 

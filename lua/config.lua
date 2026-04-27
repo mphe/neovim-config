@@ -1,13 +1,60 @@
 local utils = require("utils")
 local localconfig = require("localconfig")
 
+-- Make severity chars in qflist uppercase so trouble.nvim displays diagnostic icons
+vim.api.nvim_create_autocmd("QuickFixCmdPost", {
+    callback = function()
+        local qflist = vim.fn.getqflist()
+        for _, entry in ipairs(qflist) do
+            if entry.type ~= "" then
+                entry.type = entry.type:upper()
+            end
+        end
+        vim.fn.setqflist(qflist, "r")
+        vim.cmd([[Trouble qflist open]])
+    end,
+})
+
+-- Hide markdown header prefixes in nofile buffers (e.g. hover windows, code action, ...)
+vim.api.nvim_create_autocmd({"BufWinEnter", "FileType"}, {
+    callback = function(args)
+        local buf = args.buf
+        if vim.bo[buf].filetype ~= "markdown" or vim.bo[buf].buftype ~= "nofile" then
+            return
+        end
+
+        local ns = vim.api.nvim_create_namespace("hide_markdown_headers")
+        vim.api.nvim_buf_clear_namespace(buf, ns, 0, -1)
+
+        local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+        for i, line in ipairs(lines) do
+            local hashes = line:match("^(#+)%s")
+            if hashes then
+                vim.api.nvim_buf_set_extmark(buf, ns, i - 1, 0, {
+                    end_col = #hashes + 1,
+                    conceal = "",
+                })
+            end
+        end
+
+        vim.wo[vim.fn.bufwinid(buf)].conceallevel = 2
+    end,
+})
+
 -- Recommended by nvim-tree
 -- disable netrw at the very start of your init.lua
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 utils.setup_plugin("snacks", {
-    input = { enabled = true },
+    input = {
+        enabled = true
+    },
+    styles = {
+        input = {
+            relative = "cursor",
+        }
+    }
 })
 
 require('goto-preview').setup({
@@ -180,6 +227,21 @@ require("paint").setup({
             pattern = "\\s+case",
             hl = "Keyword",
         },
+        {
+            filter = { filetype = "markdown" },
+            pattern = "%*%*[wW]arning:%*%*",
+            hl = "DiagnosticWarn"
+        },
+        {
+            filter = { filetype = "markdown" },
+            pattern = "%*%*[nN]ote:%*%*",
+            hl = "Todo"
+        },
+        {
+            filter = { filetype = "markdown" },
+            pattern = "%*%*[dD]eprecated:%*%*",
+            hl = "DiagnosticUnnecessary"
+        },
     },
 })
 -- }}}
@@ -193,6 +255,7 @@ require("plugins.treesitter")
 require("plugins.telescope")
 require("plugins.render-markdown")
 utils.setup_plugin("windows", {})
+
 if utils.setup_plugin("overseer", {}) then
     vim.api.nvim_set_keymap("n", "<F4>", ":OverseerRun<CR>", { noremap = true, silent = true })
 end
@@ -200,14 +263,46 @@ end
 utils.setup_plugin("trouble", {
     focus = true,
     restore = true,
+    auto_jump = false,
+    auto_refresh = false,
     win = {
-        size = {
-            height = 20
+        size = { height = 30 },
+        minimal = false,
+        wo = {
+            number = false,
+            signcolumn = "no",
         }
+    },
+    preview = {
+        type = "split",
+        relative = "win",
+        position = "right",
+        size = { width = 0.5, },
+        scratch = false,
+        minimal = false,
     },
     keys = {
         ["<esc>"] = "close",
-    }
+        ["<cr>"] = "jump_close",
+        o = "jump",
+    },
+    modes = {
+        lsp_references = {
+            auto_jump = false,
+            win = {
+                minimal = false,
+            },
+            params = {
+                include_declaration = true,
+            },
+        },
+        lsp_base = {
+            auto_jump = false,
+            params = {
+                include_current = true,
+            },
+        },
+    },
 })
 
 if utils.has_plugin("trouble") then

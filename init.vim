@@ -58,7 +58,7 @@ set noruler
 set noshowcmd
 
 set title
-set titlestring=%t\ -\ Nvim
+set titlestring=%{fnamemodify(getcwd(),':t')}\ -\ %t\ -\ Nvim
 
 set exrc
 

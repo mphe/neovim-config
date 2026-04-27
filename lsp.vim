@@ -10,7 +10,7 @@ nnoremap <leader>fx :lua vim.lsp.buf.code_action({apply=true, context = { only =
 
 nnoremap <leader>d :lua vim.diagnostic.open_float()<cr>
 " nnoremap <leader>D :lua vim.diagnostic.setloclist()<cr>
-nnoremap <leader>D :Trouble diagnostics<cr>
+nnoremap <leader>D :Trouble diagnostics filter.buf=0<cr>
 
 nnoremap <leader>gi :lua vim.lsp.buf.signature_help()<cr>
 

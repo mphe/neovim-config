@@ -24,59 +24,6 @@ vim.api.nvim_create_autocmd("LspTokenUpdate", {
     end,
 })
 
-local hover_highlights = {
-    { pattern = '%*%*[wW]arning:%*%*', hl = 'DiagnosticWarn' },
-    { pattern = '%*%*[nN]ote:%*%*', hl = 'Todo' },
-    { pattern = '%*%*[dD]eprecated:%*%*', hl = 'DiagnosticUnnecessary' },
-}
-
--- Apply custom highlights and conceals to the LSP hover content
-vim.api.nvim_create_autocmd('WinNew', {
-    callback = function()
-        local win = vim.api.nvim_get_current_win()
-        local config = vim.api.nvim_win_get_config(win)
-        local ns = vim.api.nvim_create_namespace('custom_hover_hl')
-        if config.relative == '' then return end
-
-        vim.defer_fn(function()
-            if not vim.api.nvim_win_is_valid(win) then
-                return
-            end
-            local bufnr = vim.api.nvim_win_get_buf(win)
-            local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-            for i, line in ipairs(lines) do
-                -- Conceal "#" markdown header prefix
-                local _, end_col = line:find('^#+%s?')
-                if end_col then
-                    vim.api.nvim_buf_set_extmark(bufnr, ns, i - 1, 0, {
-                        end_col = end_col,
-                        conceal = '',
-                    })
-                end
-
-                -- Apply custom highlights
-                for _, entry in ipairs(hover_highlights) do
-                    local start = 1
-                    while true do
-                        local s, e = line:find(entry.pattern, start)
-                        if not s then break end
-                        vim.api.nvim_buf_set_extmark(bufnr, ns, i - 1, s - 1, {
-                            end_col = e,
-                            hl_group = entry.hl,
-                            priority = 200,
-                        })
-                        start = e + 1
-                    end
-                end
-            end
-
-            vim.wo[win].conceallevel = 2
-            vim.wo[win].concealcursor = 'nv'
-        end, 50)
-    end,
-})
-
-
 vim.lsp.inlay_hint.enable(true)
 vim.highlight.priorities.semantic_tokens = 95
 
