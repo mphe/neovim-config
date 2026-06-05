@@ -893,9 +893,6 @@ nnoremap Y y$
 " faster substitution with yanked text
 nmap S griw
 
-" substitute word under the cursor
-nnoremap <leader>s :%s/\<<C-r><C-w>\>//g<Left><Left>
-
 " visually select the text just pasted
 nnoremap gz `[v`]
 

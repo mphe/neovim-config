@@ -440,3 +440,20 @@ utils.setup_plugin("qfpreview", {
 end
 
 require("plugins.lualine")
+
+
+
+-- substitute word under the cursor keybind with vim.ui.input {{{
+-- formerly "nnoremap <leader>s :%s/\<<C-r><C-w>\>//g<Left><Left>"
+
+function SubstituteWordUnderCursor()
+    local word = vim.fn.expand('<cword>')
+    vim.ui.input({ prompt = 'Replace "' .. word .. '" with: ', default = word }, function(input)
+        if input and input ~= '' then
+            vim.cmd('%s/\\<' .. vim.fn.escape(word, '/\\') .. '\\>/' .. vim.fn.escape(input, '/\\') .. '/g')
+        end
+    end)
+end
+
+vim.keymap.set('n', '<leader>s', SubstituteWordUnderCursor, { noremap = true, silent = true })
+-- }}}
