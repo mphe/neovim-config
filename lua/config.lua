@@ -457,3 +457,6 @@ end
 
 vim.keymap.set('n', '<leader>s', SubstituteWordUnderCursor, { noremap = true, silent = true })
 -- }}}
+
+
+require("binds")

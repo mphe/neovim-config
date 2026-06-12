@@ -75,7 +75,13 @@ utils.setup_plugin("CopilotChat", {
 
 
 if utils.has_plugin("CopilotChat") then
-    vim.keymap.set('n', '<F3>', '<cmd>CopilotChatToggle<CR>', { noremap = true, silent = true })
+    vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'copilot-chat',
+        callback = function(ev)
+            vim.keymap.set('n', '<C-c>', '<cmd>CopilotChatStop<CR>', { buffer = ev.buf, noremap = true, silent = true })
+            vim.keymap.set('n', '<C-d>', '<cmd>CopilotChatReset<CR>', { buffer = ev.buf, noremap = true, silent = true })
+        end,
+    })
 
     -- vim.api.nvim_create_autocmd('FileType', {
     --     pattern = 'copilot-chat',
@@ -119,7 +125,3 @@ utils.setup_plugin("codecompanion", {
         }
     }
 })
-
-if utils.has_plugin("codecompanion") then
-    vim.keymap.set('n', '<F3>', '<cmd>CodeCompanionChat Toggle<CR>', { noremap = true, silent = true })
-end

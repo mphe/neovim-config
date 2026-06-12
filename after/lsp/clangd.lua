@@ -24,6 +24,15 @@ if vim.g.clangd_project_compile_commands_dir then
     table.insert(cmd, "--compile-commands-dir=" .. vim.g.clangd_project_compile_commands_dir)
 end
 
+vim.api.nvim_create_user_command("ClangdCompileCommandsDir", function(opts)
+    vim.g.clangd_project_compile_commands_dir = opts.args
+
+    local nvim_lua = vim.fn.getcwd() .. "/.nvim.lua"
+    local line = "vim.g.clangd_project_compile_commands_dir = " .. vim.inspect(opts.args)
+    vim.fn.writefile({ line }, nvim_lua, "a")
+    vim.notify("Updated " .. nvim_lua)
+end, { nargs = 1, complete = "dir", desc = "Set clangd compile-commands-dir" })
+
 return {
     cmd = cmd,
     settings = {

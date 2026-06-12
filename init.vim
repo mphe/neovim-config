@@ -962,16 +962,6 @@ nnoremap ; @:
 nnoremap <space> ;
 vnoremap <space> ;
 
-" Toggle inlay hint visibility: all on and inline / only type hints and at eol
-function! F2Toggle()
-    if g:config_use_nvimlsp
-        lua require("lsp-endhints").toggle()
-        InlayHintsFilterToggle
-    endif
-endfunction
-
-nnoremap <F2> :call F2Toggle()<CR>
-
 map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
             \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
             \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
@@ -1011,9 +1001,6 @@ endfun
 
 nnoremap <silent> <F5> :call F5Refresh()<CR>
 inoremap <silent> <F5> <c-o>:call F5Refresh()<CR>
-
-nnoremap <F8> :labove<CR>
-nnoremap <F9> :lbelow<CR>
 
 " Make ctrl-c copy the selected text
 vmap <c-c> "+y

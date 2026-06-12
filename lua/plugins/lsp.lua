@@ -24,6 +24,55 @@ vim.api.nvim_create_autocmd("LspTokenUpdate", {
     end,
 })
 
+-- Monkey patch open_floating_preview() to apply markdown text reflow {{{
+local original_open_floating_preview = vim.lsp.util.open_floating_preview
+
+vim.lsp.util.open_floating_preview = function(contents, syntax, opts)
+    if syntax ~= 'markdown' then
+        return original_open_floating_preview(contents, syntax, opts)
+    end
+
+    local reflowed = {}
+    local in_code_block = false
+
+    for _, line in ipairs(contents) do
+        if line:match('^```') then
+            in_code_block = not in_code_block
+            table.insert(reflowed, line)
+        elseif in_code_block then
+            table.insert(reflowed, line)
+        else
+            line = line:gsub('^%s+', ''):gsub('%s+$', '')
+
+            if line == '' then
+                -- Collapse consecutive blank lines into one
+                if #reflowed > 0 and reflowed[#reflowed] ~= '' then
+                    table.insert(reflowed, '')
+                end
+            else
+                local prev = #reflowed > 0 and reflowed[#reflowed] or nil
+                local starts_special = line:match('^[%-%*%+] ')
+                or line:match('^%d+%. ')
+                or line:match('^#+%s')
+                or line:match('^>')
+                or line:match('^|')
+                or line:match('^%s*[%-%*_][%-%*_][%-%*_]')
+
+                local prev_ends_sentence = prev and prev:match('[%.%!%?%:]%s*$')
+
+                if not prev or prev == '' or starts_special or prev_ends_sentence then
+                    table.insert(reflowed, line)
+                else
+                    reflowed[#reflowed] = reflowed[#reflowed] .. ' ' .. line
+                end
+            end
+        end
+    end
+
+    return original_open_floating_preview(reflowed, syntax, opts)
+end
+-- }}}
+
 vim.lsp.inlay_hint.enable(true)
 vim.highlight.priorities.semantic_tokens = 95
 
