@@ -154,6 +154,7 @@ require("blink.cmp").setup {
                 module = "blink-cmp-copilot-chat",
             },
             path = {
+                score_offset = 600,
                 opts = {
                     trailing_slash = false,
                     -- Path completion from cwd instead of current buffer's directory
