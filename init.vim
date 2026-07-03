@@ -50,6 +50,7 @@ if g:config_use_nvimlsp
 endif
 
 runtime restartvim.vim
+runtime monitor.vim
 
 " -------------------------------------- General settings start {{{
 syntax enable
