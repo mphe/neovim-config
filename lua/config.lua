@@ -450,7 +450,9 @@ function SubstituteWordUnderCursor()
     local word = vim.fn.expand('<cword>')
     vim.ui.input({ prompt = 'Replace "' .. word .. '" with: ', default = word }, function(input)
         if input and input ~= '' then
-            vim.cmd('%s/\\<' .. vim.fn.escape(word, '/\\') .. '\\>/' .. vim.fn.escape(input, '/\\') .. '/g')
+            local cmd = '%s/\\<' .. vim.fn.escape(word, '/\\') .. '\\>/' .. vim.fn.escape(input, '/\\') .. '/g'
+            vim.fn.histadd(':', cmd)
+            vim.cmd(cmd)
         end
     end)
 end
