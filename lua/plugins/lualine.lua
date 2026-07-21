@@ -111,6 +111,39 @@ local winbar = {
     lualine_x = { diagnostics_component},
 }
 
+local cmake_icon, cmake_hlgroup = require('nvim-web-devicons').get_icon_by_filetype("cmake")
+
+local function cmake_component()
+    if vim.call("cmake4vim#statusline#IsCMakeProject") ~= 1 then
+        return ""
+    end
+
+    local preset = vim.call("cmake4vim#statusline#GetConfigurePreset")
+    local target = vim.call("cmake4vim#statusline#GetBuildTarget")
+
+    if preset == "" then
+        preset = nil
+    end
+
+    if target == "" then
+        target = nil
+    end
+
+    if preset and target then
+        return string.format("%s %s [%s]", cmake_icon, preset, target)
+    end
+
+    if preset then
+        return string.format("%s %s", cmake_icon, preset)
+    end
+
+    if target then
+        return string.format("%s [%s]", cmake_icon, target)
+    end
+
+    return ""
+end
+
 require("lualine").setup {
     options = {
         theme = custom_theme or "auto",
@@ -122,7 +155,7 @@ require("lualine").setup {
         lualine_a = {'mode'},
         lualine_b = {filename_component},
         lualine_c = {},
-        lualine_x = { "searchcount", workspace_diagnostics_component, get_project_name, { "branch", color = "Comment" }, "filesize", get_encoding, fileformat, 'filetype',  },
+        lualine_x = { "searchcount", workspace_diagnostics_component, cmake_component, get_project_name, { "branch", color = "Comment" }, "filesize", get_encoding, fileformat, 'filetype',  },
         lualine_y = { lspstatus_component, },
         lualine_z = {'progress', 'location'}
     },

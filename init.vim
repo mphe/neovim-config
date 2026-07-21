@@ -222,10 +222,11 @@ let g:markdown_fenced_languages = ['html', 'python', 'lua', 'vim', 'typescript',
 " Stop the default arduino ftplugin from messing with indent settings
 let g:arduino_recommended_style = 0
 
-" Always open quickfix/loclist at the bottom, full width
 augroup qf_layout
   autocmd!
-  autocmd FileType qf wincmd J
+  " Always open quickfix/loclist at the bottom, full width
+  " Resize to 20 lines
+  autocmd FileType qf wincmd J | 20wincmd_
 augroup END
 
 " -------------------------------------- General settings end }}}
@@ -602,9 +603,6 @@ function! ToggleLatexMath()
 endfunction
 
 command! ToggleLatexMath call ToggleLatexMath()
-
-" Adds 'c' as vim-surround command to wrap selection in a latex command like \emph{}
-let g:surround_{char2nr('c')} = "\\\1command\1{\r}"
 
 
 " tcomment

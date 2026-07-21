@@ -26,6 +26,10 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tomtom/tcomment_vim'
 
+Plug 'tpope/vim-dispatch'
+Plug 'radenling/vim-dispatch-neovim'
+Plug 'ilyachur/cmake4vim'
+
 if g:config_use_coc
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
 endif

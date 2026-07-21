@@ -265,8 +265,9 @@ utils.setup_plugin("trouble", {
     restore = true,
     auto_jump = false,
     auto_refresh = false,
+    warn_no_results = false,
     win = {
-        size = { height = 30 },
+        size = { height = 20 },
         minimal = false,
         wo = {
             number = false,
@@ -287,17 +288,12 @@ utils.setup_plugin("trouble", {
         o = "jump",
     },
     modes = {
-        lsp_references = {
+        lsp_base = {
             auto_jump = false,
             win = {
                 minimal = false,
+                size = { height = 30 },
             },
-            params = {
-                include_declaration = true,
-            },
-        },
-        lsp_base = {
-            auto_jump = false,
             params = {
                 include_current = true,
             },
