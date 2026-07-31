@@ -254,7 +254,11 @@ end
 require("plugins.treesitter")
 require("plugins.telescope")
 require("plugins.render-markdown")
-utils.setup_plugin("windows", {})
+utils.setup_plugin("windows", {
+    autowidth = {
+        winwidth = 2 + vim.o.numberwidth,  -- This should perfectly match textwidth + sign column + line numbers
+    }
+})
 
 if utils.setup_plugin("overseer", {}) then
     vim.api.nvim_set_keymap("n", "<F4>", ":OverseerRun<CR>", { noremap = true, silent = true })
