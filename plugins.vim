@@ -60,10 +60,13 @@ if g:config_use_nvimlsp
     " Plug 'Saghen/blink.compat'
     " Plug 'quangnguyen30192/cmp-nvim-ultisnips'
     if g:config_use_copilot
-        Plug 'fang2hou/blink-copilot'
+        " Plug 'fang2hou/blink-copilot'
         Plug 'pxwg/blink-cmp-copilot-chat'
     endif
 endif
+
+" Automatically save session on quit
+Plug 'rmagatti/auto-session'
 
 " Automatically expand width of the current window
 Plug 'anuvyklack/middleclass'  " dependency of windows.nvim

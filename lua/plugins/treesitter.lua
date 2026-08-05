@@ -8,6 +8,7 @@ vim.api.nvim_create_autocmd('FileType', {
         "vimdoc",
         "copilot-chat",
         "qml",
+        "yaml",
     },
     callback = function(ev)
         -- syntax highlighting, provided by Neovim

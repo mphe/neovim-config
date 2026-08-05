@@ -73,6 +73,8 @@ function s:ApplyStyle()
     " gdscript
     hi! link @attribute.gdscript Keyword
     hi! link @string.special.url.gdscript Macro  " $ or % node paths
+    hi! link @constructor.gdscript Function
+    hi! link gdMember @property
 
     " rust
     hi link @lsp.type.const.rust Constant
@@ -87,12 +89,15 @@ function s:ApplyStyle()
     hi! link SagaActionTitle Title
     hi! link SagaClass Type
     hi! link SagaNamespace @namespace
+    hi! link SagaModule SagaNamespace
     hi! link SagaFolder Normal  " Make Lspsaga's breadcrumb folder not red
 
     " snacks
     hi! link SnacksInputBorder FloatBorder
     hi! link SnacksInputTitle FloatTitle
 
+    " trouble
+    hi! link TroubleLspFilename @namespace
 endfun
 
 function! s:ScalaSyntaxFixes()

@@ -254,11 +254,16 @@ end
 require("plugins.treesitter")
 require("plugins.telescope")
 require("plugins.render-markdown")
+utils.setup_plugin("guess-indent", {
+    auto_cmd = true,
+})
 utils.setup_plugin("windows", {
     autowidth = {
         winwidth = 2 + vim.o.numberwidth,  -- This should perfectly match textwidth + sign column + line numbers
     }
 })
+
+utils.setup_plugin("auto-session", {})
 
 if utils.setup_plugin("overseer", {}) then
     vim.api.nvim_set_keymap("n", "<F4>", ":OverseerRun<CR>", { noremap = true, silent = true })

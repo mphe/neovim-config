@@ -143,15 +143,16 @@ require("blink.cmp").setup {
                     return items
                 end,
             },
-            copilot = {
-                name = "copilot",
-                module = "blink-copilot",
-                score_offset = -200,
-                async = true,
-            },
+            -- copilot = {
+            --     name = "copilot",
+            --     module = "blink-copilot",
+            --     score_offset = -200,
+            --     async = true,
+            -- },
             copilot_c = {
                 name = "CopilotChat",
                 module = "blink-cmp-copilot-chat",
+                fallbacks = {},  -- Always show buffer completion
             },
             path = {
                 score_offset = 600,

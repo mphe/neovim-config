@@ -49,7 +49,7 @@ if g:config_use_nvimlsp
     nnoremap <nowait> gr gr
 endif
 
-runtime restartvim.vim
+" runtime restartvim.vim
 runtime monitor.vim
 
 " -------------------------------------- General settings start {{{
@@ -65,8 +65,7 @@ set exrc
 
 " tab size = 4, spaces instead of tabs, and auto indent
 set shiftwidth=4
-" set tabstop=4
-set softtabstop=-1  " Apparently prefered over tabstop. Use value of shiftwidth.
+set tabstop=4
 set expandtab
 set smarttab
 set autoindent
@@ -95,7 +94,6 @@ set nofoldenable  " don't fold anything automatically
 set foldlevelstart=99
 " Skip over closed folds with { }
 set foldopen-=block
-let g:xml_syntax_folding = 1
 
 " global clipboard
 " set clipboard+=unnamed
@@ -131,9 +129,6 @@ set visualbell t_vb=
 set novisualbell
 
 set viewoptions=cursor,folds,slash,unix
-
-" fold functions, if, for, and while in shell scripts
-let g:sh_fold_enabled=7
 
 set previewheight=3
 
@@ -203,6 +198,9 @@ set winborder=rounded
 
 set matchtime=1
 
+" recommended by auto-session plugin
+set sessionoptions+=winpos,terminal,folds
+
 " Enable doxygen tag highlighting
 let g:load_doxygen_syntax = 1
 
@@ -221,6 +219,14 @@ let g:markdown_fenced_languages = ['html', 'python', 'lua', 'vim', 'typescript',
 
 " Stop the default arduino ftplugin from messing with indent settings
 let g:arduino_recommended_style = 0
+
+let g:xml_syntax_folding = 1
+
+" fold functions, if, for, and while in shell scripts
+let g:sh_fold_enabled=7
+
+" disable forced indent settings like noexpandtab
+let g:gdscript_recommended_style = 0
 
 augroup qf_layout
   autocmd!
