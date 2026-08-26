@@ -263,7 +263,11 @@ utils.setup_plugin("windows", {
     }
 })
 
-utils.setup_plugin("auto-session", {})
+utils.setup_plugin("auto-session", {
+    suppressed_dirs = {
+        "~",
+    }
+})
 
 if utils.setup_plugin("overseer", {}) then
     vim.api.nvim_set_keymap("n", "<F4>", ":OverseerRun<CR>", { noremap = true, silent = true })

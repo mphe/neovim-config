@@ -38,6 +38,9 @@ local default_options = {
         highlight_inline = "markdownCode",
         language = true,
         border = "thin",
+        language_border = ' ',
+        language_left = '',
+        language_right = '',
     },
 }
 
