@@ -27,7 +27,8 @@ Plug 'tpope/vim-repeat'
 Plug 'tomtom/tcomment_vim'
 
 Plug 'tpope/vim-dispatch'
-Plug 'radenling/vim-dispatch-neovim'
+" Plug 'radenling/vim-dispatch-neovim'
+Plug 'datanoise/vim-dispatch-neovim'  " More maintained fork
 Plug 'ilyachur/cmake4vim'
 
 if g:config_use_coc
@@ -47,7 +48,6 @@ if g:config_use_nvimlsp
     Plug 'chrisgrieser/nvim-lsp-endhints'
     Plug 'xzbdmw/colorful-menu.nvim'
     Plug 'barreiroleo/ltex_extra.nvim'
-    " Plug 'r0nsha/qfpreview.nvim'  " displays a preview popup for quickfix and loc list
     Plug 'VidocqH/lsp-lens.nvim'
     " Plug 'Fildo7525/pretty_hover'
     Plug 'rmagatti/goto-preview'

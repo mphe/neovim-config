@@ -1,0 +1,19 @@
+diff --git autoload/dispatch/neovim.vim autoload/dispatch/neovim.vim
+index 5e128c7..d1f9882 100644
+--- autoload/dispatch/neovim.vim
++++ autoload/dispatch/neovim.vim
+@@ -73,12 +73,14 @@ function! dispatch#neovim#handle(request) abort
+       call termopen(l:cmd, l:opts)
+       call s:ResizeCurrentTerminal()
+       call s:SaveCurrentBufferPid(a:request)
++      execute 'normal G'
+       execute 'wincmd p'
+     else
+       execute 'tabnew'
+       call termopen(l:cmd, l:opts)
+       call s:ResizeCurrentTerminal()
+       call s:SaveCurrentBufferPid(a:request)
++      execute 'normal G'
+       if l:bg
+         execute 'tabprev'
+       else

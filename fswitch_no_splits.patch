@@ -1,0 +1,13 @@
+diff --git plugin/fswitch.vim plugin/fswitch.vim
+index a0396c8..0941c11 100755
+--- plugin/fswitch.vim
++++ plugin/fswitch.vim
+@@ -303,7 +303,7 @@ function! FSwitch(filename, precmd)
+         while bufnum != -1
+             let filename = fnamemodify(bufname(bufnum), ':p')
+             if filename == newpath
+-                execute ":sbuffer " .  filename
++                execute ":buffer " .  filename
+                 return
+             endif
+             let i += 1

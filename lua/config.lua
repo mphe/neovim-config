@@ -1,20 +1,6 @@
 local utils = require("utils")
 local localconfig = require("localconfig")
 
--- Make severity chars in qflist uppercase so trouble.nvim displays diagnostic icons
-vim.api.nvim_create_autocmd("QuickFixCmdPost", {
-    callback = function()
-        local qflist = vim.fn.getqflist()
-        for _, entry in ipairs(qflist) do
-            if entry.type ~= "" then
-                entry.type = entry.type:upper()
-            end
-        end
-        vim.fn.setqflist(qflist, "r")
-        vim.cmd([[Trouble qflist open]])
-    end,
-})
-
 -- Hide markdown header prefixes in nofile buffers (e.g. hover windows, code action, ...)
 vim.api.nvim_create_autocmd({"BufWinEnter", "FileType"}, {
     callback = function(args)
@@ -254,6 +240,7 @@ end
 require("plugins.treesitter")
 require("plugins.telescope")
 require("plugins.render-markdown")
+require("plugins.trouble")
 utils.setup_plugin("guess-indent", {
     auto_cmd = true,
 })
@@ -273,57 +260,6 @@ if utils.setup_plugin("overseer", {}) then
     vim.api.nvim_set_keymap("n", "<F4>", ":OverseerRun<CR>", { noremap = true, silent = true })
 end
 
-utils.setup_plugin("trouble", {
-    focus = true,
-    restore = true,
-    auto_jump = false,
-    auto_refresh = false,
-    warn_no_results = false,
-    win = {
-        size = { height = 20 },
-        minimal = false,
-        wo = {
-            number = false,
-            signcolumn = "no",
-        }
-    },
-    preview = {
-        type = "split",
-        relative = "win",
-        position = "right",
-        size = { width = 0.5, },
-        scratch = false,
-        minimal = false,
-    },
-    keys = {
-        ["<esc>"] = "close",
-        ["<cr>"] = "jump_close",
-        o = "jump",
-    },
-    modes = {
-        lsp_base = {
-            auto_jump = false,
-            win = {
-                minimal = false,
-                size = { height = 30 },
-            },
-            params = {
-                include_current = true,
-            },
-        },
-    },
-})
-
-if utils.has_plugin("trouble") then
-    vim.api.nvim_create_user_command("Diagnostics", "Trouble diagnostics", {})
-
-    -- Automatically open Trouble quickfix
-    vim.api.nvim_create_autocmd("QuickFixCmdPost", {
-        callback = function()
-            vim.cmd([[Trouble qflist open]])
-        end,
-    })
-end
 
 -- dashboard-nvim {{{
 if vim.g.config_use_dashboard == 1 then
@@ -427,24 +363,6 @@ vim.api.nvim_create_user_command("LspEndhintsToggle", require("lsp-endhints").to
 require("custom.inlayhints").setup()  -- must be initialized after lsp-endhints
 
 -- }}}
-
--- qfpreview {{{
-utils.setup_plugin("qfpreview", {
-    ui = {
-        -- number | "fill"
-        height = 30,
-        -- additinonal window configuration
-        win = {}
-    },
-    opts = {
-        -- whether to enable lsp clients
-        lsp = true,
-        -- whether to enable diagnostics
-        diagnostics = true
-    }
-})
--- }}}
-
 
 end
 
