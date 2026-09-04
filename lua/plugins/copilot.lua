@@ -80,15 +80,18 @@ if utils.has_plugin("CopilotChat") then
         callback = function(ev)
             vim.keymap.set('n', '<C-c>', '<cmd>CopilotChatStop<CR>', { buffer = ev.buf, noremap = true, silent = true })
             vim.keymap.set('n', '<C-d>', '<cmd>CopilotChatReset<CR>', { buffer = ev.buf, noremap = true, silent = true })
+            -- vim.opt_local.concealcursor = 'nv'
         end,
     })
 
-    -- vim.api.nvim_create_autocmd('FileType', {
-    --     pattern = 'copilot-chat',
-    --     callback = function()
-    --         vim.opt_local.concealcursor = 'nv'
-    --     end,
-    -- })
+    -- Fix diffs bugging out
+    vim.api.nvim_create_autocmd('BufEnter', {
+        callback = function(ev)
+            if vim.bo[ev.buf].filetype == 'copilot-chat' then
+                vim.cmd('diffoff!')
+            end
+        end,
+    })
 end
 
 
