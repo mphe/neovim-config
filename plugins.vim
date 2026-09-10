@@ -31,6 +31,8 @@ Plug 'tpope/vim-dispatch'
 Plug 'datanoise/vim-dispatch-neovim'  " More maintained fork
 Plug 'ilyachur/cmake4vim'
 
+Plug 'sindrets/diffview.nvim'
+
 if g:config_use_coc
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
 endif
@@ -71,6 +73,7 @@ Plug 'rmagatti/auto-session'
 " Automatically expand width of the current window
 Plug 'anuvyklack/middleclass'  " dependency of windows.nvim
 Plug 'anuvyklack/windows.nvim'
+Plug 's1n7ax/nvim-window-picker'
 
 
 " Edit the quickfix/location list freely

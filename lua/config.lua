@@ -245,6 +245,10 @@ utils.setup_plugin("guess-indent", {
     auto_cmd = true,
 })
 utils.setup_plugin("windows", {
+    ignore = {
+      buftype = { "quickfix", "terminal" },
+      filetype = { "NvimTree", "neo-tree", "undotree", "gundo", "trouble" }
+    },
     autowidth = {
         winwidth = 2 + vim.o.numberwidth,  -- This should perfectly match textwidth + sign column + line numbers
     }
@@ -258,6 +262,16 @@ utils.setup_plugin("auto-session", {
 
 if utils.setup_plugin("overseer", {}) then
     vim.api.nvim_set_keymap("n", "<F4>", ":OverseerRun<CR>", { noremap = true, silent = true })
+end
+
+local has_window_picker = utils.setup_plugin("window-picker", {
+    hint = "floating-letter",
+})
+
+if has_window_picker then
+    vim.keymap.set("n", "<leader>w", function()
+        vim.api.nvim_set_current_win(require('window-picker').pick_window())
+    end, { noremap = true, silent = true })
 end
 
 

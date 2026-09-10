@@ -228,13 +228,6 @@ let g:sh_fold_enabled=7
 " disable forced indent settings like noexpandtab
 let g:gdscript_recommended_style = 0
 
-augroup qf_layout
-  autocmd!
-  " Always open quickfix/loclist at the bottom, full width
-  " Resize to 20 lines
-  autocmd FileType qf wincmd J | 20wincmd_
-augroup END
-
 " -------------------------------------- General settings end }}}
 
 
@@ -397,6 +390,7 @@ set t_Co=256
 set fillchars+=eob:\ ,vert:▏,fold:─,horiz:▁,horizdown:▁,horizup:▁,vertleft:▏,vertright:🭼,verthoriz:🭼
 " set fillchars+=fold:\ ,
 set fillchars+=fold:─
+set fillchars+=diff:╱
 set cursorline
 
 runtime themes/common_style.vim
@@ -817,14 +811,6 @@ command! IgnoreWarning Rulebook ignoreRule
 " -------------------------------------- Autocmds {{{
 augroup vimrc_autocmds
 au!
-" Don't screw up folds when inserting text that might affect them,
-" until leaving insert mode.
-" autocmd InsertEnter * if !exists('w:last_fdm') | let w:last_fdm=&foldmethod | setlocal foldmethod=manual | endif
-" autocmd InsertLeave,WinLeave * if exists('w:last_fdm') | let &l:foldmethod=w:last_fdm | unlet w:last_fdm | endif
-
-" Save/Restore folds
-" autocmd BufWinLeave * if !&diff && strlen(expand('%')) && &ft != 'gitcommit' | mkview | endif
-" autocmd BufRead * if !&diff && strlen(expand('%')) && &ft != 'gitcommit' | silent! loadview | endif
 
 " filetype specific settings
 autocmd FileType cmake,vim,lua setlocal foldmethod=marker
@@ -834,7 +820,7 @@ autocmd FileType markdown setlocal shiftwidth=2 | setlocal tabstop=2 | setlocal 
 autocmd FileType scala setlocal previewheight=5
 
 " autoclose location list after jump
-autocmd FileType qf nmap <buffer> <cr> <cr>:lcl<cr>
+" autocmd FileType qf nmap <buffer> <cr> <cr>:lcl<cr>
 
 " autocmd FileType * setlocal formatoptions+=croj
 autocmd FileType * setlocal formatoptions+=roj
@@ -842,6 +828,15 @@ autocmd FileType * setlocal formatoptions+=roj
 " Set filetype by extension
 autocmd BufRead,BufNewFile *.fsh set filetype=glsl
 autocmd BufRead,BufNewFile *.vsh set filetype=glsl
+
+" Always open quickfix/loclist at the bottom, full width
+" Resize to 20 lines
+" autocmd FileType qf wincmd J | 20wincmd_
+autocmd FileType qf wincmd J
+
+" Always open gitcommits in vertical split
+autocmd FileType gitcommit wincmd L
+
 
 au BufEnter * :call CheckSize()
 augroup END
