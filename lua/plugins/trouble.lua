@@ -33,7 +33,7 @@ utils.setup_plugin("trouble", {
             auto_jump = false,
             win = {
                 minimal = false,
-                size = { height = 30 },
+                size = { height = 20 },
             },
             params = {
                 include_current = true,
@@ -48,7 +48,14 @@ if utils.has_plugin("trouble") then
     -- Automatically open Trouble quickfix and make severity chars in qflist uppercase so
     -- trouble.nvim displays diagnostic icons
     vim.api.nvim_create_autocmd("QuickFixCmdPost", {
-        callback = function()
+        callback = function(args)
+            -- Skip location list commands e.g. lgrep, lvimgrep
+            if args.match:sub(1, 1) == "l" then
+                return
+            end
+
+            -- Convert diagnostic level indicators (E, W, I, ...) to uppercase, because lowercase
+            -- symbols are not correctly parsed/interpreted by some tools
             local qflist = vim.fn.getqflist()
             for _, entry in ipairs(qflist) do
                 if entry.type ~= "" then
@@ -56,7 +63,11 @@ if utils.has_plugin("trouble") then
                 end
             end
             vim.fn.setqflist(qflist, "r")
-            vim.cmd([[Trouble qflist open]])
+
+            -- Show Trouble instead of native qflist
+            vim.schedule(function()
+                vim.cmd([[cclose | Trouble qflist open]])
+            end)
         end,
     })
 end

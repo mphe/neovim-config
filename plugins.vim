@@ -31,6 +31,8 @@ Plug 'tpope/vim-dispatch'
 Plug 'datanoise/vim-dispatch-neovim'  " More maintained fork
 Plug 'ilyachur/cmake4vim'
 
+Plug 'sindrets/diffview.nvim'
+
 if g:config_use_coc
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
 endif
