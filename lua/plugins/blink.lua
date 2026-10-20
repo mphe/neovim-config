@@ -117,7 +117,7 @@ require("blink.cmp").setup {
     -- Default list of enabled providers defined so that you can extend it
     -- elsewhere in your config, without redefining it, due to `opts_extend`
     sources = {
-        default = { 'lsp', 'path', 'snippets', 'buffer', },
+        default = { 'lazydev', 'lsp', 'path', 'snippets', 'buffer', },
 
         per_filetype = {
             ["copilot-chat"] = { "copilot_c", "path", "snippets", "buffer",  },  -- Add the copilot-chat source for relevant filetype
@@ -153,6 +153,11 @@ require("blink.cmp").setup {
                 name = "CopilotChat",
                 module = "blink-cmp-copilot-chat",
                 fallbacks = {},  -- Always show buffer completion
+            },
+            lazydev = {
+                name = "LazyDev",
+                module = "lazydev.integrations.blink",
+                score_offset = 100,
             },
             path = {
                 score_offset = 600,

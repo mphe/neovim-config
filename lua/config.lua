@@ -403,3 +403,11 @@ vim.keymap.set('n', '<leader>s', SubstituteWordUnderCursor, { noremap = true, si
 
 
 require("binds")
+
+utils.setup_plugin("lazydev", {
+    library = {
+        -- Load luvit types when the `vim.uv` word is found
+        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+        "nvim-dap-ui",
+    },
+})

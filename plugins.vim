@@ -79,6 +79,7 @@ Plug 's1n7ax/nvim-window-picker'
 " Edit the quickfix/location list freely
 Plug 'itchyny/vim-qfedit'
 
+Plug 'folke/lazydev.nvim'
 Plug 'folke/trouble.nvim'
 Plug 'folke/snacks.nvim'
 Plug 'stevearc/overseer.nvim'
