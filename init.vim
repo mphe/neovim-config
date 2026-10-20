@@ -958,13 +958,14 @@ nnoremap ; @:
 nnoremap <space> ;
 vnoremap <space> ;
 
-map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
-            \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
-            \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
-
 " F5
 function! F5Refresh()
     syn sync fromstart
+
+    if luaeval('require("dap").session() ~= nil')
+        lua vim.schedule(require("dap").continue)
+        return
+    endif
 
     if &filetype ==# 'java'
         Validate
@@ -984,6 +985,7 @@ function! F5Refresh()
         if exists(':GrayoutUpdate')
             GrayoutUpdate
         endif
+        lua require("plugins.dap").build_and_launch_or_continue()
     elseif &filetype ==# 'cs'
         if g:use_vim_omnisharp
             OmniSharpHighlight

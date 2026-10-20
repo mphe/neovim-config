@@ -32,6 +32,24 @@ vim.api.nvim_create_autocmd({"BufWinEnter", "FileType"}, {
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
+
+-- Mason {{{
+require("mason").setup({})
+require("mason-lspconfig").setup({
+    ensure_installed = {
+        "lua_ls",
+        "ltex_plus",
+        -- "neocmake",
+    },
+    automatic_enable = {
+        exclude = {}
+    }
+})
+require('mason-tool-installer').setup {
+    ensure_installed = { "tree-sitter-cli", }
+}
+-- }}}
+
 utils.setup_plugin("snacks", {
     input = {
         enabled = true
@@ -245,23 +263,68 @@ utils.setup_plugin("guess-indent", {
     auto_cmd = true,
 })
 utils.setup_plugin("windows", {
+    animation = {
+        enable = false
+    },
     ignore = {
-      buftype = { "quickfix", "terminal" },
-      filetype = { "NvimTree", "neo-tree", "undotree", "gundo", "trouble" }
+        buftype = { "quickfix", "terminal", "prompt", },
+        filetype = {
+            "NvimTree",
+            "neo-tree",
+            "undotree",
+            "gundo",
+            "trouble",
+            "dap-repl",
+            "dap-disassembly",
+            "dapui_console",
+            "dapui_scopes",
+            "dapui_watches",
+            "dapui_stacks",
+            "dapui_breakpoints",
+            "dap-view",
+            "dap-view-term",
+            "dap-view-hover",
+            "dap-view-help",
+            "OverseerList",
+            "OverseerOutput",
+        }
     },
     autowidth = {
         winwidth = 2 + vim.o.numberwidth,  -- This should perfectly match textwidth + sign column + line numbers
     }
 })
 
-utils.setup_plugin("auto-session", {
-    suppressed_dirs = {
-        "~",
-    }
+utils.setup_plugin("overseer", {
+    dap = true,
 })
+-- Maybe lazy enable using require("overseer").enable_dap()
 
-if utils.setup_plugin("overseer", {}) then
-    vim.api.nvim_set_keymap("n", "<F4>", ":OverseerRun<CR>", { noremap = true, silent = true })
+local function overseer_save_session()
+    if not utils.has_plugin("overseer") then
+        return {}
+    end
+
+    local tasks = require("overseer.task_list").list_tasks()
+    local cmds = {}
+    for _, task in ipairs(tasks) do
+        local json = vim.json.encode(task:serialize())
+        -- For some reason, vim.json.encode encodes / as \/.
+        json = string.gsub(json, "\\/", "/")
+        -- Escape single quotes so we can put this inside single quotes
+        json = string.gsub(json, "'", "\\'")
+        table.insert(cmds, string.format("lua require('overseer').new_task(vim.json.decode('%s')):start()", json))
+    end
+    return cmds
+end
+
+local function overseer_restore_session()
+    local overseer = utils.find_plugin("overseer")
+
+    if overseer then
+        for _, task in ipairs(require("overseer").list_tasks({})) do
+            task:dispose(true)
+        end
+    end
 end
 
 local has_window_picker = utils.setup_plugin("window-picker", {
@@ -293,6 +356,7 @@ end
 if vim.g.config_use_nvimlsp == 1 then
     require("diagnostics")
     require("plugins.lsp")
+    require("plugins.dap")
     require("plugins.blink")
     require("lsp-file-operations").setup()
     require("tiny-code-action").setup {
@@ -338,22 +402,6 @@ if vim.g.config_use_nvimlsp == 1 then
     })
     -- }}}
 
-    -- mason {{{
-    require("mason").setup({})
-    require("mason-lspconfig").setup({
-        ensure_installed = {
-            "lua_ls",
-            "ltex_plus",
-            -- "neocmake",
-        },
-        automatic_enable = {
-            exclude = {}
-        }
-    })
-    require('mason-tool-installer').setup {
-        "tree-sitter-cli",
-    }
-    -- }}}
 
 -- lsp-endhints {{{
 require("lsp-endhints").setup{
@@ -410,4 +458,50 @@ utils.setup_plugin("lazydev", {
         { path = "${3rd}/luv/library", words = { "vim%.uv" } },
         "nvim-dap-ui",
     },
+})
+
+utils.setup_plugin("auto-session", {
+    suppressed_dirs = { "~", "C:/work/documents" },
+    save_extra_data = function(_)
+        return vim.fn.json_encode({
+            breakpoints = require("plugins.dap").save_breakpoints(),
+            cmake4vim = {
+                build_target = vim.g.cmake_build_target,
+                build_dir = vim.g.cmake_build_dir,
+                build_type = vim.g.cmake_build_type,
+                selected_kit = vim.g.cmake_selected_kit,
+                configure_preset = vim.g.cmake_configure_preset,
+                build_preset = vim.g.cmake_build_preset,
+                test_preset = vim.g.cmake_test_preset,
+            },
+            compiler = vim.g.current_compiler,
+            makeprg = vim.go.makeprg,
+        })
+    end,
+    restore_extra_data = function(_, extra_data)
+        local json = vim.fn.json_decode(extra_data)
+
+        require("plugins.dap").restore_breakpoints(json.breakpoints or {})
+
+        local cmake = json.cmake4vim or {}
+        vim.g.cmake_build_target = cmake.build_target or vim.g.cmake_build_target
+        vim.g.cmake_build_type = cmake.build_type or vim.g.cmake_build_type
+        vim.g.cmake_build_dir = cmake.build_dir or vim.g.cmake_build_dir
+        vim.g.cmake_selected_kit = cmake.selected_kit or vim.g.cmake_selected_kit
+        vim.g.cmake_configure_preset = cmake.configure_preset or vim.g.cmake_configure_preset
+        vim.g.cmake_build_preset = cmake.build_preset or vim.g.cmake_build_preset
+        vim.g.cmake_test_preset = cmake.test_preset or vim.g.cmake_test_preset
+
+        if json.compiler then
+            vim.cmd("compiler! " .. json.compiler)
+        end
+
+        vim.go.makeprg = json.makeprg or vim.go.makeprg
+    end,
+    pre_save_cmds = {
+        overseer_save_session,
+    },
+    pre_restore_cmds = {
+        overseer_restore_session,
+    }
 })

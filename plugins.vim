@@ -56,6 +56,18 @@ if g:config_use_nvimlsp
     Plug 'chrisgrieser/nvim-rulebook'
     Plug 'rachartier/tiny-code-action.nvim'
 
+    Plug 'nvim-neotest/nvim-nio'  " required by nvim-dap-ui
+
+    Plug 'mfussenegger/nvim-dap'
+    Plug 'LiadOz/nvim-dap-repl-highlights'
+    Plug 'jonathan-elize/dap-info.nvim'
+    Plug 'lucaSartore/nvim-dap-exception-breakpoints'
+
+    Plug 'Jorenar/nvim-dap-disasm'
+    " Plug 'igorlfs/nvim-dap-view'  " lighter alternative to nvim-dap-ui, but doesn't have a good call stack view at the moment
+    Plug 'rcarriga/nvim-dap-ui'
+    Plug 'theHamsta/nvim-dap-virtual-text'
+
     " Autocompletion
     Plug 'Saghen/blink.cmp', { 'tag': 'v1.9.1' }  " 1.10.0+ is bugged again and crashes nvim because of frizbee
     Plug 'rafamadriz/friendly-snippets'
@@ -82,6 +94,7 @@ Plug 'itchyny/vim-qfedit'
 Plug 'folke/lazydev.nvim'
 Plug 'folke/trouble.nvim'
 Plug 'folke/snacks.nvim'
+Plug 'folke/paint.nvim'  " Easy custom highlight patterns
 Plug 'stevearc/overseer.nvim'
 Plug 'tommcdo/vim-exchange'
 Plug 'NMAC427/guess-indent.nvim'
@@ -109,7 +122,6 @@ Plug 'farmergreg/vim-lastplace'
 Plug 'romainl/vim-cool'  " improved hlsearch
 Plug 'dominikduda/vim_current_word'
 Plug 'lambdalisue/suda.vim'
-Plug 'embear/vim-localvimrc'
 Plug 'inkarkat/vim-ingo-library'
 Plug 'inkarkat/vim-EnhancedJumps'
 Plug 'MattesGroeger/vim-bookmarks'
@@ -144,9 +156,6 @@ Plug 'nvim-telescope/telescope-ui-select.nvim'
 
 " Buffer bar
 Plug 'romgrk/barbar.nvim'
-
-" Easy custom highlight patterns
-Plug 'folke/paint.nvim'
 
 Plug 'sakhnik/nvim-gdb'
 

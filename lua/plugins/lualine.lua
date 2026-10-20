@@ -150,6 +150,16 @@ require("lualine").setup {
         section_separators = { left = vim.g.config_separator_left, right = vim.g.config_separator_right },
         component_separators = { left = vim.g.config_subseparator_left, right = vim.g.config_subseparator_right },
         globalstatus = true,
+        disabled_filetypes = {
+            winbar = {
+                "dap-repl",
+                "dap-disassembly",
+                "dap-view",
+                "dap-view-term",
+                "dap-view-hover",
+                "dap-view-help",
+            },
+        }
     },
     sections = {
         lualine_a = {'mode'},
