@@ -312,8 +312,14 @@ let g:nvimgdb_disable_start_keymaps = 1
 
 
 " -------------------------------------- Aliases {{{
-" Treat E as e command
+" Handle common typos
 cnoreabbrev E e
+cnoreabbrev Vsp vsp
+iabbrev cosnt const
+iabbrev cosntexpr constexpr
+iabbrev nodsicard nodiscard
+
+
 " :e with current relative path inserted
 cnoreabbrev le e %:h/
 
@@ -1039,12 +1045,6 @@ endif
 " }}}
 
 " -------------------------------------- Key mappings end }}}
-
-
-" -------------------------------------- auto correct {{{
-iabbrev cosnt const
-iabbrev cosntexpr constexpr
-"  }}}
 
 
 " better fold text {{{
