@@ -30,6 +30,8 @@ let s:slight_cyan = '#71A3A0'
 let s:normal_fg = s:base0
 let s:normal_bg = s:base02
 
+let s:markdown_inline_bg = '#223344'
+
 augroup custom_solarized_colorscheme
     autocmd!
     autocmd ColorSchemePre solarized call s:ApplySolarizedStylePre()
@@ -80,7 +82,7 @@ function s:ApplySolarizedDark()
 
     hi! Folded guibg=NONE gui=bold
 
-    exec 'hi markdownCode guibg=#223344 guifg=' . s:base1
+    exec 'hi markdownCode guibg=' . s:markdown_inline_bg . ' guifg=' . s:base1
     hi link doxygenBrief Comment
 
     " treesitter / lsp {{{
@@ -88,10 +90,11 @@ function s:ApplySolarizedDark()
     hi! link @property SlightBlueFg
     hi! link @lsp.type.typeParameter WhiteFg  " c++ templates parameters
     " hi! link LspCodeLens Comment
-    hi! link LspInlayHint markdownCode
-    highlight NonText guibg=#073642 guifg=#6C71C4 gui=NONE
     " highlight LspCodeLens guibg=#073642 guifg=#6C71C4
+    hi! link LspInlayHint markdownCode
     " highlight! link LspInlayHint LspCodeLens
+    highlight NonText guibg=#073642 guifg=#6C71C4 gui=NONE
+    exec 'hi @markup.strong.markdown_inline gui=bold guibg=' . s:markdown_inline_bg
     " }}}
 
     " Search highlight color
@@ -122,9 +125,18 @@ function s:ApplySolarizedDark()
 
     " For some reason removed lines in git diffs are not red when not using fugitive.
     hi! link Removed RedFg
-    " hi! DiffAdd guifg=NONE guibg=#004e41
-    " hi! DiffAdd guifg=NONE guibg=#003626
-    " hi! DiffChange guifg=NONE guibg=#363600
+
+    " Highlight diff backgrounds rather than foregrounds
+    hi! GitGutterAdd guifg=#859900 guibg=NONE
+    hi! GitGutterDelete guifg=#dc322f guibg=NONE
+    hi! GitGutterChange guifg=#b58900 guibg=NONE
+
+    " hi! DiffAdd guifg=NONE guibg=#173f2d gui=NONE  " darker green
+    hi! DiffAdd guifg=NONE guibg=#0a3d3a gui=NONE  " cyan-green
+    hi! DiffDelete guifg=#4a2531 guibg=#3f1c25 gui=NONE
+    " hi! DiffChange guifg=NONE guibg=#3b3812  " Brown yellowish
+    hi! DiffChange guifg=NONE guibg=#2a2a45  " Desaturated violet
+    hi! DiffText guifg=NONE guibg=#0d4f60 gui=bold
 
     " blink.cmp
     hi! link NormalFloat NormalBgFg
