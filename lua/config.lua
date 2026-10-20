@@ -255,6 +255,7 @@ if vim.g.config_use_copilot == 1 then
     require("plugins.copilot")
 end
 
+require("cpputils")
 require("plugins.treesitter")
 require("plugins.telescope")
 require("plugins.render-markdown")
@@ -505,3 +506,14 @@ utils.setup_plugin("auto-session", {
         overseer_restore_session,
     }
 })
+
+
+if utils.setup_plugin("disenchant", {
+    compile_command_c = "clang -O3 -c %s -o %s",
+    compile_command_cpp = "clang++ -O3 -c %s -o %s",
+})
+then
+    vim.api.nvim_create_user_command("Disassemble", "lua require('disenchant').disenchant()", {})
+end
+
+

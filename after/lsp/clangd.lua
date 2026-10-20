@@ -1,4 +1,4 @@
-local cmd = {
+local base_cmd = {
     "clangd",
     "--background-index",
     "--clang-tidy",
@@ -11,27 +11,43 @@ local cmd = {
     -- "--experimental-modules-support",  -- can cause crashes
 }
 
--- Expose a global variable `clangd_project_compile_commands_dir` that can be set to specify
--- clangd's fallback compile-commands path.
--- Usually, this should be set in a project-local `.nvim.lua`/`.nvimrc`/`.exrc` file (see `exrc`).
+local config_file = ".clangd_compile_commands_dir"
+
+local function read_compile_commands_dir()
+    local path = vim.fn.getcwd() .. "/" .. config_file
+
+    if vim.fn.filereadable(path) == 1 then
+        local lines = vim.fn.readfile(path)
+        if lines[1] and lines[1] ~= "" then
+            return lines[1]
+        end
+    end
+
+    return nil
+end
+
+-- Reads the fallback compile-commands dir from a project-local `.clangd_compile_commands_dir` file.
 -- This is helpful when working with external dependencies that are not part of the main project
 -- directory hierarchy. Since the dependency is located somewhere else and may not have its own
 -- compile_commands.json, clangd will not find a suitable compile_commands.json and will also not
 -- use the main project's database.
 -- This causes clangd to not be able to provide accurate diagnostics and code completion for files
 -- from the dependent project.
-if vim.g.clangd_project_compile_commands_dir then
-    table.insert(cmd, "--compile-commands-dir=" .. vim.g.clangd_project_compile_commands_dir)
-end
-
 vim.api.nvim_create_user_command("ClangdCompileCommandsDir", function(opts)
-    vim.g.clangd_project_compile_commands_dir = opts.args
-
-    local nvim_lua = vim.fn.getcwd() .. "/.nvim.lua"
-    local line = "vim.g.clangd_project_compile_commands_dir = " .. vim.inspect(opts.args)
-    vim.fn.writefile({ line }, nvim_lua, "a")
-    vim.notify("Updated " .. nvim_lua)
+    local path = vim.fn.getcwd() .. "/" .. config_file
+    vim.fn.writefile({ opts.args }, path)
+    vim.cmd("silent! lsp restart clangd")
 end, { nargs = 1, complete = "dir", desc = "Set clangd compile-commands-dir" })
+
+
+local function cmd(dispatchers, config)
+    local result = vim.deepcopy(base_cmd)
+    local dir = read_compile_commands_dir()
+    if dir then
+        table.insert(result, "--compile-commands-dir=" .. dir)
+    end
+    return vim.lsp.rpc.start(result, dispatchers, { cwd = config.cmd_cwd })
+end
 
 return {
     cmd = cmd,

@@ -412,9 +412,6 @@ endif
 
 " -------------------------------------- Plugin configuration {{{
 
-" disenchant
-command! Disassemble lua require("disenchant").disenchant()
-
 " gitgutter - https://github.com/airblade/vim-gitgutter
 let g:gitgutter_set_sign_backgrounds = 0
 let g:gitgutter_sign_added = '│'
