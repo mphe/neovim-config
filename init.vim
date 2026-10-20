@@ -525,7 +525,9 @@ let g:ctrlp_custom_ignore = {
 let g:ctrlp_working_path_mode = 'rw'
 " let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -c -o --exclude-standard && git submodule --quiet foreach --recursive "git ls-files . -c -o --exclude-standard"', 'find %s -type f']
 
-nnoremap <leader>l :CtrlPMixed<CR>
+if !g:config_use_telescope
+    nnoremap <leader>l :CtrlPMixed<CR>
+endif
 
 " vimtex
 let g:vimtex_view_method = 'zathura'
@@ -789,12 +791,6 @@ endif
 
 " vim-gdscript4
 let g:gdscript_use_python_indent = 1
-
-" telescope
-if g:config_use_telescope
-    nnoremap <c-p> :Telescope find_files<CR>
-    nnoremap <leader>l :Telescope buffers<CR>
-endif
 
 " vim-exchange
 nmap cx <Plug>(Exchange)

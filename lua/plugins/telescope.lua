@@ -1,5 +1,6 @@
 local telescope_actions = require("telescope.actions")
 
+local M = {}
 
 -- Yank the selected path in file picker (https://github.com/nvim-telescope/telescope-file-browser.nvim/issues/327)
 local function get_selected_path()
@@ -55,8 +56,7 @@ local function open_file_path_yank_picker(opts)
     })
 end
 
-
-require("telescope").setup{
+local config = {
     extensions = {
         ["ui-select"] = {
             require("telescope.themes").get_dropdown {},
@@ -118,6 +118,7 @@ require("telescope").setup{
             initial_mode = "normal",
         },
         find_files = {
+            hidden = true,
             mappings = {
                 i = {
                     ["<C-y>"] = function() yank(get_selected_path()) end,
@@ -127,6 +128,7 @@ require("telescope").setup{
     },
 }
 
+require("telescope").setup(config)
 require("telescope").load_extension("ui-select")
 
 vim.keymap.set("n", "<C-t>", open_file_path_yank_picker, { desc = "Pick file and yank path" })
@@ -134,3 +136,17 @@ vim.keymap.set("i", "<C-t>", function() open_file_path_yank_picker({ insert = tr
 
 
 vim.cmd([[hi! link TelescopeBorder FloatBorder]])
+
+if vim.g.config_use_telescope == 1 then
+    vim.keymap.set("n", "<C-p>", require("telescope.builtin").find_files, { desc = "Pick file" })
+    vim.keymap.set("n", "<leader>l", require("telescope.builtin").buffers, { desc = "Pick buffer" })
+end
+
+
+-- Allows overriding settings per-project, e.g. using `exrc`.
+function M.update_config(opts)
+    config = vim.tbl_deep_extend("force", config, opts)
+    require("telescope").setup(config)
+end
+
+return M
