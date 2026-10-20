@@ -4,4 +4,4 @@ CompilerSet errorformat=%f(%l\\,%c):\ %trror:\ %m,
                        \%f(%l\\,%c):\ %tarning:\ %m,
                        \%f(%l\\,%c):\ %tote:\ %m,
                        \%-G%.%#
-
+let g:current_compiler = 'clang-cl'
